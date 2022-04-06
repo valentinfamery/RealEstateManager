@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
+    <string name="textViewMainBase">\"Le premier bien immobilier enregistré vaut \"</string>
 </resources>
