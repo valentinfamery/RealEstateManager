@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting() {
-    Scaffold(/* ... */) { contentPadding ->
+    Scaffold {
         // Screen content
         TopAppBar(
             title = {
