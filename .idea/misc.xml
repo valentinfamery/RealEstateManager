@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/valen/AndroidStudioProjects/Projet_9_OC_RealEstateManager/app/src/main/res/drawable/bg_gradient.xml" value="0.1185" />
+        <entry key="..\:/Users/valen/AndroidStudioProjects/Projet_9_OC_RealEstateManager/app/src/main/res/drawable/splash_background.xml" value="0.1185" />
         <entry key="..\:/Users/valen/AndroidStudioProjects/RealEstateManager/app/src/main/res/layout/activity_main.xml" value="0.17592592592592593" />
         <entry key="..\:/Users/valen/AndroidStudioProjects/RealEstateManager/app/src/main/res/layout/activity_second.xml" value="0.358695652173913" />
       </map>
