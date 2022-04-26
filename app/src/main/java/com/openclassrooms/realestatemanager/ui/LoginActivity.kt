@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.firebase.ui.auth.AuthUI
@@ -35,6 +36,12 @@ class LoginActivity : AppCompatActivity() {
         val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
             val user = FirebaseAuth.getInstance().currentUser
+            startActivityMain()
         }
+    }
+
+    private fun startActivityMain(){
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        startActivity(intent)
     }
 }

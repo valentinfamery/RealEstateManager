@@ -65,6 +65,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
 
     implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
+
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
 }
 repositories {
     mavenCentral()
