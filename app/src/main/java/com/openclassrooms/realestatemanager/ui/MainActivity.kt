@@ -10,12 +10,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +38,27 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting() {
-    Scaffold {
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+
+
+    Scaffold (
+        topBar = {
+
+
         // Screen content
         TopAppBar(
             title = {
                 Text(text = "Real Estate Manager")
             },
             navigationIcon = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.apply {
+                            if (isClosed) open() else close()
+                        }
+                    }
+                }) {
                     Icon(Icons.Filled.Menu,"")
                 }
             },
@@ -59,12 +74,28 @@ fun Greeting() {
                 }
             },
             backgroundColor = MaterialTheme.colors.background
-
         )
+
+        },
+
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            Text("Drawer title", modifier = Modifier.padding(16.dp))
+            Divider()
+        }
+
+
+
+
+
+
+
+
         /* ... */
-    }
+    ){}
 
 }
+
 
 
 
