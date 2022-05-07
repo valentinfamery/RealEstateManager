@@ -1,21 +1,21 @@
 package com.openclassrooms.realestatemanager.ui.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorPalette = darkColors(
+
+private val DarkColorPalette = darkColorScheme(
     primary = Blue200,
-    primaryVariant = Blue700,
     secondary = Teal200
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = lightColorScheme(
     primary = Blue500,
-    primaryVariant = Blue700,
     secondary = Teal200
+
 
     /* Other default colors to override
     background = Color.White,
@@ -39,7 +39,7 @@ fun Projet_9_OC_RealEstateManagerTheme(
     }
 
     MaterialTheme(
-        colors = colors,
+        colorScheme = colors,
         typography = Typography,
         shapes = Shapes,
         content = content
