@@ -29,17 +29,24 @@ private val LightColorPalette = lightColorScheme(
 
 @Composable
 fun Projet_9_OC_RealEstateManagerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    isDynamicColor: Boolean = true,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
+    val dynamicColor = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val colorScheme = when {
+        dynamicColor && isDarkTheme -> {
+            dynamicDarkColorScheme(LocalContext.current)
+        }
+        dynamicColor && !isDarkTheme -> {
+            dynamicLightColorScheme(LocalContext.current)
+        }
+        isDarkTheme -> DarkColorPalette
+        else -> LightColorPalette
     }
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = colorScheme,
         typography = Typography,
         shapes = Shapes,
         content = content

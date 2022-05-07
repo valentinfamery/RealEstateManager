@@ -36,7 +36,9 @@ class NewRealEstateActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String) {
     Scaffold (
-        content = {},
+        content = {
+            Text(text = "ccccccccccccccc")
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {

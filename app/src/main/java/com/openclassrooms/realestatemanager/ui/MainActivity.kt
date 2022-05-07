@@ -24,7 +24,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -88,57 +90,50 @@ fun MainScreen(navController: NavController) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ConstraintLayout {
-                // Create references for the composables to constrain
-                val (button, text) = createRefs()
 
 
-                        Box(
-                            modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.tertiary)
-                                .constrainAs(text) {
-                                    top.linkTo(parent.top, 15.dp)
-                                    start.linkTo(parent.start, 100.dp)
-                                    end.linkTo(parent.end, 100.dp)
-                                }
+            Column (horizontalAlignment = Alignment.CenterHorizontally,){
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(15.dp))
 
-                        )
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.tertiary)
 
-
-
-
-
-
-
-            }
-
-
-
-
-
-
-
-
-
-
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(15.dp))
-            items.forEach { item ->
-                NavigationDrawerItem(
-                    icon = { Icon(item, contentDescription = null) },
-                    label = { Text("Settings") },
-                    selected = item == selectedItem.value,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        selectedItem.value = item
-                        navController.navigate("settingsScreen") {
-                        }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(15.dp))
+
+                Text(text = "Azubal")
+                Text(text = "valentinfamery087@gmail.com")
+
+
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp))
+
+
+
+
+
+                items.forEach { item ->
+                    NavigationDrawerItem(
+                        icon = { Icon(item, contentDescription = null) },
+                        label = { Text("Settings") },
+                        selected = item == selectedItem.value,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            selectedItem.value = item
+                            navController.navigate("settingsScreen") {
+                            }
+                        },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
+                }
             }
         },
         content = {
