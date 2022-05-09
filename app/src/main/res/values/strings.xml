@@ -3,4 +3,5 @@
     <string name="textViewMainBase">\"Le premier bien immobilier enregistré vaut \"</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_new_real_estate">NewRealEstateActivity</string>
+    <string name="title_activity_real_estate_detail">RealEstateDetail</string>
 </resources>

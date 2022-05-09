@@ -4,18 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
+
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -71,10 +79,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 fun MainScreen(navController: NavController) {
-
-
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -115,11 +122,7 @@ fun MainScreen(navController: NavController) {
                 Spacer(modifier = Modifier
                     .fillMaxWidth()
                     .height(20.dp))
-
-
-
-
-
+                
                 items.forEach { item ->
                     NavigationDrawerItem(
                         icon = { Icon(item, contentDescription = null) },
@@ -134,7 +137,14 @@ fun MainScreen(navController: NavController) {
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
                 }
+                
             }
+            ConstraintLayout() {
+
+
+            }
+            
+            
         },
         content = {
              Scaffold(
@@ -163,10 +173,65 @@ fun MainScreen(navController: NavController) {
                },
 
                 content = {
+                    val context = LocalContext.current
+
                     Column(
 
                     ) {
-                        Text(text = "bbbbbbbbbb")
+                        LazyColumn {
+                            // Add a single item
+                            item {
+
+                                Card(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                                        .fillMaxWidth(),
+                                    shape = RoundedCornerShape(corner = CornerSize(16.dp))
+                                ) {
+                                    Row (Modifier.clickable {
+                                        val intent = Intent(context, RealEstateDetail::class.java)
+                                        context.startActivity(intent)
+
+                                    }){
+                                        RowImage()
+                                        Column(
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                                .fillMaxWidth()
+                                                .align(Alignment.CenterVertically)
+                                        ) {
+                                            Text(text = "VIEW DETAIL", style = typography.headlineLarge)
+                                            Text(text = "VIEW DETAIL", style = typography.headlineSmall)
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Add another single item
+                            item {
+                                Card(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                                        .fillMaxWidth(),
+                                    shape = RoundedCornerShape(corner = CornerSize(16.dp))
+                                ) {
+                                    Row {
+                                        RowImage()
+                                        Column(
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                                .fillMaxWidth()
+                                                .align(Alignment.CenterVertically)
+                                        ) {
+                                            Text(text = "VIEW DETAIL", style = typography.headlineLarge)
+                                            Text(text = "VIEW DETAIL", style = typography.headlineSmall)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
                     }
 
                           },
@@ -242,6 +307,21 @@ fun SettingsScreen(navController: NavController) {
 
 
 
+
+}
+
+
+
+@Composable
+private fun RowImage() {
+    Box(
+        modifier = Modifier
+            .padding(8.dp)
+            .size(84.dp)
+            .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+            .background(MaterialTheme.colorScheme.tertiary)
+
+    )
 }
 
 
