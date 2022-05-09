@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.jetnews.utils
+package com.openclassrooms.realestatemanager
 
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
