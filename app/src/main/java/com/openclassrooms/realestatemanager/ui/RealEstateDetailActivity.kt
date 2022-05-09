@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -38,7 +38,7 @@ class RealEstateDetail : ComponentActivity() {
 @Composable
 fun Greeting2() {
     LazyVerticalGrid(
-        cells = GridCells.Adaptive(minSize = 150.dp)
+        columns = GridCells.Adaptive(minSize = 150.dp)
     ) {
         item {
             Card(
