@@ -146,37 +146,43 @@ fun MainScreen(navController: NavController) {
         },
         content = {
              Scaffold(
-                topBar = {
-                    CenterAlignedTopAppBar(
-                        title = {
-                            Text(text = "Real Estate Manager")
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                scope.launch { drawerState.open() }
-                            }) {
-                                Icon(Icons.Filled.Menu,"")
-                            }
-                        },
-                        actions = {
-                            IconButton(onClick = { /*TODO*/ }) {
-                                //Icon(Icons.Filled.Search, contentDescription = "Localized description")
-                            }
-                        },
-                    )
-
-
-
-
-               },
-
                 content = {
                     val context = LocalContext.current
 
-                    Column(
+                    ConstraintLayout() {
 
-                    ) {
-                        LazyColumn {
+                        val (centerAlignedTopAppBar,lazyColumn) = createRefs()
+
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(text = "Real Estate Manager")
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = {
+                                    scope.launch { drawerState.open() }
+                                }) {
+                                    Icon(Icons.Filled.Menu,"")
+                                }
+                            },
+                            actions = {
+                                IconButton(onClick = { /*TODO*/ }) {
+                                    //Icon(Icons.Filled.Search, contentDescription = "Localized description")
+                                }
+                            },
+                            modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                                top.linkTo(parent.top, margin = 0.dp)
+                                start.linkTo(parent.start, margin = 0.dp)
+                                end.linkTo(parent.end, margin = 0.dp)
+                            }
+                        )
+
+                        LazyColumn(
+                            modifier = Modifier.constrainAs(lazyColumn) {
+                                top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
+                                start.linkTo(parent.start, margin = 50.dp)
+                                end.linkTo(parent.end, margin = 50.dp)
+                            }
+                        ) {
                             // Add a single item
                             item {
 
@@ -229,9 +235,7 @@ fun MainScreen(navController: NavController) {
                             }
                         }
 
-
                     }
-
                           },
 
 
@@ -261,30 +265,44 @@ fun SettingsScreen(navController: NavController) {
     Scaffold(
 
 
-        topBar = {
-            CenterAlignedTopAppBar(
 
-                title = {
-                    Text(text = "Settings")
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigate("mainScreen") {
-
-                        }
-                    }) {
-                        Icon(Icons.Filled.ArrowBack, "")
-                   }
-                },
-
-            )
-
-
-       },
 
 
         content = {
-                  Text(text = "aaaaaa")
+
+
+            ConstraintLayout() {
+                val (centerAlignedTopAppBar,text) = createRefs()
+
+                CenterAlignedTopAppBar(
+
+                    title = {
+                        Text(text = "Settings")
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            navController.navigate("mainScreen") {
+
+                            }
+                        }) {
+                            Icon(Icons.Filled.ArrowBack, "")
+                        }
+                    },
+                    modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                        top.linkTo(parent.top, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }
+
+                    )
+
+                Text(text = "aaaaaa",modifier = Modifier.constrainAs(text) {
+                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                })
+            }
+
 
         },
         floatingActionButton = {

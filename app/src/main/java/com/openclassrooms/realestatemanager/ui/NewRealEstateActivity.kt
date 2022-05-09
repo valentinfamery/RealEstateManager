@@ -43,6 +43,8 @@ class NewRealEstateActivity : ComponentActivity() {
 @Composable
 fun Greeting() {
 
+
+
     Scaffold (
         content = {
 
@@ -50,7 +52,28 @@ fun Greeting() {
 
                 ConstraintLayout() {
                     // Create references for the composables to constrain
-                    val (textField1,textField2,textField3,numberPicker) = createRefs()
+
+                    val (textField1,textField2,textField3,numberPicker,centerAlignedTopAppBar) = createRefs()
+
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(text = "New Estate Manager")
+                        },
+                        navigationIcon = {
+                            val activity = (LocalContext.current as? Activity)
+                            IconButton(onClick = {
+                                activity?.finish()
+                            }) {
+                                Icon(Icons.Filled.ArrowBack,"")
+                            }
+                        },
+                        modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                            top.linkTo(parent.top, margin = 0.dp)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
+                        }
+
+                        )
 
                     TextField(
                         value = text,
@@ -58,7 +81,7 @@ fun Greeting() {
                         label = { Text("Type") },
                         singleLine = true,
                         modifier = Modifier.constrainAs(textField1) {
-                            top.linkTo(parent.top, margin = 25.dp)
+                            top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
                         }
@@ -117,22 +140,7 @@ fun Greeting() {
 
 
         },
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = "New Estate Manager")
-                },
-                navigationIcon = {
-                    val activity = (LocalContext.current as? Activity)
-                    IconButton(onClick = {
-                        activity?.finish()
-                    }) {
-                        Icon(Icons.Filled.ArrowBack,"")
-                    }
-                },
 
-            )
-        }
             )
 }
 
