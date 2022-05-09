@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.widget.NumberPicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,10 +51,12 @@ fun Greeting() {
 
                 var text by rememberSaveable { mutableStateOf("") }
 
-                ConstraintLayout() {
+                ConstraintLayout(modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxHeight()
+
+                ) {
                     // Create references for the composables to constrain
 
-                    val (textField1,textField2,textField3,numberPicker,centerAlignedTopAppBar) = createRefs()
+                    val (textField1,textField2,textField3,numberPicker,numberPicker2 , numberPicker3,numberPicker4,centerAlignedTopAppBar,confirmAddButton) = createRefs()
 
                     CenterAlignedTopAppBar(
                         title = {
@@ -126,6 +129,65 @@ fun Greeting() {
                             }
                         }
                     )
+
+                    AndroidView(
+                        modifier = Modifier.constrainAs(numberPicker2){
+                            top.linkTo(numberPicker.bottom, margin = 25.dp)
+                            start.linkTo(parent.start, margin = 50.dp)
+                            end.linkTo(parent.end, margin = 50.dp)
+                        },
+                        factory = { context ->
+                            NumberPicker(context).apply {
+                                setOnValueChangedListener { numberPicker, i, i2 ->  }
+                                minValue = 0
+                                maxValue = 10
+                            }
+                        }
+                    )
+
+                    AndroidView(
+                        modifier = Modifier.constrainAs(numberPicker3){
+                            top.linkTo(numberPicker2.bottom, margin = 25.dp)
+                            start.linkTo(parent.start, margin = 50.dp)
+                            end.linkTo(parent.end, margin = 50.dp)
+                        },
+                        factory = { context ->
+                            NumberPicker(context).apply {
+                                setOnValueChangedListener { numberPicker, i, i2 ->  }
+                                minValue = 0
+                                maxValue = 10
+                            }
+                        }
+                    )
+
+                    AndroidView(
+                        modifier = Modifier.constrainAs(numberPicker4){
+                            top.linkTo(numberPicker3.bottom, margin = 25.dp)
+                            start.linkTo(parent.start, margin = 50.dp)
+                            end.linkTo(parent.end, margin = 50.dp)
+                        },
+                        factory = { context ->
+                            NumberPicker(context).apply {
+                                setOnValueChangedListener { numberPicker, i, i2 ->  }
+                                minValue = 0
+                                maxValue = 10
+                            }
+                        }
+                    )
+
+                    Button(
+                        onClick = { /* Do something! */ },
+                        modifier = Modifier.constrainAs(confirmAddButton) {
+                            top.linkTo(numberPicker4.bottom, margin = 25.dp)
+                            bottom.linkTo(parent.bottom, margin = 25.dp)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
+                        },
+                    ) {
+                        Text("Confirm")
+                    }
+
+
 
                 }
 
