@@ -96,31 +96,33 @@ fun MainScreen(navController: NavController) {
         drawerState = drawerState,
         drawerContent = {
 
-
-            Column (horizontalAlignment = Alignment.CenterHorizontally,){
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(15.dp))
+            ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
+                val (userProfilePicture,username,userEmail,drawerItems,buttonLogout) = createRefs()
 
                 Box(
                     modifier = Modifier
                         .size(100.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.tertiary)
-
+                        .constrainAs(userProfilePicture) {
+                            top.linkTo(parent.top, margin = 15.dp)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
+                        }
                 )
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(15.dp))
-
-                Text(text = "Azubal")
-                Text(text = "valentinfamery087@gmail.com")
 
 
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp))
-                
+                Text(text = "Azubal",modifier = Modifier.constrainAs(username) {
+                    top.linkTo(userProfilePicture.bottom, margin = 15.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                })
+                Text(text = "valentinfamery087@gmail.com",modifier = Modifier.constrainAs(userEmail) {
+                    top.linkTo(username.bottom, margin = 5.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                })
+
                 items.forEach { item ->
                     NavigationDrawerItem(
                         icon = { Icon(item, contentDescription = null) },
@@ -132,17 +134,36 @@ fun MainScreen(navController: NavController) {
                             navController.navigate("settingsScreen") {
                             }
                         },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        modifier = Modifier
+                            .padding(
+                                NavigationDrawerItemDefaults.ItemPadding
+
+                            )
+                            .constrainAs(drawerItems) {
+                                top.linkTo(userEmail.bottom, margin = 15.dp)
+                            }
                     )
                 }
-                
-            }
-            ConstraintLayout() {
 
+                Button(
+                    onClick = { /* Do something! */ },
+                    modifier = Modifier.constrainAs(buttonLogout) {
+                    bottom.linkTo(parent.bottom, margin = 20.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                },
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Localized description",
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("Logout")
+                }
 
             }
-            
-            
+
         },
         content = {
              Scaffold(
