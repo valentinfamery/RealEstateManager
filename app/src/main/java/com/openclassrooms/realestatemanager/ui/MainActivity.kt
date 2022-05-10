@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,39 +42,65 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
 
+    private val userViewModel: UserViewModel by viewModels()
+    private var isCurrentUserLoggedIn : Boolean = false
 
-
-
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        userViewModel.isCurrentUserLoggedIn.observe(this) { t: Boolean? ->
+            if (t != null) {
+                isCurrentUserLoggedIn = t
+            }else {
+                finish();
+            }
+        }
+
         setContent {
             Projet_9_OC_RealEstateManagerTheme(
             ) {
-
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "mainScreen") {
-                    composable("mainScreen") { MainScreen(navController = navController) }
-                    composable("settingsScreen") { SettingsScreen(navController = navController) }
+                if(isCurrentUserLoggedIn == true){
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "mainScreen") {
+                        composable("mainScreen") { MainScreen(navController = navController) }
+                        composable("settingsScreen") { SettingsScreen(navController = navController) }
+                    }
+                }else if (isCurrentUserLoggedIn == false){
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "loginScreen") {
+                        composable("mainScreen") { MainScreen(navController = navController) }
+                        composable("settingsScreen") { SettingsScreen(navController = navController) }
+                        composable("loginScreen") { LoginScreen(navController = navController) }
+                        composable("registerScreen") { RegisterScreen(navController = navController) }
+                        composable("signInScreen") { SignInScreen(navController = navController) }
+                    }
                 }
-
-                // A surface container using the 'background' color from the theme
-
             }
         }
     }
+
+
+
 }
 
 @Composable
@@ -187,7 +214,7 @@ fun MainScreen(navController: NavController) {
                             },
                             actions = {
                                 IconButton(onClick = { /*TODO*/ }) {
-                                    //Icon(Icons.Filled.Search, contentDescription = "Localized description")
+                                    Icon(Icons.Filled.Search, contentDescription = "Localized description")
                                 }
                             },
                             modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
@@ -359,6 +386,125 @@ private fun RowImage() {
             .background(MaterialTheme.colorScheme.tertiary)
 
     )
+}
+
+@Composable
+private fun LoginScreen(navController : NavController){
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (image,buttonRegister,buttonSignIn) = createRefs()
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "",
+            modifier = Modifier.constrainAs(image){
+                top.linkTo(parent.top, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+        )
+
+        Button(
+            onClick = { navController.navigate("registerScreen")/* Do something! */ },
+            modifier = Modifier.constrainAs(buttonRegister) {
+                top.linkTo(image.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            },
+        ) {
+            Text("Register")
+        }
+
+        Button(
+            onClick = { navController.navigate("signInScreen")/* Do something! */ },
+            modifier = Modifier.constrainAs(buttonSignIn) {
+                top.linkTo(buttonRegister.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            },
+        ) {
+            Text("SignIn")
+        }
+
+
+    }
+}
+
+@Composable
+private fun RegisterScreen(navController : NavController){
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (image,centerAlignedTopAppBar) = createRefs()
+
+        CenterAlignedTopAppBar(
+
+            title = {
+                Text(text = "Register")
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    navController.navigate("loginScreen") {
+
+                    }
+                }) {
+                    Icon(Icons.Filled.ArrowBack, "")
+                }
+            },
+            modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                top.linkTo(parent.top, margin = 0.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "",
+            modifier = Modifier.constrainAs(image){
+                top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+        )
+    }
+}
+
+@Composable
+private fun SignInScreen(navController : NavController){
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (image,centerAlignedTopAppBar) = createRefs()
+
+        CenterAlignedTopAppBar(
+
+            title = {
+                Text(text = "SignIn")
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    navController.navigate("loginScreen") {
+
+                    }
+                }) {
+                    Icon(Icons.Filled.ArrowBack, "")
+                }
+            },
+            modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                top.linkTo(parent.top, margin = 0.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "",
+            modifier = Modifier.constrainAs(image){
+                top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+        )
+    }
 }
 
 
