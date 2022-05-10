@@ -335,9 +335,7 @@ fun SettingsScreen(navController: NavController) {
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-                            navController.navigate("mainScreen") {
-
-                            }
+                            navController.popBackStack()
                         }) {
                             Icon(Icons.Filled.ArrowBack, "")
                         }
