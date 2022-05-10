@@ -93,10 +93,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }else if (isCurrentUserLoggedIn == false){
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "loginScreen") {
+                    NavHost(navController = navController, startDestination = "signInScreen") {
                         composable("mainScreen") { MainScreen(navController = navController) }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
-                        composable("loginScreen") { LoginScreen(navController = navController) }
                         composable("registerScreen") { RegisterScreen(navController = navController) }
                         composable("signInScreen") { SignInScreen(navController = navController) }
                     }
@@ -392,46 +391,7 @@ private fun RowImage() {
     )
 }
 
-@Composable
-private fun LoginScreen(navController : NavController){
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (image,buttonRegister,buttonSignIn) = createRefs()
 
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "",
-            modifier = Modifier.constrainAs(image){
-                top.linkTo(parent.top, margin = 25.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            }
-        )
-
-        Button(
-            onClick = { navController.navigate("registerScreen")/* Do something! */ },
-            modifier = Modifier.constrainAs(buttonRegister) {
-                top.linkTo(image.bottom, margin = 25.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            },
-        ) {
-            Text("Register")
-        }
-
-        Button(
-            onClick = { navController.navigate("signInScreen")/* Do something! */ },
-            modifier = Modifier.constrainAs(buttonSignIn) {
-                top.linkTo(buttonRegister.bottom, margin = 25.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            },
-        ) {
-            Text("SignIn")
-        }
-
-
-    }
-}
 
 @Composable
 private fun RegisterScreen(navController : NavController){
@@ -529,33 +489,13 @@ private fun RegisterScreen(navController : NavController){
 @Composable
 private fun SignInScreen(navController : NavController){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (image,centerAlignedTopAppBar,textFieldEmail,textFieldPassword,buttonConfirmSignIn) = createRefs()
-
-        CenterAlignedTopAppBar(
-
-            title = {
-                Text(text = "SignIn")
-            },
-            navigationIcon = {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(Icons.Filled.ArrowBack, "")
-                }
-            },
-            modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
-                top.linkTo(parent.top, margin = 0.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            }
-
-        )
+        val (image,textFieldEmail,textFieldPassword,buttonConfirmSignIn,buttonRegister) = createRefs()
 
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "",
             modifier = Modifier.constrainAs(image){
-                top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
+                top.linkTo(parent.top, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
             }
@@ -589,6 +529,17 @@ private fun SignInScreen(navController : NavController){
             }
 
         )
+
+        Button(
+            onClick = { navController.navigate("registerScreen")/* Do something! */ },
+            modifier = Modifier.constrainAs(buttonRegister) {
+                top.linkTo(textFieldPassword.bottom, margin = 50.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            },
+        ) {
+            Text("Register")
+        }
 
         Button(
             onClick = {
