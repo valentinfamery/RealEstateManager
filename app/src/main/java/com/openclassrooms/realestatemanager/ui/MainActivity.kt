@@ -22,12 +22,10 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +49,8 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.openclassrooms.realestatemanager.R
 
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
@@ -63,10 +63,14 @@ class MainActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels()
     private var isCurrentUserLoggedIn : Boolean = false
 
+    private lateinit var auth: FirebaseAuth
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+
 
         userViewModel.isCurrentUserLoggedIn.observe(this) { t: Boolean? ->
             if (t != null) {
@@ -75,6 +79,8 @@ class MainActivity : ComponentActivity() {
                 finish();
             }
         }
+
+        auth = Firebase.auth
 
         setContent {
             Projet_9_OC_RealEstateManagerTheme(
@@ -432,7 +438,7 @@ private fun LoginScreen(navController : NavController){
 @Composable
 private fun RegisterScreen(navController : NavController){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (image,centerAlignedTopAppBar) = createRefs()
+        val (image,centerAlignedTopAppBar,textFieldEmail,textFieldUsername,textFieldPassword,buttonConfirmRegister) = createRefs()
 
         CenterAlignedTopAppBar(
 
@@ -441,9 +447,7 @@ private fun RegisterScreen(navController : NavController){
             },
             navigationIcon = {
                 IconButton(onClick = {
-                    navController.navigate("loginScreen") {
-
-                    }
+                    navController.popBackStack()
                 }) {
                     Icon(Icons.Filled.ArrowBack, "")
                 }
@@ -465,13 +469,69 @@ private fun RegisterScreen(navController : NavController){
                 end.linkTo(parent.end, margin = 0.dp)
             }
         )
+
+        var textEmail by rememberSaveable { mutableStateOf("") }
+        var textUsername by rememberSaveable { mutableStateOf("") }
+        var textPassword by rememberSaveable { mutableStateOf("") }
+
+        TextField(
+            value = textEmail,
+            onValueChange = { textEmail = it },
+            label = { Text("Email") },
+            singleLine = true,
+            modifier = Modifier.constrainAs(textFieldEmail) {
+                top.linkTo(image.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+
+        )
+
+        TextField(
+            value = textUsername,
+            onValueChange = { textUsername = it },
+            label = { Text("Username") },
+            singleLine = true,
+            modifier = Modifier.constrainAs(textFieldUsername) {
+                top.linkTo(textFieldEmail.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+
+        )
+
+        TextField(
+            value = textPassword,
+            onValueChange = { textPassword = it },
+            label = { Text("Password") },
+            singleLine = true,
+            modifier = Modifier.constrainAs(textFieldPassword) {
+                top.linkTo(textFieldUsername.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+
+        )
+
+        Button(
+            onClick = {
+                navController.navigate("mainScreen")/* Do something! */ },
+            modifier = Modifier.constrainAs(buttonConfirmRegister) {
+                bottom.linkTo(parent.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            },
+        ) {
+            Text("Confirm Register")
+        }
+
     }
 }
 
 @Composable
 private fun SignInScreen(navController : NavController){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (image,centerAlignedTopAppBar) = createRefs()
+        val (image,centerAlignedTopAppBar,textFieldEmail,textFieldPassword,buttonConfirmSignIn) = createRefs()
 
         CenterAlignedTopAppBar(
 
@@ -480,9 +540,7 @@ private fun SignInScreen(navController : NavController){
             },
             navigationIcon = {
                 IconButton(onClick = {
-                    navController.navigate("loginScreen") {
-
-                    }
+                    navController.popBackStack()
                 }) {
                     Icon(Icons.Filled.ArrowBack, "")
                 }
@@ -504,6 +562,48 @@ private fun SignInScreen(navController : NavController){
                 end.linkTo(parent.end, margin = 0.dp)
             }
         )
+
+        var textEmail by rememberSaveable { mutableStateOf("") }
+        var textPassword by rememberSaveable { mutableStateOf("") }
+
+        TextField(
+            value = textEmail,
+            onValueChange = { textEmail = it },
+            label = { Text("Email") },
+            singleLine = true,
+            modifier = Modifier.constrainAs(textFieldEmail) {
+                top.linkTo(image.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+
+        )
+
+        TextField(
+            value = textPassword,
+            onValueChange = { textPassword = it },
+            label = { Text("Password") },
+            singleLine = true,
+            modifier = Modifier.constrainAs(textFieldPassword) {
+                top.linkTo(textFieldEmail.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            }
+
+        )
+
+        Button(
+            onClick = {
+                navController.navigate("mainScreen")/* Do something! */ },
+            modifier = Modifier.constrainAs(buttonConfirmSignIn) {
+                bottom.linkTo(parent.bottom, margin = 25.dp)
+                start.linkTo(parent.start, margin = 0.dp)
+                end.linkTo(parent.end, margin = 0.dp)
+            },
+        ) {
+            Text("Confirm SignIn")
+        }
+
     }
 }
 
