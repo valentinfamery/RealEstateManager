@@ -179,7 +179,7 @@ fun MainScreen(navController: NavController) {
                 }
 
                 Button(
-                    onClick = { /* Do something! */ },
+                    onClick = { navController.navigate("signInScreen") },
                     modifier = Modifier.constrainAs(buttonLogout) {
                     bottom.linkTo(parent.bottom, margin = 20.dp)
                     start.linkTo(parent.start, margin = 0.dp)
