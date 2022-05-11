@@ -1,7 +1,10 @@
 package com.openclassrooms.realestatemanager.ui
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,9 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 
@@ -29,31 +29,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.openclassrooms.realestatemanager.R
 
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -69,7 +62,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-
 
 
         userViewModel.isCurrentUserLoggedIn.observe(this) { t: Boolean? ->
@@ -96,8 +88,8 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "signInScreen") {
                         composable("mainScreen") { MainScreen(navController = navController) }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
-                        composable("registerScreen") { RegisterScreen(navController = navController) }
-                        composable("signInScreen") { SignInScreen(navController = navController) }
+                        composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
+                        composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
                     }
                 }
             }
@@ -394,7 +386,7 @@ private fun RowImage() {
 
 
 @Composable
-private fun RegisterScreen(navController : NavController){
+private fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (image,centerAlignedTopAppBar,textFieldEmail,textFieldUsername,textFieldPassword,buttonConfirmRegister) = createRefs()
 
@@ -471,9 +463,43 @@ private fun RegisterScreen(navController : NavController){
 
         )
 
+        val context = LocalContext.current
+
         Button(
+
             onClick = {
-                navController.navigate("mainScreen")/* Do something! */ },
+
+                userViewModel.createUser(textUsername,textEmail,textPassword).observeForever {
+                    when (it) {
+                        is Resource.Loading -> {
+                        }
+                        is Resource.Success -> {
+                            userViewModel.signInUser(textEmail,textPassword).observeForever {
+                                when (it) {
+                                    is Resource.Loading -> {
+                                    }
+                                    is Resource.Success -> {
+                                        navController.navigate("mainScreen")
+
+                                        Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                    is Resource.Error -> {
+                                        Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+
+                navController.navigate("mainScreen")/* Do something! */
+
+                      },
             modifier = Modifier.constrainAs(buttonConfirmRegister) {
                 bottom.linkTo(parent.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
@@ -487,7 +513,11 @@ private fun RegisterScreen(navController : NavController){
 }
 
 @Composable
-private fun SignInScreen(navController : NavController){
+private fun SignInScreen(
+    navController: NavController,
+    userViewModel: UserViewModel
+
+){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (image,textFieldEmail,textFieldPassword,buttonConfirmSignIn,buttonRegister) = createRefs()
 
@@ -541,9 +571,32 @@ private fun SignInScreen(navController : NavController){
             Text("Register")
         }
 
+
+        val context = LocalContext.current
+
         Button(
             onClick = {
-                navController.navigate("mainScreen")/* Do something! */ },
+
+                userViewModel.signInUser(textEmail,textPassword).observeForever {
+                    when (it) {
+                        is Resource.Loading -> {
+                        }
+                        is Resource.Success -> {
+                            navController.navigate("mainScreen")
+
+                            Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            },
+
+
+
+
             modifier = Modifier.constrainAs(buttonConfirmSignIn) {
                 bottom.linkTo(parent.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
@@ -555,6 +608,10 @@ private fun SignInScreen(navController : NavController){
 
     }
 }
+
+
+
+
 
 
 

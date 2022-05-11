@@ -4,16 +4,26 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.openclassrooms.realestatemanager.models.User
+import com.openclassrooms.realestatemanager.utils.Resource
+import com.openclassrooms.realestatemanager.utils.safeCall
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class UserRepository {
     var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     var authUI: AuthUI = AuthUI.getInstance()
+
+
     val isCurrentUserLoggedIn: MutableLiveData<Boolean>
         get() {
             val result = MutableLiveData<Boolean>()
@@ -24,6 +34,26 @@ class UserRepository {
     fun signOut(context: Context?) {
         authUI.signOut(context!!)
     }
+
+    suspend fun createUser(userName: String, userEmailAddress: String, userLoginPassword: String): Resource<AuthResult> {
+        return withContext(Dispatchers.IO) {
+            safeCall {
+                val registrationResult = firebaseAuth.createUserWithEmailAndPassword(userEmailAddress, userLoginPassword).await()
+                Resource.Success(registrationResult)
+            }
+        }
+    }
+
+    suspend fun login(email: String, password: String): Resource<AuthResult> {
+        return withContext(Dispatchers.IO) {
+            safeCall {
+                val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+                Resource.Success(result)
+            }
+        }
+    }
+
+
 
     fun deleteUser(context: Context?) {
         val uid = firebaseAuth.uid
