@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.openclassrooms.realestatemanager
+package com.openclassrooms.realestatemanager.utils
 
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
