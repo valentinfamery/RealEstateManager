@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.ui
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -34,9 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -54,7 +50,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
-    private var isCurrentUserLoggedIn : Boolean = false
+
 
     private lateinit var auth: FirebaseAuth
 
@@ -63,30 +59,27 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-
-        userViewModel.isCurrentUserLoggedIn.observe(this) { t: Boolean? ->
-            if (t != null) {
-                isCurrentUserLoggedIn = t
-            }else {
-                finish();
-            }
-        }
-
         auth = Firebase.auth
 
         setContent {
             Projet_9_OC_RealEstateManagerTheme(
             ) {
-                if(isCurrentUserLoggedIn == true){
+                val currentUser = auth.currentUser
+                if(currentUser != null){
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "mainScreen") {
-                        composable("mainScreen") { MainScreen(navController = navController) }
+                        composable("mainScreen") { MainScreen(
+                            navController = navController,
+                            auth = auth
+                        ) }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
+                        composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
+                        composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
                     }
-                }else if (isCurrentUserLoggedIn == false){
+                }else{
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "signInScreen") {
-                        composable("mainScreen") { MainScreen(navController = navController) }
+                        composable("mainScreen") { MainScreen(navController = navController,auth) }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
                         composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
                         composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
@@ -103,7 +96,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavController, auth: FirebaseAuth) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -169,8 +162,14 @@ fun MainScreen(navController: NavController) {
                     )
                 }
 
+
+
                 Button(
-                    onClick = { navController.navigate("signInScreen") },
+                    onClick = {
+
+                        auth.signOut()
+                        navController.navigate("signInScreen")
+                              },
                     modifier = Modifier.constrainAs(buttonLogout) {
                     bottom.linkTo(parent.bottom, margin = 20.dp)
                     start.linkTo(parent.start, margin = 0.dp)
@@ -584,7 +583,7 @@ private fun SignInScreen(
                         is Resource.Success -> {
                             navController.navigate("mainScreen")
 
-                            Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, "SignIn Successfully", Toast.LENGTH_SHORT)
                                 .show()
                         }
                         is Resource.Error -> {
