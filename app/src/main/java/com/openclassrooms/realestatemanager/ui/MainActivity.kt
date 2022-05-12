@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                 if(currentUser != null){
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "mainScreen") {
-                        composable("mainScreen") { MainScreen(navController = navController, auth = auth) }
+                        composable("mainScreen") { MainScreen(navControllerDrawer = navController, auth = auth) }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
                         composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
                         composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                 }else{
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "signInScreen") {
-                        composable("mainScreen") { MainScreen(navController = navController,auth) }
+                        composable("mainScreen") { MainScreen(navControllerDrawer = navController,auth) }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
                         composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
                         composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
