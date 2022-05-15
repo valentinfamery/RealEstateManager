@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
 android {
     compileSdkVersion 32
@@ -78,6 +79,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation('androidx.lifecycle:lifecycle-livedata-ktx:2.4.1')
+
+    implementation  "com.google.maps.android:maps-compose:2.1.1"
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 
 
 
