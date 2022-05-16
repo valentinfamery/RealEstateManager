@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -16,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.utils.Resource
@@ -23,11 +25,17 @@ import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
+    var textEmail by rememberSaveable { mutableStateOf("") }
+    var textUsername by rememberSaveable { mutableStateOf("") }
+    var textPassword by rememberSaveable { mutableStateOf("") }
+    val createUserState by userViewModel.createUser(textUsername,textEmail,textPassword).observeAsState()
+
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (image,centerAlignedTopAppBar,textFieldEmail,textFieldUsername,textFieldPassword,buttonConfirmRegister) = createRefs()
+        val context = LocalContext.current
+
 
         CenterAlignedTopAppBar(
-
             title = {
                 Text(text = "Register")
             },
@@ -56,9 +64,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
             }
         )
 
-        var textEmail by rememberSaveable { mutableStateOf("") }
-        var textUsername by rememberSaveable { mutableStateOf("") }
-        var textPassword by rememberSaveable { mutableStateOf("") }
+
 
         TextField(
             value = textEmail,
@@ -99,14 +105,14 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
 
         )
 
-        val context = LocalContext.current
+
 
         Button(
 
             onClick = {
 
-                userViewModel.createUser(textUsername,textEmail,textPassword).observeForever {
-                    when (it) {
+                createUserState?.let {
+                    when(it){
                         is Resource.Loading -> {
                         }
                         is Resource.Success -> {

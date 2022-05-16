@@ -28,7 +28,7 @@ class UserViewModel : ViewModel {
     }
 
 
-    fun createUser(userName: String, userEmailAddress: String, userLoginPassword: String) : MutableLiveData<Resource<AuthResult>> {
+    fun createUser(userName: String, userEmailAddress: String, userLoginPassword: String) : LiveData<Resource<AuthResult>> {
 
         val _userRegistrationStatus = MutableLiveData<Resource<AuthResult>>()
 
