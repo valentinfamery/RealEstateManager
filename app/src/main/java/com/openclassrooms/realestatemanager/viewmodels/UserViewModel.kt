@@ -84,9 +84,7 @@ class UserViewModel : ViewModel {
         userRepository.deleteUser(context)
     }
 
-    fun createUser() {
-        userRepository.createUser()
-    }
+
 
 
 

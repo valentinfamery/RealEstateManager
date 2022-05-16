@@ -4,9 +4,7 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.AuthUI
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.DocumentSnapshot
@@ -39,6 +37,13 @@ class UserRepository {
         return withContext(Dispatchers.IO) {
             safeCall {
                 val registrationResult = firebaseAuth.createUserWithEmailAndPassword(userEmailAddress, userLoginPassword).await()
+                val user = firebaseAuth.currentUser
+                if (user != null) {
+                    val urlPicture = if (user.photoUrl != null) user.photoUrl.toString() else null
+                    val uid = user.uid
+                    val userToCreate = User(uid, userName, urlPicture, userEmailAddress)
+                    usersCollection.document(uid).set(userToCreate)
+                }
                 Resource.Success(registrationResult)
             }
         }
@@ -65,20 +70,9 @@ class UserRepository {
 
     // Get the Collection Reference
     private val usersCollection: CollectionReference
-        private get() = FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
+        get() = FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
 
-    // Create User in Firestore
-    fun createUser() {
-        val user = firebaseAuth.currentUser
-        if (user != null) {
-            val urlPicture = if (user.photoUrl != null) user.photoUrl.toString() else null
-            val username = user.displayName
-            val uid = user.uid
-            val email = user.email
-            val userToCreate = User(uid, username, urlPicture, email)
-            usersCollection.document(uid).set(userToCreate)
-        }
-    }
+
 
     val userData: MutableLiveData<User?>
         get() {
