@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -25,12 +27,14 @@ fun DrawerScreen(
     drawerState: DrawerState,
     scope: CoroutineScope,
     navController: NavController,
-    auth: FirebaseAuth
+    auth: FirebaseAuth,
+    userViewModel: UserViewModel
 ) {
     val items = listOf(Icons.Default.Settings)
     val selectedItem = remember { mutableStateOf(items[0]) }
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
         val (userProfilePicture,username,userEmail,drawerItems,buttonLogout) = createRefs()
+        val userDataState = userViewModel.userData.observeAsState()
 
         Box(
             modifier = Modifier
@@ -45,12 +49,12 @@ fun DrawerScreen(
         )
 
 
-        Text(text = "Azubal",modifier = Modifier.constrainAs(username) {
+        Text(text = userDataState.value?.username ?:"",modifier = Modifier.constrainAs(username) {
             top.linkTo(userProfilePicture.bottom, margin = 15.dp)
             start.linkTo(parent.start, margin = 0.dp)
             end.linkTo(parent.end, margin = 0.dp)
         })
-        Text(text = "valentinfamery087@gmail.com",modifier = Modifier.constrainAs(userEmail) {
+        Text(text = userDataState.value?.email ?:"",modifier = Modifier.constrainAs(userEmail) {
             top.linkTo(username.bottom, margin = 5.dp)
             start.linkTo(parent.start, margin = 0.dp)
             end.linkTo(parent.end, margin = 0.dp)

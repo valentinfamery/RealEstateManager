@@ -18,11 +18,12 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
+import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
-fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth) {
+fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewModel: UserViewModel) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
@@ -39,7 +40,7 @@ fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerScreen(drawerState,scope,navControllerDrawer,auth)
+            DrawerScreen(drawerState,scope,navControllerDrawer,auth,userViewModel)
         },
         content = {
             Scaffold(
