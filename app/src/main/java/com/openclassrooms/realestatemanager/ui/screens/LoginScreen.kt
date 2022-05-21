@@ -10,6 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -30,10 +31,11 @@ fun SignInScreen(
 
 ){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (entryEmail,entryPassword,buttonLogin,buttonRegister,textButtonRegister) = createRefs()
+        val (entryEmail,entryPassword,buttonLogin,buttonRegister,textButtonRegister,buttonResetPassword) = createRefs()
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
-
+        val resetPasswordState = userViewModel.sendPasswordResetEmail(email).observeAsState()
+        val context = LocalContext.current
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -77,8 +79,32 @@ fun SignInScreen(
             Text("REGISTER")
         }
 
+        TextButton(
+            onClick = {
+                resetPasswordState.value?.let {
+                    when (it) {
+                        is Resource.Loading -> {
+                        }
+                        is Resource.Error -> {
+                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            Toast.makeText(context, "Password reset email sent", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
 
-        val context = LocalContext.current
+            },
+            modifier = Modifier.constrainAs(buttonResetPassword) {
+                top.linkTo(entryPassword.bottom, margin = 0.dp)
+                end.linkTo(entryPassword.end, margin = 0.dp)
+            },
+        ) {
+            Text("Forgot password ?")
+        }
+
+
+
 
         Button(
             onClick = {

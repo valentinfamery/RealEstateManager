@@ -50,6 +50,17 @@ class UserRepository {
         }
     }
 
+    suspend fun sendPasswordResetEmail(email: String): Resource<Void> {
+        return withContext(Dispatchers.IO) {
+            safeCall {
+                val result = firebaseAuth.sendPasswordResetEmail(email).await()
+                Resource.Success(result)
+            }
+        }
+    }
+
+
+
     fun deleteUser(context: Context?) {
         val uid = firebaseAuth.uid
         if (uid != null) {

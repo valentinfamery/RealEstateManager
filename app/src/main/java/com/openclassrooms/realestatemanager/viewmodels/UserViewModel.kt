@@ -30,7 +30,7 @@ class UserViewModel : ViewModel {
 
         val error =
             if (userEmailAddress.isEmpty() || userName.isEmpty() || userLoginPassword.isEmpty() ) {
-                "Empty Strings"
+                "Please fill all the fields"
             } else if (!Patterns.EMAIL_ADDRESS.matcher(userEmailAddress).matches()) {
                 "Not a valid Email"
             } else null
@@ -51,7 +51,7 @@ class UserViewModel : ViewModel {
     fun loginUser(userEmailAddress: String, userLoginPassword: String) : MutableLiveData<Resource<AuthResult>>{
         val userSignUpStatus = MutableLiveData<Resource<AuthResult>>()
         if (userEmailAddress.isEmpty() || userLoginPassword.isEmpty()) {
-            userSignUpStatus.postValue(Resource.Error("Empty Strings"))
+            userSignUpStatus.postValue(Resource.Error("Please fill all the fields"))
         } else {
             userSignUpStatus.postValue(Resource.Loading())
             viewModelScope.launch(Dispatchers.Main) {
@@ -60,6 +60,20 @@ class UserViewModel : ViewModel {
             }
         }
         return userSignUpStatus
+    }
+
+    fun sendPasswordResetEmail(userEmailAddress: String) : MutableLiveData<Resource<Void>>{
+        val userPasswordResetStatus = MutableLiveData<Resource<Void>>()
+        if (userEmailAddress.isEmpty()) {
+            userPasswordResetStatus.postValue(Resource.Error("Please fill the email field"))
+        } else {
+            userPasswordResetStatus.postValue(Resource.Loading())
+            viewModelScope.launch(Dispatchers.Main) {
+                val sendPasswordResetEmailResult = userRepository.sendPasswordResetEmail(userEmailAddress)
+                userPasswordResetStatus.postValue(sendPasswordResetEmailResult)
+            }
+        }
+        return userPasswordResetStatus
     }
 
 
