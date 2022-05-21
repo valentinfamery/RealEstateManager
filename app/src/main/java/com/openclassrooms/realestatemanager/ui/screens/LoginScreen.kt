@@ -3,8 +3,10 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,28 +30,17 @@ fun SignInScreen(
 
 ){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (image,textFieldEmail,textFieldPassword,buttonConfirmSignIn,buttonRegister) = createRefs()
-
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "",
-            modifier = Modifier.constrainAs(image){
-                top.linkTo(parent.top, margin = 25.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            }
-        )
-
-        var textEmail by rememberSaveable { mutableStateOf("") }
-        var textPassword by rememberSaveable { mutableStateOf("") }
+        val (entryEmail,entryPassword,buttonLogin,buttonRegister,textButtonRegister) = createRefs()
+        var email by rememberSaveable { mutableStateOf("") }
+        var password by rememberSaveable { mutableStateOf("") }
 
         TextField(
-            value = textEmail,
-            onValueChange = { textEmail = it },
+            value = email,
+            onValueChange = { email = it },
             label = { Text("Email") },
             singleLine = true,
-            modifier = Modifier.constrainAs(textFieldEmail) {
-                top.linkTo(image.bottom, margin = 25.dp)
+            modifier = Modifier.constrainAs(entryEmail) {
+                top.linkTo(parent.top, margin = 250.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
             }
@@ -57,27 +48,33 @@ fun SignInScreen(
         )
 
         TextField(
-            value = textPassword,
-            onValueChange = { textPassword = it },
+            value = password,
+            onValueChange = { password = it },
             label = { Text("Password") },
             singleLine = true,
-            modifier = Modifier.constrainAs(textFieldPassword) {
-                top.linkTo(textFieldEmail.bottom, margin = 25.dp)
+            modifier = Modifier.constrainAs(entryPassword) {
+                top.linkTo(entryEmail.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
             }
 
         )
 
-        Button(
+        Text(text = "Don't have an account ?", modifier = Modifier.constrainAs(textButtonRegister) {
+            top.linkTo(buttonLogin.bottom, margin = 15.dp)
+            start.linkTo(parent.start, margin = 0.dp)
+            end.linkTo(parent.end, margin = 0.dp)
+        })
+
+        TextButton(
             onClick = { navController.navigate("registerScreen")/* Do something! */ },
             modifier = Modifier.constrainAs(buttonRegister) {
-                top.linkTo(textFieldPassword.bottom, margin = 50.dp)
+                top.linkTo(textButtonRegister.bottom, margin = 0.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
             },
         ) {
-            Text("Register")
+            Text("REGISTER")
         }
 
 
@@ -86,14 +83,14 @@ fun SignInScreen(
         Button(
             onClick = {
 
-                userViewModel.signInUser(textEmail,textPassword).observeForever {
+                userViewModel.loginUser(email,password).observeForever {
                     when (it) {
                         is Resource.Loading -> {
                         }
                         is Resource.Success -> {
                             navController.navigate("mainScreen")
 
-                            Toast.makeText(context, "SignIn Successfully", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT)
                                 .show()
                         }
                         is Resource.Error -> {
@@ -106,13 +103,15 @@ fun SignInScreen(
 
 
 
-            modifier = Modifier.constrainAs(buttonConfirmSignIn) {
-                bottom.linkTo(parent.bottom, margin = 25.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            },
+            modifier = Modifier
+                .size(width = 275.dp, height = 50.dp)
+                .constrainAs(buttonLogin) {
+                    top.linkTo(entryPassword.bottom, margin = 50.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                },
         ) {
-            Text("Confirm SignIn")
+            Text("Login")
         }
 
     }

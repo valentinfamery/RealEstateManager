@@ -10,10 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
 import com.openclassrooms.realestatemanager.models.User
 import com.openclassrooms.realestatemanager.utils.Resource
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class UserViewModel : ViewModel {
@@ -27,12 +24,11 @@ class UserViewModel : ViewModel {
         this.userRepository = userRepository
     }
 
+    fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) : LiveData<Resource<AuthResult>> {
 
-    fun createUser(userName: String, userEmailAddress: String, userLoginPassword: String) : LiveData<Resource<AuthResult>> {
+        val userRegistrationStatus = MutableLiveData<Resource<AuthResult>>()
 
-        val _userRegistrationStatus = MutableLiveData<Resource<AuthResult>>()
-
-        var error =
+        val error =
             if (userEmailAddress.isEmpty() || userName.isEmpty() || userLoginPassword.isEmpty() ) {
                 "Empty Strings"
             } else if (!Patterns.EMAIL_ADDRESS.matcher(userEmailAddress).matches()) {
@@ -40,59 +36,45 @@ class UserViewModel : ViewModel {
             } else null
 
         error?.let {
-            _userRegistrationStatus.postValue(Resource.Error(it))
-            return _userRegistrationStatus
+            userRegistrationStatus.postValue(Resource.Error(it))
+            return userRegistrationStatus
         }
-        _userRegistrationStatus.postValue(Resource.Loading())
+        userRegistrationStatus.postValue(Resource.Loading())
 
         viewModelScope.launch(Dispatchers.Main) {
-            val registerResult = userRepository.createUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword)
-            _userRegistrationStatus.postValue(registerResult)
-
-
+            val registerResult = userRepository.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword)
+            userRegistrationStatus.postValue(registerResult)
         }
-        return _userRegistrationStatus
+        return userRegistrationStatus
     }
 
-    fun signInUser(userEmailAddress: String, userLoginPassword: String) : MutableLiveData<Resource<AuthResult>>{
-
-        val _userSignUpStatus = MutableLiveData<Resource<AuthResult>>()
-
+    fun loginUser(userEmailAddress: String, userLoginPassword: String) : MutableLiveData<Resource<AuthResult>>{
+        val userSignUpStatus = MutableLiveData<Resource<AuthResult>>()
         if (userEmailAddress.isEmpty() || userLoginPassword.isEmpty()) {
-            _userSignUpStatus.postValue(Resource.Error("Empty Strings"))
+            userSignUpStatus.postValue(Resource.Error("Empty Strings"))
         } else {
-
-            _userSignUpStatus.postValue(Resource.Loading())
+            userSignUpStatus.postValue(Resource.Loading())
             viewModelScope.launch(Dispatchers.Main) {
-                val loginResult = userRepository.login(userEmailAddress, userLoginPassword)
-                _userSignUpStatus.postValue(loginResult)
+                val loginResult = userRepository.loginUser(userEmailAddress, userLoginPassword)
+                userSignUpStatus.postValue(loginResult)
             }
         }
-        return _userSignUpStatus
+        return userSignUpStatus
     }
 
 
-
-    val isCurrentUserLoggedIn: MutableLiveData<Boolean>
-        get() = userRepository.isCurrentUserLoggedIn
-
     fun signOut(context: Context?) {
-        userRepository.signOut(context)
+        userRepository.logout(context)
     }
 
     fun deleteUser(context: Context?) {
         userRepository.deleteUser(context)
     }
 
-
-
-
-
-
     val userData: MutableLiveData<User?>
         get() = userRepository.userData
-    val allUsers: MutableLiveData<List<User>>
-        get() = userRepository.allUsers
+    val getUsers: MutableLiveData<List<User>>
+        get() = userRepository.getUsers
 
     fun setUserName(userName: String?) {
         userRepository.setUsername(userName)

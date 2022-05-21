@@ -21,19 +21,11 @@ class UserRepository {
     var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     var authUI: AuthUI = AuthUI.getInstance()
 
-
-    val isCurrentUserLoggedIn: MutableLiveData<Boolean>
-        get() {
-            val result = MutableLiveData<Boolean>()
-            result.postValue(firebaseAuth.currentUser != null)
-            return result
-        }
-
-    fun signOut(context: Context?) {
+    fun logout(context: Context?) {
         authUI.signOut(context!!)
     }
 
-    suspend fun createUser(userName: String, userEmailAddress: String, userLoginPassword: String): Resource<AuthResult> {
+    suspend fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String): Resource<AuthResult> {
         return withContext(Dispatchers.IO) {
             safeCall {
                 val registrationResult = firebaseAuth.createUserWithEmailAndPassword(userEmailAddress, userLoginPassword).await()
@@ -49,7 +41,7 @@ class UserRepository {
         }
     }
 
-    suspend fun login(email: String, password: String): Resource<AuthResult> {
+    suspend fun loginUser(email: String, password: String): Resource<AuthResult> {
         return withContext(Dispatchers.IO) {
             safeCall {
                 val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
@@ -57,8 +49,6 @@ class UserRepository {
             }
         }
     }
-
-
 
     fun deleteUser(context: Context?) {
         val uid = firebaseAuth.uid
@@ -71,8 +61,6 @@ class UserRepository {
     // Get the Collection Reference
     private val usersCollection: CollectionReference
         get() = FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
-
-
 
     val userData: MutableLiveData<User?>
         get() {
@@ -90,7 +78,7 @@ class UserRepository {
         }
 
     // Remove the current element from the iterator and the list.
-    val allUsers: MutableLiveData<List<User>>
+    val getUsers: MutableLiveData<List<User>>
         get() {
             val result = MutableLiveData<List<User>>()
             usersCollection.get().addOnSuccessListener { queryDocumentSnapshots: QuerySnapshot ->
