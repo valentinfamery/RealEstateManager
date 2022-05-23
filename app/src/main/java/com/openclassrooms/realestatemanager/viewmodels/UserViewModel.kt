@@ -62,8 +62,8 @@ class UserViewModel : ViewModel {
         return userSignUpStatus
     }
 
-    fun sendPasswordResetEmail(userEmailAddress: String) : MutableLiveData<Resource<Void>>{
-        val userPasswordResetStatus = MutableLiveData<Resource<Void>>()
+    fun sendPasswordResetEmail(userEmailAddress: String) : MutableLiveData<Resource<Boolean>>{
+        val userPasswordResetStatus = MutableLiveData<Resource<Boolean>>()
         if (userEmailAddress.isEmpty()) {
             userPasswordResetStatus.postValue(Resource.Error("Please fill the email field"))
         } else {

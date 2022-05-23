@@ -28,6 +28,8 @@ class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
+    private lateinit var startScreen : String
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,17 +41,22 @@ class MainActivity : ComponentActivity() {
             ) {
                 val currentUser = auth.currentUser
 
+                if (currentUser == null) {
+                    startScreen = "signInScreen"
+                } else {
+                    startScreen = "mainScreen"
+                }
+
+
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "signInScreen") {
+                NavHost(navController = navController, startDestination = startScreen) {
                     composable("mainScreen") { MainScreen(navControllerDrawer = navController, auth = auth,userViewModel) }
                     composable("settingsScreen") { SettingsScreen(navController = navController) }
                     composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
                     composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
                 }
 
-                if(currentUser != null){
-                    navController.navigate("mainScreen")
-                }
+
             }
         }
     }
