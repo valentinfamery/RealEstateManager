@@ -85,8 +85,7 @@ class UserViewModel : ViewModel {
         userRepository.deleteUser(context)
     }
 
-    val userData: MutableLiveData<User?>
-        get() = userRepository.userData
+    val userData: MutableLiveData<User?> get() = userRepository.userData
     val getUsers: MutableLiveData<List<User>>
         get() = userRepository.getUsers
 

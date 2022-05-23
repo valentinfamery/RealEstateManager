@@ -73,20 +73,20 @@ class UserRepository {
     private val usersCollection: CollectionReference
         get() = FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
 
-    val userData: MutableLiveData<User?>
-        get() {
-            val user = firebaseAuth.currentUser
-            val uid = Objects.requireNonNull(user)!!.uid
-            val result = MutableLiveData<User?>()
-            val docRef = usersCollection.document(uid)
-            docRef.get().addOnSuccessListener { documentSnapshot: DocumentSnapshot ->
-                val user1 = documentSnapshot.toObject(
-                    User::class.java
-                )
-                result.postValue(user1)
+    val userData: MutableLiveData<User?> get() {
+        val user = firebaseAuth.currentUser
+        val uid = user?.uid
+        val result = MutableLiveData<User?>()
+
+        if (uid != null) {
+            usersCollection.document(uid).get().addOnSuccessListener { documentSnapshot ->
+                val user = documentSnapshot.toObject(User::class.java)
+                result.postValue(user)
             }
-            return result
         }
+
+        return result
+    }
 
     // Remove the current element from the iterator and the list.
     val getUsers: MutableLiveData<List<User>>

@@ -21,18 +21,12 @@ import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewModel: UserViewModel) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
-    val items = listOf(
-        Screen.ListScreen,
-        Screen.MapScreen,
-    )
-
-
+    val items = listOf(Screen.ListScreen, Screen.MapScreen,)
 
     val navController = rememberNavController()
     val context = LocalContext.current
