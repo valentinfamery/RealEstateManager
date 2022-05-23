@@ -38,26 +38,17 @@ class MainActivity : ComponentActivity() {
             Projet_9_OC_RealEstateManagerTheme(
             ) {
                 val currentUser = auth.currentUser
+
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = "signInScreen") {
+                    composable("mainScreen") { MainScreen(navControllerDrawer = navController, auth = auth,userViewModel) }
+                    composable("settingsScreen") { SettingsScreen(navController = navController) }
+                    composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
+                    composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
+                }
+
                 if(currentUser != null){
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "mainScreen") {
-                        composable("mainScreen") { MainScreen(navControllerDrawer = navController, auth = auth,userViewModel) }
-                        composable("settingsScreen") { SettingsScreen(navController = navController) }
-                        composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
-                        composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
-                    }
-                }else{
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = "signInScreen") {
-                        composable("mainScreen") { MainScreen(
-                            navControllerDrawer = navController,
-                            auth,
-                            userViewModel
-                        ) }
-                        composable("settingsScreen") { SettingsScreen(navController = navController) }
-                        composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
-                        composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
-                    }
+                    navController.navigate("mainScreen")
                 }
             }
         }
