@@ -25,17 +25,14 @@ import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
 @Composable
-fun SignInScreen(
-    navController: NavController,
-    userViewModel: UserViewModel
+fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    val resetPasswordState = userViewModel.sendPasswordResetEmail(email).observeAsState()
+    val context = LocalContext.current
 
-){
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (entryEmail,entryPassword,buttonLogin,buttonRegister,textButtonRegister,buttonResetPassword) = createRefs()
-        var email by rememberSaveable { mutableStateOf("") }
-        var password by rememberSaveable { mutableStateOf("") }
-        val resetPasswordState = userViewModel.sendPasswordResetEmail(email).observeAsState()
-        val context = LocalContext.current
         TextField(
             value = email,
             onValueChange = { email = it },
