@@ -25,7 +25,6 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val registerUserState by userViewModel.registerUser(username,email,password).observeAsState()
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (centerAlignedTopAppBar,entryEmail,entryUsername,entryPassword,buttonRegister) = createRefs()
@@ -91,7 +90,8 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
 
         Button(
             onClick = {
-                registerUserState?.let {
+
+                userViewModel.registerUser(email,username,password).observeForever{
                     when(it){
                         is Resource.Loading -> {
                         }
@@ -117,6 +117,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
                         }
                     }
                 }
+
             },
             modifier = Modifier.size(width = 275.dp, height = 50.dp).constrainAs(buttonRegister) {
                 top.linkTo(entryPassword.bottom, margin = 25.dp)

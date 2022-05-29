@@ -30,7 +30,6 @@ import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val resetPasswordState = userViewModel.sendPasswordResetEmail(email).observeAsState()
     val context = LocalContext.current
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().also {
@@ -84,7 +83,7 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
 
         TextButton(
             onClick = {
-                resetPasswordState.value?.let {
+                userViewModel.sendPasswordResetEmail(email).observeForever{
                     when (it) {
                         is Resource.Loading -> {
                         }
@@ -96,7 +95,6 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
                         }
                     }
                 }
-
             },
             modifier = Modifier.constrainAs(buttonResetPassword) {
                 top.linkTo(entryPassword.bottom, margin = 0.dp)
