@@ -91,7 +91,11 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
                             Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                         }
                         else -> {
-                            Toast.makeText(context, "Password reset email sent", Toast.LENGTH_SHORT).show()
+                            if(it.data == true){
+                                Toast.makeText(context, "Email sent", Toast.LENGTH_SHORT).show()
+                            }else{
+                                Toast.makeText(context, "Error email not sent", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
