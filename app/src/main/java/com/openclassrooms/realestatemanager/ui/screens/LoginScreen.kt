@@ -46,7 +46,6 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
             }
-
         )
 
         TextField(

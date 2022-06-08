@@ -4,6 +4,7 @@ import android.media.Image
 import java.util.*
 
 class RealEstate(
+    private var id: String? = null,
     private var type: String? = null,
     private var price: Int? = null,
     private var area: Int? = null,
@@ -12,10 +13,10 @@ class RealEstate(
     private var address: String? = null,
     private var pointsOfInterest: String? = null,
     private var status: String? = null,
-    private var dateOfEntry: Date? = null,
-    private var dateOfSale: Date? = null,
+    private var dateOfEntry: String? = null,
+    private var dateOfSale: String? = null,
     private var realEstateAgent: String? = null,
-    private var listPicture: Image? = null
+    private var listPicture: MutableList<String> ?= null
 ) {
     fun getType(): String? {
         return type
@@ -49,11 +50,11 @@ class RealEstate(
         return status
     }
 
-    fun getDateOfEntry(): Date? {
+    fun getDateOfEntry(): String? {
         return dateOfEntry
     }
 
-    fun getDateOfSale(): Date? {
+    fun getDateOfSale(): String? {
         return dateOfSale
     }
 
@@ -61,8 +62,12 @@ class RealEstate(
         return realEstateAgent
     }
 
-    fun getListPicture(): Image? {
+    fun getListPicture(): MutableList<String>? {
         return listPicture
+    }
+
+    fun getId(): String? {
+        return id
     }
 
     fun setType(type: String?) {
@@ -97,11 +102,11 @@ class RealEstate(
         this.status = status
     }
 
-    fun setDateOfEntry(dateOfEntry: Date?) {
+    fun setDateOfEntry(dateOfEntry: String?) {
         this.dateOfEntry = dateOfEntry
     }
 
-    fun setDateOfSale(dateOfSale: Date?) {
+    fun setDateOfSale(dateOfSale: String?) {
         this.dateOfSale = dateOfSale
     }
 
@@ -109,8 +114,12 @@ class RealEstate(
         this.realEstateAgent = realEstateAgent
     }
 
-    fun setListPicture(listPicture: Image?) {
+    fun setListPicture(listPicture: MutableList<String>?) {
         this.listPicture = listPicture
+    }
+
+    fun setId(id: String?) {
+        this.id = id
     }
 
 }

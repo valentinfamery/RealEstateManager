@@ -29,6 +29,7 @@ fun DrawerScreen(
     navController: NavController,
     auth: FirebaseAuth,
     userViewModel: UserViewModel
+
 ) {
     val items = listOf(Icons.Default.Settings)
     val selectedItem = remember { mutableStateOf(items[0]) }
