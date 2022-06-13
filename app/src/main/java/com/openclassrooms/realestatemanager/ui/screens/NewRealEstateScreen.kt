@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -13,35 +12,40 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.protobuf.Empty
+import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import java.time.format.DateTimeFormatter
@@ -53,9 +57,15 @@ import java.util.*
 @Composable
 fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
 
-    val listPhotos = remember { mutableStateListOf<Uri>() }
+    val openDialog = remember { mutableStateOf(false) }
+    var titlePhoto by remember { mutableStateOf("") }
+
+    val listPhotos = remember { mutableStateListOf<PhotoWithText>() }
     val activity = LocalContext.current as Activity
-    val mContext = LocalContext.current
+    val context = LocalContext.current
+    
+    
+    var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
 
     val someActivityResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -64,8 +74,9 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
                 val data: Intent? = it.data
                 val uriImageSelected: Uri? = data?.data
                 if (uriImageSelected != null) {
-                    Log.e("uri", uriImageSelected.toString())
-                    listPhotos.add(uriImageSelected)
+
+
+                    photoSelect = uriImageSelected
                 }
 
             }
@@ -83,27 +94,134 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
                 someActivityResultLauncher.launch(i)
             } else {
                 Toast.makeText(
-                    mContext,
+                    context,
                     "Impossible d'ajouter un biens , veuillez autorisé l'accees au stockage interne",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         },
     )
-
-    val openDialog = remember { mutableStateOf(false) }
-    val titlePhoto = rememberSaveable{ mutableStateOf("") }
-
+    
     if (openDialog.value) {
         Dialog(
             onDismissRequest = { },
-        ){
+        ) {
             Card(
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.padding(10.dp,5.dp,10.dp,10.dp),
-            ){
-                Column(modifier = Modifier.background(Color.White)) {
-                    
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.defaultMinSize(100.dp,150.dp),
+            ) {
+
+                ConstraintLayout() {
+                    val (titleEntry, imageSelect, buttonCancel, buttonConfirm, buttonAddPhoto) = createRefs()
+                    TextField(
+                        value = titlePhoto,
+                        onValueChange = { titlePhoto = it },
+                        label = { Text("Enter Title Photo") },
+                        maxLines = 2,
+                        modifier = Modifier.constrainAs(titleEntry) {
+                            top.linkTo(parent.top, margin = 15.dp)
+                            start.linkTo(parent.start, margin = 25.dp)
+                            end.linkTo(parent.end, margin = 25.dp)
+                        }
+                    )
+
+
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                            .wrapContentSize()
+                            .constrainAs(imageSelect) {
+                                top.linkTo(titleEntry.bottom, margin = 15.dp)
+                                start.linkTo(parent.start, margin = 30.dp)
+                                end.linkTo(parent.end, margin = 30.dp)
+                            }
+
+                    ) {
+                        if (photoSelect != Uri.EMPTY) {
+                            GlideImage(
+                                imageModel = photoSelect,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(150.dp)
+                            )
+                        }else{
+                            GlideImage(
+                                imageModel = "",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(150.dp)
+                            )
+                        }
+
+                    }
+
+
+                    Button(
+                        modifier = Modifier.constrainAs(buttonAddPhoto) {
+                            top.linkTo(imageSelect.bottom, margin = 15.dp)
+                            start.linkTo(parent.start, margin = 25.dp)
+                            end.linkTo(parent.end, margin = 25.dp)
+                        },
+                        onClick = {
+                            when {
+                                ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE
+                                ) == PackageManager.PERMISSION_GRANTED -> {
+
+                                    val i = Intent(
+                                        Intent.ACTION_PICK,
+                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                    )
+                                    someActivityResultLauncher.launch(i)
+
+                                    // You can use the API that requires the permission.
+                                }
+                                shouldShowRequestPermissionRationale(activity, "") -> {}
+                                else -> {
+                                    // You can directly ask for the permission.
+                                    // The registered ActivityResultCallback gets the result of this request.
+                                    requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+
+                                }
+                            }
+                        }
+
+
+                    ) {
+                        Text(text = "Add Photo")
+                    }
+
+
+                    TextButton(
+                        modifier = Modifier.constrainAs(buttonCancel) {
+                            top.linkTo(buttonAddPhoto.bottom, margin = 15.dp)
+                            start.linkTo(parent.start, margin = 50.dp)
+                        },
+                        onClick = {
+                            openDialog.value = false
+                            photoSelect = Uri.EMPTY
+                            /*TODO*/
+                        }
+                    ) {
+                        Text(text = "Cancel")
+                    }
+                    TextButton(
+                        modifier = Modifier.constrainAs(buttonConfirm) {
+                            top.linkTo(buttonAddPhoto.bottom, margin = 15.dp)
+                            end.linkTo(parent.end, margin = 50.dp)
+                        },
+                        onClick = {
+                            val photoWithText = PhotoWithText(null,photoSelect,titlePhoto)
+                            
+                            listPhotos.add(photoWithText)
+                            openDialog.value = false
+                            /*TODO*/
+                        }
+                    ) {
+                        Text(text = "Confirm")
+                    }
+
+
                 }
             }
 
@@ -125,13 +243,15 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
         var textDateOfSale by rememberSaveable { mutableStateOf("00/00/0000") }
 
 
+        var listType = listOf("Appartement","Loft","Manoir","Maison")
+
         ConstraintLayout(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .fillMaxHeight()
         ) {
 
-            val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldPointOfInterest, fieldStatus, rowDateEntryButtonAndText, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto,buttonAddPhoto) = createRefs()
+            val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldPointOfInterest, fieldStatus, rowDateEntryButtonAndText, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto,dropdownMenu) = createRefs()
 
             CenterAlignedTopAppBar(
                 title = {
@@ -152,18 +272,54 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
 
             )
 
+            var expanded by remember { mutableStateOf(false) }
+
+            val icon = if (expanded)
+                Icons.Filled.KeyboardArrowUp
+            else
+                Icons.Filled.KeyboardArrowDown
+
             TextField(
                 value = entryType,
                 onValueChange = { entryType = it },
-                label = { Text("Type") },
-                singleLine = true,
+                label = {Text("Type")},
                 modifier = Modifier.constrainAs(fieldType) {
                     top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
                     start.linkTo(parent.start, margin = 50.dp)
                     end.linkTo(parent.end, margin = 50.dp)
+                },
+                trailingIcon = {
+                    Icon(icon,"contentDescription",
+                        Modifier.clickable { expanded = !expanded })
                 }
 
             )
+
+
+            Box(
+                modifier = Modifier.constrainAs(dropdownMenu) {
+                    top.linkTo(fieldType.bottom, margin = 0.dp)
+                    start.linkTo(fieldType.start, margin = 0.dp)
+                    end.linkTo(fieldType.end, margin = 0.dp)
+                },
+            ) {
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    listType.forEach{
+                        DropdownMenuItem(
+                            text = { Text(it) },
+                            onClick = {
+                                      entryType = it
+                                expanded = false
+                                      /* Handle edit! */
+                                      },
+                        )
+                    }
+                }
+            }
 
             TextField(
                 value = entryPrice,
@@ -263,12 +419,12 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
             day = calendar.get(Calendar.DAY_OF_MONTH)
             calendar.time = Date()
 
-            textDateOfEntry = ""+day + "/" + (month + 1) + "/" + year
+            textDateOfEntry = "" + day + "/" + (month + 1) + "/" + year
 
             textDateOfEntry.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
             val dateOfSalePickerDialog = DatePickerDialog(
-                mContext,
+                context,
                 { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
 
                     textDateOfSale = "$dayOfMonth/$month/$year"
@@ -311,26 +467,17 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
                 end.linkTo(parent.end, margin = 25.dp)
             }) {
                 repeat(listPhotos.size) {
+                        Box(modifier = Modifier.size(184.dp)) {
 
-
-
-                            Box(
-                                modifier = Modifier.size(180.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
+                            Column() {
                                 GlideImage(
-                                    imageModel = listPhotos[it],
+                                    imageModel = listPhotos[it].getPhotoUri(),
                                     // Crop, Fit, Inside, FillHeight, FillWidth, None
                                     contentScale = ContentScale.Crop,
                                 )
+                                Text(text = listPhotos[it].getText())
                             }
-
-
-
-
-
-
-
+                        }
                 }
             }
 
@@ -339,28 +486,12 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
 
                     openDialog.value = true
 
-                    when {
-                        ContextCompat.checkSelfPermission(
-                            mContext,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED -> {
 
-                            val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                            someActivityResultLauncher.launch(i)
-
-                            // You can use the API that requires the permission.
-                        }
-                        shouldShowRequestPermissionRationale(activity, "") -> {}
-                        else -> {
-                            // You can directly ask for the permission.
-                            // The registered ActivityResultCallback gets the result of this request.
-                            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-
-                        }
-                    }
                 },
-                modifier = Modifier.constrainAs(buttonAddPhoto){
+                modifier = Modifier.constrainAs(buttonAddPhoto) {
                     top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
                 }
             ) {
                 Text("Add Photo")
@@ -401,7 +532,7 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
 
                     } catch (e: Exception) {
                         Toast.makeText(
-                            mContext,
+                            context,
                             "Please enter a valid number for price , area and number of room",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -409,7 +540,7 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
 
                 },
                 modifier = Modifier.constrainAs(confirmAddButton) {
-                    top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
+                    top.linkTo(buttonAddPhoto.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 },
@@ -421,6 +552,8 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
 
     }
 }
+
+
 
 
 

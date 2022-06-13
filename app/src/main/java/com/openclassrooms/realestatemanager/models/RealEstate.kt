@@ -16,7 +16,7 @@ class RealEstate(
     private var dateOfEntry: String? = null,
     private var dateOfSale: String? = null,
     private var realEstateAgent: String? = null,
-    private var listPicture: MutableList<String> ?= null
+    private var listPicture: List<PhotoWithText> ? =null
 ) {
     fun getType(): String? {
         return type
@@ -62,7 +62,7 @@ class RealEstate(
         return realEstateAgent
     }
 
-    fun getListPicture(): MutableList<String>? {
+    fun getListPicture(): List<PhotoWithText>? {
         return listPicture
     }
 
@@ -114,7 +114,7 @@ class RealEstate(
         this.realEstateAgent = realEstateAgent
     }
 
-    fun setListPicture(listPicture: MutableList<String>?) {
+    fun setListPicture(listPicture: MutableList<PhotoWithText>?) {
         this.listPicture = listPicture
     }
 

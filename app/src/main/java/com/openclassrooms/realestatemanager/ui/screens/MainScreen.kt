@@ -1,16 +1,19 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+
 import androidx.compose.material3.*
+
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -22,6 +25,7 @@ import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterial3Api
 fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewModel: UserViewModel) {
@@ -33,20 +37,20 @@ fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewM
     val navController = rememberNavController()
     val context = LocalContext.current
 
+
+
+
     ModalNavigationDrawer(
         drawerState = drawerState,
-        gesturesEnabled = true,
-        drawerContent = {
-            DrawerScreen(drawerState,scope,navControllerDrawer,auth,userViewModel)
-        },
+        gesturesEnabled = drawerState.isOpen,
+        drawerContent = {DrawerScreen(drawerState,scope,navControllerDrawer,auth,userViewModel)},
         content = {
             Scaffold(
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = { /* do something */
                             context.startActivity(
-                                Intent(context,
-                                    NewRealEstateActivity::class.java)
+                                Intent(context, NewRealEstateActivity::class.java)
                             )
                         },
                         modifier = Modifier.clip(RoundedCornerShape(15.dp))
@@ -56,6 +60,7 @@ fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewM
                         Icon(Icons.Filled.Add, "Localized description")
                     }
                 },
+
                 bottomBar = {
                     NavigationBar {
                         items.forEachIndexed { index, item ->
@@ -71,12 +76,18 @@ fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewM
                     }
                 }
             ) {
-                NavHost(navController = navController, startDestination = "listScreen") {
+                NavHost(navController = navController, startDestination = "listScreen", modifier = Modifier.fillMaxSize()) {
                     composable(Screen.ListScreen.route) { ListScreen(drawerState,scope) }
                     composable(Screen.MapScreen.route) { MapScreen(drawerState,scope) }
                 }
             }
-
         },
+
     )
+
+
+
+
+
+
 }

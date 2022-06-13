@@ -28,6 +28,8 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        
+
     }
     buildFeatures {
         compose true
@@ -48,6 +50,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
 
     implementation "androidx.compose.ui:ui:$compose_version"
+
+
+
 
     implementation "androidx.compose.material3:material3:1.0.0-alpha10"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.0-alpha10"
@@ -108,6 +113,8 @@ dependencies {
     // Declare the dependency for the Cloud Storage library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-storage-ktx'
+
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
 
 }
 repositories {

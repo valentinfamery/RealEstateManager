@@ -1,12 +1,23 @@
 package com.openclassrooms.realestatemanager.models
 
-class PhotoWithText(private var photoUrl : String? = null,private var text: String? = null) {
+import android.net.Uri
+
+class PhotoWithText(private var photoUrl : String? = null,private var photoUri : Uri? = null,private var text: String) {
 
     fun getPhotoUrl(): String? {
         return photoUrl
     }
 
-    fun getText(): String? {
+    fun getText(): String {
         return text
     }
+
+    fun getPhotoUri(): Uri?{
+        return photoUri
+    }
+
+    fun setUrl(url: String?) {
+        this.photoUrl = url
+    }
+
 }
