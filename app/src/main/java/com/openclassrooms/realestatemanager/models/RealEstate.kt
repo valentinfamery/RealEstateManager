@@ -1,8 +1,5 @@
 package com.openclassrooms.realestatemanager.models
 
-import android.media.Image
-import java.util.*
-
 class RealEstate(
     private var id: String? = null,
     private var type: String? = null,
@@ -15,8 +12,7 @@ class RealEstate(
     private var status: String? = null,
     private var dateOfEntry: String? = null,
     private var dateOfSale: String? = null,
-    private var realEstateAgent: String? = null,
-    private var listPicture: List<PhotoWithText> ? =null
+    private var realEstateAgent: String? = null
 ) {
     fun getType(): String? {
         return type
@@ -60,10 +56,6 @@ class RealEstate(
 
     fun getRealEstateAgent(): String? {
         return realEstateAgent
-    }
-
-    fun getListPicture(): List<PhotoWithText>? {
-        return listPicture
     }
 
     fun getId(): String? {
@@ -112,10 +104,6 @@ class RealEstate(
 
     fun setRealEstateAgent(realEstateAgent: String?) {
         this.realEstateAgent = realEstateAgent
-    }
-
-    fun setListPicture(listPicture: MutableList<PhotoWithText>?) {
-        this.listPicture = listPicture
     }
 
     fun setId(id: String?) {

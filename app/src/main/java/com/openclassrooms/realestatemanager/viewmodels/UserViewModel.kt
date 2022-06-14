@@ -86,8 +86,7 @@ class UserViewModel : ViewModel {
     }
 
     val userData: MutableLiveData<User?> get() = userRepository.userData
-    val getUsers: MutableLiveData<List<User>>
-        get() = userRepository.getUsers
+    val getUsers: MutableLiveData<List<User>> get() = userRepository.getUsers
 
     fun setUserName(userName: String?) {
         userRepository.setUsername(userName)

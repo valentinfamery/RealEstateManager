@@ -28,12 +28,17 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(drawerState: DrawerState, scope: CoroutineScope) {
+fun MapScreen(
+    drawerState: DrawerState,
+    scope: CoroutineScope,
+    realEstateViewModel: RealEstateViewModel
+) {
 
 
     lateinit var mLocationRequest : LocationRequest

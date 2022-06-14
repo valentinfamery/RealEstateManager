@@ -46,6 +46,7 @@ import androidx.core.content.ContextCompat
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.protobuf.Empty
 import com.openclassrooms.realestatemanager.models.PhotoWithText
+import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import java.time.format.DateTimeFormatter
@@ -499,7 +500,6 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
 
             Button(
                 onClick = {
-
 
                     try {
                         val type: String = entryType

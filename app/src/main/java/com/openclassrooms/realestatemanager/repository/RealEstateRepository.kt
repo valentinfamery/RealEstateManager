@@ -1,5 +1,8 @@
 package com.openclassrooms.realestatemanager.repository
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -9,9 +12,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.utils.Resource
+import com.openclassrooms.realestatemanager.utils.safeCall
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class RealEstateRepository {
@@ -29,44 +36,23 @@ class RealEstateRepository {
         private const val COLLECTION_REAL_ESTATE_IMAGES = "real_estates_images"
     }
 
-    val getRealEstates: MutableLiveData<List<RealEstate>> get() {
-        val result : MutableLiveData<List<RealEstate>> = MutableLiveData<List<RealEstate>>()
+    val getRealEstates: SnapshotStateList<RealEstate> get() {
+        val result = mutableStateListOf<RealEstate>()
         usersCollection.get().addOnSuccessListener { queryDocumentSnapshots: QuerySnapshot ->
                 val userList = queryDocumentSnapshots.toObjects(
                     RealEstate::class.java
                 )
-                result.postValue(userList)
+            result.addAll(userList)
+
             }
             return result
         }
 
-    fun createRealEstate(
-        type: String,
-        price: Int,
-        area: Int,
-        numberRoom: Int,
-        description: String,
-        address: String,
-        pointOfInterest: String,
-        status: String,
-        listPhotos: List<PhotoWithText>,
-        dateEntry: String,
-        dateSale: String,
-        viewModelScope: CoroutineScope,
+    fun createRealEstate(type: String, price: Int, area: Int, numberRoom: Int, description: String, address: String,
+        pointOfInterest: String, status: String, listPhotos: List<PhotoWithText> ?=null, dateEntry: String, dateSale: String,
     ) {
 
-
             val id = UUID.randomUUID().toString()
-        var listUrlPhotos : List<PhotoWithText> ?=null
-
-
-        viewModelScope.launch{
-            listUrlPhotos = addAllImagesAndGetUrls(listPhotos)
-        }
-
-
-
-
 
             val realEstate = RealEstate(
                 id,
@@ -80,37 +66,49 @@ class RealEstateRepository {
                 status,
                 dateEntry,
                 dateSale,
-                firebaseAuth.currentUser?.displayName,
-                listUrlPhotos
+                firebaseAuth.currentUser?.displayName
             )
             usersCollection.document(id).set(realEstate)
 
-        if(listUrlPhotos !=null) {
+        val storageRef = storage.reference
 
-            for (photoWithText in listUrlPhotos!!) {
+        val imagesRef: StorageReference = storageRef.child("realEstates")
+
+
+        if(listPhotos!=null) {
+
+            for (photoWithText in listPhotos) {
+
+                val uploadTask = imagesRef.putFile(photoWithText.getPhotoUri()!!)
+
+                uploadTask.continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    imagesRef.downloadUrl
+                }.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val downloadUrl = task.result
+                        photoWithText.setUrl(downloadUrl.toString())
+                    }
+                }
+
                 imagesCollectionRealEstates(id).document().set(photoWithText)
             }
-
         }
 
 
     }
 
-    private suspend fun addAllImagesAndGetUrls(listPhotos: List<PhotoWithText>): List<PhotoWithText> {
 
 
-                val id = UUID.randomUUID().toString()
 
 
-                val storageRef = storage.reference
-                val imagesRef: StorageReference = storageRef.child("realEstates")
 
-                for (photoWithText in listPhotos) {
-                    val url = imagesRef.putFile(photoWithText.getPhotoUri()!!).await().storage.downloadUrl.await().toString()
-                    photoWithText.setUrl(url)
-                }
-        return listPhotos
-    }
+
+
 
 
 

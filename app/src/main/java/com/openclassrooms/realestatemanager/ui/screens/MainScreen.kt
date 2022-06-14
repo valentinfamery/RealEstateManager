@@ -2,12 +2,11 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 
 import androidx.compose.material3.*
 
@@ -23,12 +22,19 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
+import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterial3Api
-fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewModel: UserViewModel) {
+fun MainScreen(
+    navControllerDrawer: NavController,
+    auth: FirebaseAuth,
+    userViewModel: UserViewModel,
+    realEstateViewModel: RealEstateViewModel
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
@@ -40,29 +46,25 @@ fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewM
 
 
 
+
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen,
         drawerContent = {DrawerScreen(drawerState,scope,navControllerDrawer,auth,userViewModel)},
         content = {
+
             Scaffold(
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = { /* do something */
-                            context.startActivity(
-                                Intent(context, NewRealEstateActivity::class.java)
-                            )
-                        },
-                        modifier = Modifier.clip(RoundedCornerShape(15.dp))
+                content = {innerPadding ->
 
+                NavHost(navController = navController, startDestination = "listScreen") {
+                    composable(Screen.ListScreen.route) { ListScreen(drawerState,scope,realEstateViewModel,innerPadding) }
+                    composable(Screen.MapScreen.route) { MapScreen(drawerState,scope,realEstateViewModel) }
+                }
 
-                    ) {
-                        Icon(Icons.Filled.Add, "Localized description")
-                    }
                 },
-
                 bottomBar = {
-                    NavigationBar {
+                    NavigationBar (){
                         items.forEachIndexed { index, item ->
                             NavigationBarItem(
                                 icon = { Icon(item.icon, contentDescription = null) },
@@ -74,20 +76,24 @@ fun MainScreen(navControllerDrawer: NavController, auth: FirebaseAuth, userViewM
                             )
                         }
                     }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { /* do something */
+                            context.startActivity(
+                                Intent(context, NewRealEstateActivity::class.java)
+                            )
+                        },
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(15.dp))
+                    ) {
+                        Icon(Icons.Filled.Add, "Localized description")
+                    }
                 }
-            ) {
-                NavHost(navController = navController, startDestination = "listScreen", modifier = Modifier.fillMaxSize()) {
-                    composable(Screen.ListScreen.route) { ListScreen(drawerState,scope) }
-                    composable(Screen.MapScreen.route) { MapScreen(drawerState,scope) }
-                }
-            }
+
+            )
+
         },
 
     )
-
-
-
-
-
-
 }

@@ -21,12 +21,14 @@ import com.openclassrooms.realestatemanager.ui.screens.SettingsScreen
 import com.openclassrooms.realestatemanager.ui.screens.SignInScreen
 
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
 
 class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
+    private val realEstateViewModel: RealEstateViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
     private lateinit var startScreen : String
 
@@ -50,7 +52,7 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = startScreen) {
-                    composable("mainScreen") { MainScreen(navControllerDrawer = navController, auth = auth,userViewModel) }
+                    composable("mainScreen") { MainScreen(navControllerDrawer = navController, auth = auth,userViewModel,realEstateViewModel) }
                     composable("settingsScreen") { SettingsScreen(navController = navController) }
                     composable("registerScreen") { RegisterScreen(navController = navController,userViewModel = userViewModel) }
                     composable("signInScreen") { SignInScreen(navController = navController,userViewModel = userViewModel) }
