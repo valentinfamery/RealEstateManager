@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +36,7 @@ fun DrawerScreen(
     val selectedItem = remember { mutableStateOf(items[0]) }
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
         val (userProfilePicture,username,userEmail,drawerItems,buttonLogout) = createRefs()
-        val userDataState = userViewModel.userData.observeAsState()
+        val userDataState by userViewModel.userData.observeAsState()
 
         Box(
             modifier = Modifier
@@ -50,12 +51,12 @@ fun DrawerScreen(
         )
 
 
-        Text(text = userDataState.value?.username ?:"",modifier = Modifier.constrainAs(username) {
+        Text(text = userDataState?.username ?:"",modifier = Modifier.constrainAs(username) {
             top.linkTo(userProfilePicture.bottom, margin = 15.dp)
             start.linkTo(parent.start, margin = 0.dp)
             end.linkTo(parent.end, margin = 0.dp)
         })
-        Text(text = userDataState.value?.email ?:"",modifier = Modifier.constrainAs(userEmail) {
+        Text(text = userDataState?.email ?:"",modifier = Modifier.constrainAs(userEmail) {
             top.linkTo(username.bottom, margin = 5.dp)
             start.linkTo(parent.start, margin = 0.dp)
             end.linkTo(parent.end, margin = 0.dp)
