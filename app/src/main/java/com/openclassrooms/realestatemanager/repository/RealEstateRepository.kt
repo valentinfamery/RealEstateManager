@@ -36,13 +36,13 @@ class RealEstateRepository {
         private const val COLLECTION_REAL_ESTATE_IMAGES = "real_estates_images"
     }
 
-    val getRealEstates: SnapshotStateList<RealEstate> get() {
-        val result = mutableStateListOf<RealEstate>()
+    val getRealEstates: MutableLiveData<List<RealEstate>> get() {
+        val result : MutableLiveData<List<RealEstate>> = MutableLiveData<List<RealEstate>>()
         usersCollection.get().addOnSuccessListener { queryDocumentSnapshots: QuerySnapshot ->
                 val userList = queryDocumentSnapshots.toObjects(
                     RealEstate::class.java
                 )
-            result.addAll(userList)
+            result.postValue(userList)
 
             }
             return result

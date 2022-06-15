@@ -10,7 +10,7 @@ import com.openclassrooms.realestatemanager.repository.RealEstateRepository
 class RealEstateViewModel : ViewModel() {
     private val realEstateRepository : RealEstateRepository = RealEstateRepository()
 
-    val getRealEstates: SnapshotStateList<RealEstate> get() = realEstateRepository.getRealEstates
+    val getRealEstates: MutableLiveData<List<RealEstate>> get() = realEstateRepository.getRealEstates
 
     fun createRealEstate(type: String, price: Int, area: Int, numberRoom: Int, description: String, address: String, pointOfInterest: String, status: String,listPhotosUri : List<PhotoWithText> ,dateEntry : String ,dateSale :String
     ) {

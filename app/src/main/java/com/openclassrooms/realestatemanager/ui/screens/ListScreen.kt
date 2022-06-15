@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +54,8 @@ fun ListScreen(
     val textState = remember { mutableStateOf(TextFieldValue(""))}
     val listState = remember{ realEstateViewModel.getRealEstates }
 
+    val items: List<RealEstate> by realEstateViewModel.getRealEstates.observeAsState(listOf())
+
 
     Scaffold(
         modifier = Modifier.padding(innerPadding),
@@ -68,11 +71,17 @@ fun ListScreen(
 
         },
         content = {
-            LazyColumn(modifier = Modifier.padding(it),
+            LazyColumn(
+
+
+                modifier = Modifier.padding(it),
             ){
-                items(listState){item ->
-                    RowList(context,item)
-                }
+
+                    items(items){ item ->
+                        RowList(context,item)
+                    }
+
+
             }
         }
     )

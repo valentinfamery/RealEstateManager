@@ -129,11 +129,11 @@ fun MapScreen(
             properties = mapProperties,
             uiSettings = uiSettings,
         ) {
-            for(realEstate in listState){
+            //for(realEstate in listState){
                 //Marker(
                     //state = MarkerState(position = userPosition),
                 //)
-            }
+            //}
 
         }
 
