@@ -23,8 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.RealEstateDetail
@@ -45,31 +49,23 @@ fun ListScreen(
 ) {
 
     val context = LocalContext.current
-
-
+    val navController = rememberNavController()
+    val textState = remember { mutableStateOf(TextFieldValue(""))}
     val listState = remember{ realEstateViewModel.getRealEstates }
 
 
     Scaffold(
         modifier = Modifier.padding(innerPadding),
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = "Real Estate Manager")
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        scope.launch { drawerState.open() }
-                    }) {
-                        Icon(Icons.Filled.Menu, "")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Filled.Search, contentDescription = "Localized description")
-                    }
-                },
-            )
+
+            NavHost(
+                navController = navController,
+                startDestination = "topBarMap",
+            ) {
+                composable("topBarMap") { TopBar(scope,drawerState,navController,"RealEstateManager")}
+                composable("SearchView") { SearchView(textState,navController)}
+            }
+
         },
         content = {
             LazyColumn(modifier = Modifier.padding(it),
