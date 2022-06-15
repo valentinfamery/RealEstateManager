@@ -72,14 +72,22 @@ class RealEstateRepository {
 
         val storageRef = storage.reference
 
-        val imagesRef: StorageReference = storageRef.child("realEstates")
+        //val realEstatesRef: StorageReference = storageRef.child("realEstates")
+
+        //val realEstateRef: StorageReference = realEstatesRef.child("realEstates/$id")
+
+
 
 
         if(listPhotos!=null) {
 
+
+
             for (photoWithText in listPhotos) {
 
-                val uploadTask = imagesRef.putFile(photoWithText.getPhotoUri()!!)
+                val realEstateImage : StorageReference = storageRef.child("realEstates/$id/"+UUID.randomUUID().toString())
+
+                val uploadTask = realEstateImage.putFile(photoWithText.getPhotoUri()!!)
 
                 uploadTask.continueWithTask { task ->
                     if (!task.isSuccessful) {
@@ -87,7 +95,7 @@ class RealEstateRepository {
                             throw it
                         }
                     }
-                    imagesRef.downloadUrl
+                    realEstateImage.downloadUrl
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val downloadUrl = task.result
