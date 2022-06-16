@@ -12,7 +12,7 @@ class RealEstateViewModel : ViewModel() {
 
     val getRealEstates: MutableLiveData<List<RealEstate>> get() = realEstateRepository.getRealEstates
 
-    fun createRealEstate(type: String, price: Int, area: Int, numberRoom: Int, description: String, address: String, pointOfInterest: String, status: String,listPhotosUri : List<PhotoWithText> ,dateEntry : String ,dateSale :String
+    fun createRealEstate(type: String, price: Int, area: Int, numberRoom: Int, description: String, address: String, pointOfInterest: String, status: String,listPhotosUri : MutableList<PhotoWithText> ,dateEntry : String ,dateSale :String
     ) {
         realEstateRepository.createRealEstate(type , price , area , numberRoom , description , address , pointOfInterest , status,listPhotosUri,dateEntry,dateSale)
     }

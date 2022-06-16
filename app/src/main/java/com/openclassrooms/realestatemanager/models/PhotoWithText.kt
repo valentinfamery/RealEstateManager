@@ -16,7 +16,7 @@ class PhotoWithText(private var photoUrl : String? = null,private var photoUri :
         return photoUri
     }
 
-    fun setUrl(url: String?) {
+    fun setUrl(url: String?=null) {
         this.photoUrl = url
     }
 

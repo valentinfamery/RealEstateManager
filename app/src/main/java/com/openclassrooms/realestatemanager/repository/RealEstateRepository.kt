@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.repository
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -14,11 +16,8 @@ import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.utils.safeCall
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class RealEstateRepository {
@@ -49,7 +48,7 @@ class RealEstateRepository {
         }
 
     fun createRealEstate(type: String, price: Int, area: Int, numberRoom: Int, description: String, address: String,
-        pointOfInterest: String, status: String, listPhotos: List<PhotoWithText> ?=null, dateEntry: String, dateSale: String,
+        pointOfInterest: String, status: String, listPhotos: MutableList<PhotoWithText> ?=null, dateEntry: String, dateSale: String,
     ) {
 
             val id = UUID.randomUUID().toString()
@@ -85,21 +84,11 @@ class RealEstateRepository {
 
             for (photoWithText in listPhotos) {
 
-                val realEstateImage : StorageReference = storageRef.child("realEstates/$id/"+UUID.randomUUID().toString())
+                runBlocking {
+                    launch {
+                        val urlFinal = uploadImageAndGetUrl(photoWithText.getPhotoUri()!!,id)
 
-                val uploadTask = realEstateImage.putFile(photoWithText.getPhotoUri()!!)
-
-                uploadTask.continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        task.exception?.let {
-                            throw it
-                        }
-                    }
-                    realEstateImage.downloadUrl
-                }.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val downloadUrl = task.result
-                        photoWithText.setUrl(downloadUrl.toString())
+                        photoWithText.setUrl(urlFinal)
                     }
                 }
 
@@ -108,6 +97,14 @@ class RealEstateRepository {
         }
 
 
+    }
+
+    private suspend fun uploadImageAndGetUrl(uri :Uri,id:String) : String{
+        val storageRef = storage.reference
+        val realEstateImage : StorageReference = storageRef.child("realEstates/$id/"+UUID.randomUUID().toString())
+        return withContext(Dispatchers.IO) {
+            realEstateImage.putFile(uri).await().storage.downloadUrl.await()
+        }.toString()
     }
 
 
