@@ -71,9 +71,7 @@ class RealEstateRepository {
 
             val id = UUID.randomUUID().toString()
 
-        val geocoder = Geocoder(activity)
-        val list :List<Address> = geocoder.getFromLocationName(address3, 1)
-        val address2 :Address = list[0]
+
 
             val realEstate = RealEstate(
                 id,
@@ -88,8 +86,8 @@ class RealEstateRepository {
                 dateEntry,
                 dateSale,
                 firebaseAuth.currentUser?.displayName,
-                address2.latitude,
-                address2.longitude
+                null,
+                null
             )
             usersCollection.document(id).set(realEstate)
 
