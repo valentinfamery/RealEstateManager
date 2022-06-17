@@ -1,13 +1,7 @@
 package com.openclassrooms.realestatemanager.repository
 
-import android.app.Activity
-import android.location.Address
-import android.location.Geocoder
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
@@ -18,15 +12,27 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.RealEstate
-import com.openclassrooms.realestatemanager.utils.Resource
-import com.openclassrooms.realestatemanager.utils.safeCall
-import kotlinx.coroutines.*
+import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
+import com.openclassrooms.realestatemanager.service.ApiInterface
+import com.openclassrooms.realestatemanager.service.ApiService
+import com.openclassrooms.realestatemanager.service.ApiService.`interface`
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
+
 
 class RealEstateRepository {
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val storage = FirebaseStorage.getInstance()
+    private val mInterface: ApiInterface = ApiService.`interface`
+
+
 
     private val usersCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)
 
@@ -119,23 +125,32 @@ class RealEstateRepository {
         }.toString()
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     fun deleteRealEstate(id : String) {
         usersCollection.document(id).delete()
+    }
+
+    fun getLatLngRealEstate(address: String) : LatLng?{
+        var result :LatLng ?=null
+        val listRestaurantApiNearBySearchResponseOut: Call<ResultGeocoding?>? = `interface`.getResultGeocodingResponse(address)
+
+        listRestaurantApiNearBySearchResponseOut?.enqueue(object : Callback<ResultGeocoding?> {
+            override fun onResponse(call: Call<ResultGeocoding?>, response: Response<ResultGeocoding?>) {
+
+                if (response.body() != null) {
+
+                    val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
+                    val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
+
+                    result = LatLng(lat!!, lng!!)
+                }
+            }
+
+            override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
+
+            }
+        })
+
+        return result
     }
 
 
