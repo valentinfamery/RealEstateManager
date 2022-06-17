@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.models
 
+
 class RealEstate(
     private var id: String? = null,
     private var type: String? = null,
@@ -12,7 +13,10 @@ class RealEstate(
     private var status: String? = null,
     private var dateOfEntry: String? = null,
     private var dateOfSale: String? = null,
-    private var realEstateAgent: String? = null
+    private var realEstateAgent: String? = null ,
+    private var lat: Double? = null,
+    private var lng: Double? = null
+
 ) {
     fun getType(): String? {
         return type

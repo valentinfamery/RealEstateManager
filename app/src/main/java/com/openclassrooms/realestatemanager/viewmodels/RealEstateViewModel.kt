@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.viewmodels
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import android.app.Activity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.models.PhotoWithText
@@ -12,9 +12,21 @@ class RealEstateViewModel : ViewModel() {
 
     val getRealEstates: MutableLiveData<List<RealEstate>> get() = realEstateRepository.getRealEstates
 
-    fun createRealEstate(type: String, price: Int, area: Int, numberRoom: Int, description: String, address: String, pointOfInterest: String, status: String,listPhotosUri : MutableList<PhotoWithText> ,dateEntry : String ,dateSale :String
+    fun createRealEstate(
+        type: String,
+        price: Int,
+        area: Int,
+        numberRoom: Int,
+        description: String,
+        address: String,
+        pointOfInterest: String,
+        status: String,
+        listPhotosUri: MutableList<PhotoWithText>,
+        dateEntry: String,
+        dateSale: String,
+        activity: Activity
     ) {
-        realEstateRepository.createRealEstate(type , price , area , numberRoom , description , address , pointOfInterest , status,listPhotosUri,dateEntry,dateSale)
+        realEstateRepository.createRealEstate(type , price , area , numberRoom , description , address , pointOfInterest , status,listPhotosUri,dateEntry,dateSale,activity)
     }
 
     fun deleteRealEstate(idRealEstate : String){

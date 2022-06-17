@@ -1,11 +1,15 @@
 package com.openclassrooms.realestatemanager.repository
 
+import android.app.Activity
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -47,11 +51,29 @@ class RealEstateRepository {
             return result
         }
 
-    fun createRealEstate(type: String, price: Int, area: Int, numberRoom: Int, description: String, address: String,
-        pointOfInterest: String, status: String, listPhotos: MutableList<PhotoWithText> ?=null, dateEntry: String, dateSale: String,
+    fun createRealEstate(
+        type: String,
+        price: Int,
+        area: Int,
+        numberRoom: Int,
+        description: String,
+        address: String,
+        pointOfInterest: String,
+        status: String,
+        listPhotos: MutableList<PhotoWithText>? = null,
+        dateEntry: String,
+        dateSale: String,
+        activity: Activity,
     ) {
 
+
+        val address3 = "1600 Amphitheatre Parkway, Mountain View, CA"
+
             val id = UUID.randomUUID().toString()
+
+        val geocoder = Geocoder(activity)
+        val list :List<Address> = geocoder.getFromLocationName(address3, 1)
+        val address2 :Address = list[0]
 
             val realEstate = RealEstate(
                 id,
@@ -60,12 +82,14 @@ class RealEstateRepository {
                 area,
                 numberRoom,
                 description,
-                address,
+                address3,
                 pointOfInterest,
                 status,
                 dateEntry,
                 dateSale,
-                firebaseAuth.currentUser?.displayName
+                firebaseAuth.currentUser?.displayName,
+                address2.latitude,
+                address2.longitude
             )
             usersCollection.document(id).set(realEstate)
 
@@ -74,6 +98,7 @@ class RealEstateRepository {
         //val realEstatesRef: StorageReference = storageRef.child("realEstates")
 
         //val realEstateRef: StorageReference = realEstatesRef.child("realEstates/$id")
+
 
 
 
