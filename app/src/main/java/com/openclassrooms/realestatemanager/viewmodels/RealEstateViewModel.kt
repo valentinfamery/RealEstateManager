@@ -32,4 +32,8 @@ class RealEstateViewModel : ViewModel() {
         realEstateRepository.deleteRealEstate(idRealEstate)
     }
 
+    fun getLatLngRealEstate(address : String){
+       realEstateRepository.getLatLngRealEstate(address)
+    }
+
 }

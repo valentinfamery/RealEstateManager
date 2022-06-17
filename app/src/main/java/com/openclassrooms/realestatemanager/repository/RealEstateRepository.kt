@@ -77,6 +77,7 @@ class RealEstateRepository {
             val id = UUID.randomUUID().toString()
 
 
+            val latLng = getLatLngRealEstate("1600+Amphitheatre+Parkway,+Mountain+View,+CA")
 
             val realEstate = RealEstate(
                 id,
@@ -91,8 +92,8 @@ class RealEstateRepository {
                 dateEntry,
                 dateSale,
                 firebaseAuth.currentUser?.displayName,
-                null,
-                null
+                latLng?.latitude,
+                latLng?.longitude
             )
             usersCollection.document(id).set(realEstate)
 
@@ -142,11 +143,12 @@ class RealEstateRepository {
                     val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
 
                     result = LatLng(lat!!, lng!!)
+                    Log.e(lat.toString(),lng.toString())
                 }
             }
 
             override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
-
+                result = null
             }
         })
 
