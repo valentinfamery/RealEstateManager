@@ -24,9 +24,8 @@ class RealEstateViewModel : ViewModel() {
         listPhotosUri: MutableList<PhotoWithText>,
         dateEntry: String,
         dateSale: String,
-        activity: Activity
     ) {
-        realEstateRepository.createRealEstate(type , price , area , numberRoom , description , address , pointOfInterest , status,listPhotosUri,dateEntry,dateSale,activity)
+        realEstateRepository.createRealEstate(type , price , area , numberRoom , description , address , pointOfInterest , status,listPhotosUri,dateEntry,dateSale)
     }
 
     fun deleteRealEstate(idRealEstate : String){

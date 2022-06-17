@@ -517,8 +517,7 @@ fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
                             status,
                             listPhotos,
                             textDateOfEntry,
-                            textDateOfSale,
-                            activity
+                            textDateOfSale
                         )
 
                         activity.finish()

@@ -63,7 +63,6 @@ class RealEstateRepository {
         listPhotos: MutableList<PhotoWithText>? = null,
         dateEntry: String,
         dateSale: String,
-        activity: Activity,
     ) {
 
 
@@ -90,16 +89,6 @@ class RealEstateRepository {
                 null
             )
             usersCollection.document(id).set(realEstate)
-
-        val storageRef = storage.reference
-
-        //val realEstatesRef: StorageReference = storageRef.child("realEstates")
-
-        //val realEstateRef: StorageReference = realEstatesRef.child("realEstates/$id")
-
-
-
-
 
         if(listPhotos!=null) {
 
