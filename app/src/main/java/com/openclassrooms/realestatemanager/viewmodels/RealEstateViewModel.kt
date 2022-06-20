@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.models.PhotoWithText
+import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.repository.RealEstateRepository
 
@@ -34,6 +35,10 @@ class RealEstateViewModel : ViewModel() {
 
     fun getLatLngRealEstate(address : String){
        realEstateRepository.getLatLngRealEstate(address)
+    }
+
+    fun getRealEstatePhotosWithId(id : String):MutableLiveData<List<PhotoWithTextFirebase>>{
+       return realEstateRepository.getRealEstatePhotosWithId(id)
     }
 
 }

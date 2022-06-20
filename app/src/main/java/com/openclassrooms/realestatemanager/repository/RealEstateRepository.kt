@@ -11,6 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.models.PhotoWithText
+import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
 import com.openclassrooms.realestatemanager.service.ApiInterface
@@ -57,6 +58,19 @@ class RealEstateRepository {
             return result
         }
 
+    fun getRealEstatePhotosWithId(id : String) : MutableLiveData<List<PhotoWithTextFirebase>> {
+        val result : MutableLiveData<List<PhotoWithTextFirebase>> = MutableLiveData<List<PhotoWithTextFirebase>>()
+
+        imagesCollectionRealEstates(id).get().addOnSuccessListener {queryDocumentSnapshots: QuerySnapshot ->
+            val listPhotoWithText = queryDocumentSnapshots.toObjects(
+                PhotoWithTextFirebase::class.java
+            )
+            result.postValue(listPhotoWithText)
+        }
+
+        return result
+    }
+
     fun createRealEstate(
         type: String,
         price: Int,
@@ -97,21 +111,28 @@ class RealEstateRepository {
             )
             usersCollection.document(id).set(realEstate)
 
+
+
+        var listToFirebase : MutableList<PhotoWithTextFirebase> ?= null
+
         if(listPhotos!=null) {
-
-
-
             for (photoWithText in listPhotos) {
 
                 runBlocking {
                     launch {
                         val urlFinal = uploadImageAndGetUrl(photoWithText.getPhotoUri()!!,id)
 
-                        photoWithText.setUrl(urlFinal)
+                        val photoWithTextFirebase = PhotoWithTextFirebase(urlFinal,photoWithText.getText())
+
+                        listToFirebase?.add(photoWithTextFirebase)
                     }
                 }
+            }
+        }
 
-                imagesCollectionRealEstates(id).document().set(photoWithText)
+        if(listToFirebase!=null){
+            for(photoWithTextFirebase in listToFirebase){
+                imagesCollectionRealEstates(id).document().set(photoWithTextFirebase)
             }
         }
 
@@ -158,4 +179,6 @@ class RealEstateRepository {
 
 
 }
+
+
 

@@ -12,18 +12,25 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.RealEstateDetail
+import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RowList(context: Context, item: RealEstate) {
+fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateViewModel) {
+
+    val items2 by realEstateViewModel.getRealEstatePhotosWithId(item.getId().toString()).observeAsState()
+
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -44,7 +51,7 @@ fun RowList(context: Context, item: RealEstate) {
                     .background(MaterialTheme.colorScheme.tertiary)
             ) {
                 GlideImage(
-                    imageModel = "",
+                    imageModel = items2?.get(0)?.getPhotoUrl(),
                     contentScale = ContentScale.Crop,
                 )
             }
@@ -67,3 +74,5 @@ fun RowList(context: Context, item: RealEstate) {
         }
     }
 }
+
+
