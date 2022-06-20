@@ -25,9 +25,7 @@ import java.io.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealEstateDetailScreen(item: Serializable?) {
-
-    val realEstate:RealEstate=item as RealEstate
+fun RealEstateDetailScreen() {
 
     Scaffold(
         floatingActionButton = {
@@ -73,7 +71,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = realEstate.getType().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textPrice) {
@@ -81,7 +79,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = realEstate.getPrice().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textArea) {
@@ -90,7 +88,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.Place, contentDescription = "")
-                    Text(text = realEstate.getArea().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textNumberRoom) {
@@ -99,7 +97,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.Place , contentDescription = "")
-                    Text(text = realEstate.getNumberRoom().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textDescription) {
@@ -108,7 +106,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.Place, contentDescription = "")
-                    Text(text = realEstate.getDescription().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textAddress) {
@@ -117,7 +115,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = realEstate.getAddress().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textPointsOfInterest) {
@@ -126,7 +124,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = realEstate.getPointsOfInterest().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textStatus) {
@@ -135,7 +133,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = realEstate.getStatus().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textDateOfEntry) {
@@ -143,7 +141,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = realEstate.getDateOfEntry().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textDateOfSale) {
@@ -151,7 +149,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = realEstate.getDateOfSale().toString())
+                    Text(text = "")
                 }
 
                 Row(modifier = Modifier.constrainAs(textRealEstateAgent) {
@@ -160,7 +158,7 @@ fun RealEstateDetailScreen(item: Serializable?) {
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = realEstate.getRealEstateAgent().toString())
+                    Text(text = "")
                 }
 
 

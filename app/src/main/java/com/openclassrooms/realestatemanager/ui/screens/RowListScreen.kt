@@ -43,7 +43,6 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
     ) {
         Row(Modifier.clickable {
             val intent = Intent(context, RealEstateDetail::class.java)
-            intent.putExtra("item", item)
 
             context.startActivity(intent)
 

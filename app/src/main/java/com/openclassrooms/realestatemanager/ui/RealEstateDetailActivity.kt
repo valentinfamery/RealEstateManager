@@ -19,11 +19,7 @@ class RealEstateDetail : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val item = intent.getSerializableExtra("item")
-                    val photos = intent.getStringArrayExtra("photos")
-
-
-                    RealEstateDetailScreen(item)
+                    RealEstateDetailScreen()
                 }
             }
         }
