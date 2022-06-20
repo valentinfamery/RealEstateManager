@@ -41,4 +41,8 @@ class RealEstateViewModel : ViewModel() {
        return realEstateRepository.getRealEstatePhotosWithId(id)
     }
 
+    fun getRealEstateById(id : String): MutableLiveData<RealEstate?> {
+        return realEstateRepository.getRealEstateById(id)
+    }
+
 }

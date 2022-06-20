@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -21,11 +23,15 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import java.io.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealEstateDetailScreen() {
+fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: String?) {
+
+    val itemRealEstate by realEstateViewModel.getRealEstateById(itemId.toString()).observeAsState()
+
 
     Scaffold(
         floatingActionButton = {
@@ -71,7 +77,7 @@ fun RealEstateDetailScreen() {
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = "")
+                    Text(text = itemRealEstate?.getType().toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textPrice) {

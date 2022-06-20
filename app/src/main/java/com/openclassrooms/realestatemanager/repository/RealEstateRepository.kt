@@ -13,6 +13,7 @@ import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.models.User
 import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
 import com.openclassrooms.realestatemanager.service.ApiInterface
 import com.openclassrooms.realestatemanager.service.ApiService
@@ -36,6 +37,7 @@ class RealEstateRepository {
 
 
     private val usersCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)
+
 
     private fun imagesCollectionRealEstates(restaurantId: String): CollectionReference {
         return FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE).document(restaurantId).collection(COLLECTION_REAL_ESTATE_IMAGES)
@@ -174,6 +176,19 @@ class RealEstateRepository {
         })
 
         return result
+    }
+
+    fun getRealEstateById(id : String): MutableLiveData<RealEstate?>{
+        val result : MutableLiveData<RealEstate?> = MutableLiveData<RealEstate?>()
+
+        usersCollection.document(id).get().addOnSuccessListener {
+            usersCollection.document(id).get().addOnSuccessListener { documentSnapshot ->
+                val realEstate = documentSnapshot.toObject(RealEstate::class.java)
+                result.postValue(realEstate)
+            }
+        }
+        return result
+
     }
 
 

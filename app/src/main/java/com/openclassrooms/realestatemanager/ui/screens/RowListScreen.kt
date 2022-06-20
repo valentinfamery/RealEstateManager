@@ -34,7 +34,6 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
 
 
 
-
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -43,6 +42,7 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
     ) {
         Row(Modifier.clickable {
             val intent = Intent(context, RealEstateDetail::class.java)
+            intent.putExtra("itemId",item.getId())
 
             context.startActivity(intent)
 
