@@ -42,6 +42,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import java.io.Serializable
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -49,7 +50,10 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterial3Api
 @Composable
-fun NewRealEstateScreen(realEstateViewModel: RealEstateViewModel) {
+fun NewRealEstateScreen(
+    realEstateViewModel: RealEstateViewModel
+
+) {
 
     val openDialog = remember { mutableStateOf(false) }
     var titlePhoto by remember { mutableStateOf("") }

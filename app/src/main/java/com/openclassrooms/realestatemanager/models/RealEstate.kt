@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.models
 
+import java.io.Serializable
 
-class RealEstate(
+
+class RealEstate (
     private var id: String? = null,
     private var type: String? = null,
     private var price: Int? = null,
@@ -17,7 +19,7 @@ class RealEstate(
     private var lat: Double? = null,
     private var lng: Double? = null
 
-) {
+) : Serializable {
     fun getType(): String? {
         return type
     }

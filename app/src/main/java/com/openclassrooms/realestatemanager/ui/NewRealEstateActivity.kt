@@ -1,22 +1,17 @@
 package com.openclassrooms.realestatemanager.ui
 
-import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
-import android.widget.DatePicker
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.openclassrooms.realestatemanager.ui.screens.NewRealEstateScreen
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
-import java.util.*
 
 class NewRealEstateActivity : ComponentActivity() {
 
@@ -36,6 +31,8 @@ class NewRealEstateActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
+
                     NewRealEstateScreen(realEstateViewModel)
                 }
             }

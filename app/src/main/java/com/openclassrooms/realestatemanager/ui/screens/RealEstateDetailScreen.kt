@@ -2,31 +2,32 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import java.io.Serializable
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealEstateDetailScreen() {
+fun RealEstateDetailScreen(item: Serializable?) {
+
+    val realEstate:RealEstate=item as RealEstate
 
     Scaffold(
         floatingActionButton = {
@@ -39,9 +40,11 @@ fun RealEstateDetailScreen() {
         },
         content = {
 
-            ConstraintLayout() {
+            ConstraintLayout(modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxHeight()) {
 
-                val (centerAlignedTopAppBar, lazyVerticalGrid) = createRefs()
+                val (centerAlignedTopAppBar,textType,textPrice,textArea,textNumberRoom,textDescription,textAddress,textPointsOfInterest,textStatus,textDateOfEntry,textDateOfSale,textRealEstateAgent) = createRefs()
 
                 CenterAlignedTopAppBar(
                     title = {
@@ -63,94 +66,113 @@ fun RealEstateDetailScreen() {
 
                 )
 
-                LazyVerticalGrid(
-                    modifier = Modifier.constrainAs(lazyVerticalGrid) {
-                        top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
-                    },
-                    columns = GridCells.Adaptive(minSize = 150.dp)
-                ) {
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                        ) {
-                            Row {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth()
-                                        .align(Alignment.CenterVertically)
-                                ) {
-                                    Text(
-                                        text = "VIEW DETAIL",
-                                        style = MaterialTheme.typography.headlineLarge
-                                    )
-                                    Text(
-                                        text = "VIEW DETAIL",
-                                        style = MaterialTheme.typography.headlineSmall
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                        ) {
-                            Row {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth()
-                                        .align(Alignment.CenterVertically)
-                                ) {
-                                    Text(
-                                        text = "VIEW DETAIL",
-                                        style = MaterialTheme.typography.headlineLarge
-                                    )
-                                    Text(
-                                        text = "VIEW DETAIL",
-                                        style = MaterialTheme.typography.headlineSmall
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                        ) {
-                            Row {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth()
-                                        .align(Alignment.CenterVertically)
-                                ) {
-                                    Text(
-                                        text = "VIEW DETAIL",
-                                        style = MaterialTheme.typography.headlineLarge
-                                    )
-                                    Text(
-                                        text = "VIEW DETAIL",
-                                        style = MaterialTheme.typography.headlineSmall
-                                    )
-                                }
-                            }
-                        }
-                    }
+
+
+                Row(modifier = Modifier.constrainAs(textType) {
+                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Text(text = realEstate.getType().toString())
                 }
+
+                Row(modifier = Modifier.constrainAs(textPrice) {
+                    top.linkTo(textType.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Text(text = realEstate.getPrice().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textArea) {
+                    top.linkTo(textPrice.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Icon(Icons.Filled.Place, contentDescription = "")
+                    Text(text = realEstate.getArea().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textNumberRoom) {
+                    top.linkTo(textArea.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Icon(Icons.Filled.Place , contentDescription = "")
+                    Text(text = realEstate.getNumberRoom().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textDescription) {
+                    top.linkTo(textNumberRoom.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Icon(Icons.Filled.Place, contentDescription = "")
+                    Text(text = realEstate.getDescription().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textAddress) {
+                    top.linkTo(textDescription.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = "")
+                    Text(text = realEstate.getAddress().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textPointsOfInterest) {
+                    top.linkTo(textAddress.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = "")
+                    Text(text = realEstate.getPointsOfInterest().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textStatus) {
+                    top.linkTo(textPointsOfInterest.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = "")
+                    Text(text = realEstate.getStatus().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textDateOfEntry) {
+                    top.linkTo(textStatus.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Text(text = realEstate.getDateOfEntry().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textDateOfSale) {
+                    top.linkTo(textDateOfEntry.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Text(text = realEstate.getDateOfSale().toString())
+                }
+
+                Row(modifier = Modifier.constrainAs(textRealEstateAgent) {
+                    top.linkTo(textDateOfSale.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                }) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = "")
+                    Text(text = realEstate.getRealEstateAgent().toString())
+                }
+
+
+
+
+
+
+
+
             }
-
-        })
+        }
+    )
 
 
 
@@ -158,10 +180,3 @@ fun RealEstateDetailScreen() {
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview2() {
-    Projet_9_OC_RealEstateManagerTheme {
-        RealEstateDetailScreen()
-    }
-}

@@ -24,12 +24,16 @@ import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.RealEstateDetail
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import java.io.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateViewModel) {
 
     val items2 by realEstateViewModel.getRealEstatePhotosWithId(item.getId().toString()).observeAsState()
+
+
+
 
     Card(
         modifier = Modifier
@@ -38,8 +42,9 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
         shape = RoundedCornerShape(corner = CornerSize(16.dp))
     ) {
         Row(Modifier.clickable {
-            val intent =
-                Intent(context, RealEstateDetail::class.java)
+            val intent = Intent(context, RealEstateDetail::class.java)
+            intent.putExtra("item", item)
+
             context.startActivity(intent)
 
         }) {
