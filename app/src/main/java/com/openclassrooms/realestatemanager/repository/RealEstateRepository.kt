@@ -93,7 +93,7 @@ class RealEstateRepository {
             val id = UUID.randomUUID().toString()
 
 
-            val latLng = getLatLngRealEstate("1600+Amphitheatre+Parkway,+Mountain+View,+CA")
+            val latLng = getLatLngRealEstate(address3)
 
             val realEstate = RealEstate(
                 id,
@@ -113,30 +113,21 @@ class RealEstateRepository {
             )
             usersCollection.document(id).set(realEstate)
 
-
-
-        var listToFirebase : MutableList<PhotoWithTextFirebase> ?= null
-
         if(listPhotos!=null) {
             for (photoWithText in listPhotos) {
-
                 runBlocking {
                     launch {
                         val urlFinal = uploadImageAndGetUrl(photoWithText.getPhotoUri()!!,id)
 
                         val photoWithTextFirebase = PhotoWithTextFirebase(urlFinal,photoWithText.getText())
 
-                        listToFirebase?.add(photoWithTextFirebase)
+                        imagesCollectionRealEstates(id).document().set(photoWithTextFirebase)
+
                     }
                 }
             }
         }
 
-        if(listToFirebase!=null){
-            for(photoWithTextFirebase in listToFirebase){
-                imagesCollectionRealEstates(id).document().set(photoWithTextFirebase)
-            }
-        }
 
 
     }

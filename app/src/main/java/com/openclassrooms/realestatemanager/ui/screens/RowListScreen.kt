@@ -30,7 +30,7 @@ import java.io.Serializable
 @Composable
 fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateViewModel) {
 
-    val items2 by realEstateViewModel.getRealEstatePhotosWithId(item.getId().toString()).observeAsState()
+    val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.getId().toString()).observeAsState()
 
 
 
@@ -47,18 +47,21 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
             context.startActivity(intent)
 
         }) {
-            Box(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(84.dp)
-                    .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
-                    .background(MaterialTheme.colorScheme.tertiary)
-            ) {
-                GlideImage(
-                    imageModel = items2?.get(0)?.getPhotoUrl(),
-                    contentScale = ContentScale.Crop,
-                )
-            }
+
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(84.dp)
+                        .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                        .background(MaterialTheme.colorScheme.tertiary)
+                ) {
+                    GlideImage(
+                        imageModel = items2?.get(0)?.getPhotoUrl(),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+
+
 
             Column(
                 modifier = Modifier
