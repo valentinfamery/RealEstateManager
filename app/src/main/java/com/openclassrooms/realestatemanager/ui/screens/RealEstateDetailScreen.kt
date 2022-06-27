@@ -120,7 +120,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = itemRealEstate?.getType().toString())
+                    Text(text = itemRealEstate?.type.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textPrice) {

@@ -93,40 +93,69 @@ class RealEstateRepository {
             val id = UUID.randomUUID().toString()
 
 
-            val latLng = getLatLngRealEstate(address3)
+        val listRestaurantApiNearBySearchResponseOut: Call<ResultGeocoding?>? = `interface`.getResultGeocodingResponse(address3)
 
-            val realEstate = RealEstate(
-                id,
-                type,
-                price,
-                area,
-                numberRoom,
-                description,
-                address3,
-                pointOfInterest,
-                status,
-                dateEntry,
-                dateSale,
-                firebaseAuth.currentUser?.displayName,
-                latLng?.latitude,
-                latLng?.longitude
-            )
-            usersCollection.document(id).set(realEstate)
+        listRestaurantApiNearBySearchResponseOut?.enqueue(object : Callback<ResultGeocoding?> {
+            override fun onResponse(call: Call<ResultGeocoding?>, response: Response<ResultGeocoding?>) {
 
-        if(listPhotos!=null) {
-            for (photoWithText in listPhotos) {
-                runBlocking {
-                    launch {
-                        val urlFinal = uploadImageAndGetUrl(photoWithText.getPhotoUri()!!,id)
+                if (response.body() != null) {
 
-                        val photoWithTextFirebase = PhotoWithTextFirebase(urlFinal,photoWithText.getText())
+                    val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
+                    val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
+                    Log.e(lat.toString(),lng.toString())
+                    Log.e("latlng",LatLng(lat!!, lng!!).toString())
+                    val latLng = LatLng(lat, lng)
+                    Log.e("result",latLng.toString())
 
-                        imagesCollectionRealEstates(id).document().set(photoWithTextFirebase)
+                    val realEstate = RealEstate(
+                        id,
+                        type,
+                        price,
+                        area,
+                        numberRoom,
+                        description,
+                        address3,
+                        pointOfInterest,
+                        status,
+                        dateEntry,
+                        dateSale,
+                        firebaseAuth.currentUser?.displayName,
+                        latLng.latitude,
+                        latLng.longitude
+                    )
+                    usersCollection.document(id).set(realEstate)
 
+                    if(listPhotos!=null) {
+                        for (photoWithText in listPhotos) {
+                            runBlocking {
+                                launch {
+                                    val urlFinal = uploadImageAndGetUrl(photoWithText.getPhotoUri()!!,id)
+
+                                    val photoWithTextFirebase = PhotoWithTextFirebase(urlFinal,photoWithText.getText())
+
+                                    imagesCollectionRealEstates(id).document().set(photoWithTextFirebase)
+
+                                }
+                            }
+                        }
                     }
+
+
                 }
             }
-        }
+
+            override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
+
+            }
+        })
+
+
+
+
+
+
+
+
 
 
 
@@ -146,25 +175,9 @@ class RealEstateRepository {
 
     fun getLatLngRealEstate(address: String) : LatLng?{
         var result :LatLng ?=null
-        val listRestaurantApiNearBySearchResponseOut: Call<ResultGeocoding?>? = `interface`.getResultGeocodingResponse(address)
 
-        listRestaurantApiNearBySearchResponseOut?.enqueue(object : Callback<ResultGeocoding?> {
-            override fun onResponse(call: Call<ResultGeocoding?>, response: Response<ResultGeocoding?>) {
 
-                if (response.body() != null) {
-
-                    val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
-                    val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
-
-                    result = LatLng(lat!!, lng!!)
-                    Log.e(lat.toString(),lng.toString())
-                }
-            }
-
-            override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
-                result = null
-            }
-        })
+        Log.e("result",result.toString())
 
         return result
     }

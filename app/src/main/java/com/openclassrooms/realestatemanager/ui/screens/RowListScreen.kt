@@ -30,7 +30,7 @@ import java.io.Serializable
 @Composable
 fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateViewModel) {
 
-    val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.getId().toString()).observeAsState()
+    val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.id.toString()).observeAsState()
 
 
 
@@ -42,7 +42,7 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
     ) {
         Row(Modifier.clickable {
             val intent = Intent(context, RealEstateDetail::class.java)
-            intent.putExtra("itemId",item.getId())
+            intent.putExtra("itemId",item.id)
 
             context.startActivity(intent)
 
@@ -70,11 +70,11 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
                     .align(Alignment.CenterVertically)
             ) {
                 Text(
-                    text = item.getType().toString(),
+                    text = item.type.toString(),
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Text(
-                    text = item.getPrice().toString(),
+                    text = item.price.toString(),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
