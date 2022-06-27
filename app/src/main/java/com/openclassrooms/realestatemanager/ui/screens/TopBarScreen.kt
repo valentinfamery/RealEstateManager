@@ -30,7 +30,6 @@ fun TopBar(
         },
         actions = {
             IconButton(onClick = {
-                navController.navigate("SearchView")
             }) {
                 Icon(Icons.Filled.Search, contentDescription = "")
             }

@@ -17,13 +17,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.google.accompanist.flowlayout.FlowColumn
+import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
+import com.skydoves.landscapist.glide.GlideImage
 import java.io.Serializable
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,6 +35,8 @@ import java.io.Serializable
 fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: String?) {
 
     val itemRealEstate by realEstateViewModel.getRealEstateById(itemId.toString()).observeAsState()
+
+    val listPhotos by realEstateViewModel.getRealEstatePhotosWithId(itemId.toString()).observeAsState()
 
 
     Scaffold(
@@ -48,7 +54,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                 .verticalScroll(rememberScrollState())
                 .fillMaxHeight()) {
 
-                val (centerAlignedTopAppBar,textType,textPrice,textArea,textNumberRoom,textDescription,textAddress,textPointsOfInterest,textStatus,textDateOfEntry,textDateOfSale,textRealEstateAgent) = createRefs()
+                val (centerAlignedTopAppBar,textType,textPrice,textArea,textNumberRoom,textDescription,textAddress,textPointsOfInterest,textStatus,textDateOfEntry,textDateOfSale,textRealEstateAgent,lazyColumnPhoto) = createRefs()
 
                 CenterAlignedTopAppBar(
                     title = {
@@ -69,6 +75,43 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     }
 
                 )
+
+                FlowColumn(modifier = Modifier.constrainAs(lazyColumnPhoto) {
+                    top.linkTo(parent.top, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 25.dp)
+                    end.linkTo(parent.end, margin = 25.dp)
+                }) {
+                    repeat(listPhotos?.size ?: 0) {
+                        Box(modifier = Modifier.size(184.dp)) {
+
+                            Column() {
+                                ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+
+                                    val (image,text)  = createRefs()
+
+                                    GlideImage(
+                                        imageModel = listPhotos?.get(it)?.getPhotoUrl(),
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.constrainAs(image){
+                                            top.linkTo(parent.top, margin = 0.dp)
+                                            start.linkTo(parent.start, margin = 0.dp)
+                                            end.linkTo(parent.end, margin = 0.dp)
+                                        }
+                                    )
+                                    Text(text = listPhotos?.get(it)?.getText() ?:"" ,modifier = Modifier.constrainAs(text){
+                                        top.linkTo(image.bottom, margin = 0.dp)
+                                        start.linkTo(parent.start, margin = 0.dp)
+                                        end.linkTo(parent.end, margin = 0.dp)
+                                    })
+
+                                }
+
+
+
+                            }
+                        }
+                    }
+                }
 
 
 

@@ -106,7 +106,6 @@ fun MapScreen(
                 }
         ) {
             composable("topBarMap") { TopBar(scope,drawerState,navController,"Map")}
-            composable("SearchView") { SearchView(textState,navController)}
         }
 
 
