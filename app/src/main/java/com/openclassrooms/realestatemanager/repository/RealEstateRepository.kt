@@ -129,9 +129,9 @@ class RealEstateRepository {
                         for (photoWithText in listPhotos) {
                             runBlocking {
                                 launch {
-                                    val urlFinal = uploadImageAndGetUrl(photoWithText.getPhotoUri()!!,id)
+                                    val urlFinal = uploadImageAndGetUrl(photoWithText.photoUri!!,id)
 
-                                    val photoWithTextFirebase = PhotoWithTextFirebase(urlFinal,photoWithText.getText())
+                                    val photoWithTextFirebase = PhotoWithTextFirebase(urlFinal,photoWithText.text)
 
                                     imagesCollectionRealEstates(id).document().set(photoWithTextFirebase)
 

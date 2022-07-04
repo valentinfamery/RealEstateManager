@@ -473,7 +473,7 @@ fun NewRealEstateScreen(
                                     val (image,text)  = createRefs()
 
                                     GlideImage(
-                                        imageModel = listPhotos[it].getPhotoUri(),
+                                        imageModel = listPhotos[it].photoUri,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.constrainAs(image){
                                             top.linkTo(parent.top, margin = 0.dp)
@@ -481,7 +481,7 @@ fun NewRealEstateScreen(
                                             end.linkTo(parent.end, margin = 0.dp)
                                         }
                                     )
-                                    Text(text = listPhotos[it].getText(),modifier = Modifier.constrainAs(text){
+                                    Text(text = listPhotos[it].text,modifier = Modifier.constrainAs(text){
                                         top.linkTo(image.bottom, margin = 0.dp)
                                         start.linkTo(parent.start, margin = 0.dp)
                                         end.linkTo(parent.end, margin = 0.dp)

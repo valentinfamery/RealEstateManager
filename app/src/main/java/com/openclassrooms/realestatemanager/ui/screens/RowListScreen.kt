@@ -56,7 +56,7 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
                     GlideImage(
-                        imageModel = items2?.get(0)?.getPhotoUrl(),
+                        imageModel = items2?.get(0)?.photoUrl,
                         contentScale = ContentScale.Crop,
                     )
                 }

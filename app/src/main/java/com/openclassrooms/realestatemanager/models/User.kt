@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.models
 
-class User(
+data class User(
     var uid: String? = "",
-    var username: String? ="", var urlPicture: String? ="", var email: String? =""
+    var username: String? ="",
+    var urlPicture: String? ="",
+    var email: String? =""
 )

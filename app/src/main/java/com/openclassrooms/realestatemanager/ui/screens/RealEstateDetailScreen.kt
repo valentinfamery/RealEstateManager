@@ -90,7 +90,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                                     val (image,text)  = createRefs()
 
                                     GlideImage(
-                                        imageModel = listPhotos?.get(it)?.getPhotoUrl(),
+                                        imageModel = listPhotos?.get(it)?.photoUrl,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.constrainAs(image){
                                             top.linkTo(parent.top, margin = 0.dp)
@@ -98,7 +98,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                                             end.linkTo(parent.end, margin = 0.dp)
                                         }
                                     )
-                                    Text(text = listPhotos?.get(it)?.getText() ?:"" ,modifier = Modifier.constrainAs(text){
+                                    Text(text = listPhotos?.get(it)?.text ?:"" ,modifier = Modifier.constrainAs(text){
                                         top.linkTo(image.bottom, margin = 0.dp)
                                         start.linkTo(parent.start, margin = 0.dp)
                                         end.linkTo(parent.end, margin = 0.dp)
