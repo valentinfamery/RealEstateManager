@@ -19,11 +19,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.flowlayout.FlowColumn
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
@@ -54,7 +62,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                 .verticalScroll(rememberScrollState())
                 .fillMaxHeight()) {
 
-                val (centerAlignedTopAppBar,textType,textPrice,textArea,textNumberRoom,textDescription,textAddress,textPointsOfInterest,textStatus,textDateOfEntry,textDateOfSale,textRealEstateAgent,lazyColumnPhoto) = createRefs()
+                val (centerAlignedTopAppBar,textType,textPrice,textArea,textNumberRoom,textDescription,textAddress,textPointsOfInterest,textStatus,textDateOfEntry,textDateOfSale,textRealEstateAgent,lazyColumnPhoto,googleMap) = createRefs()
 
                 CenterAlignedTopAppBar(
                     title = {
@@ -77,37 +85,21 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                 )
 
                 FlowColumn(modifier = Modifier.constrainAs(lazyColumnPhoto) {
-                    top.linkTo(parent.top, margin = 25.dp)
+                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 25.dp)
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
                     repeat(listPhotos?.size ?: 0) {
-                        Box(modifier = Modifier.size(184.dp)) {
+                        Box(modifier = Modifier
+                            .size(184.dp)
+                            .clip(RoundedCornerShape(15.dp))) {
 
                             Column() {
-                                ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-
-                                    val (image,text)  = createRefs()
-
                                     GlideImage(
                                         imageModel = listPhotos?.get(it)?.photoUrl,
                                         contentScale = ContentScale.Crop,
-                                        modifier = Modifier.constrainAs(image){
-                                            top.linkTo(parent.top, margin = 0.dp)
-                                            start.linkTo(parent.start, margin = 0.dp)
-                                            end.linkTo(parent.end, margin = 0.dp)
-                                        }
                                     )
-                                    Text(text = listPhotos?.get(it)?.text ?:"" ,modifier = Modifier.constrainAs(text){
-                                        top.linkTo(image.bottom, margin = 0.dp)
-                                        start.linkTo(parent.start, margin = 0.dp)
-                                        end.linkTo(parent.end, margin = 0.dp)
-                                    })
-
-                                }
-
-
-
+                                    Text(text = listPhotos?.get(it)?.text ?:"" )
                             }
                         }
                     }
@@ -116,7 +108,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
 
 
                 Row(modifier = Modifier.constrainAs(textType) {
-                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
+                    top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
@@ -128,7 +120,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = "")
+                    Text(text = itemRealEstate?.price.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textArea) {
@@ -136,8 +128,8 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Icon(Icons.Filled.Place, contentDescription = "")
-                    Text(text = "")
+                    Icon(painter = painterResource(id = R.drawable.ic_baseline_crop_square_24), contentDescription = "")
+                    Text(text = itemRealEstate?.area.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textNumberRoom) {
@@ -145,8 +137,8 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Icon(Icons.Filled.Place , contentDescription = "")
-                    Text(text = "")
+                    Icon(painter = painterResource(id = R.drawable.ic_baseline_house_24) , contentDescription = "")
+                    Text(text = itemRealEstate?.numberRoom.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textDescription) {
@@ -154,8 +146,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Icon(Icons.Filled.Place, contentDescription = "")
-                    Text(text = "")
+                    Text(text = itemRealEstate?.description.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textAddress) {
@@ -164,25 +155,15 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
                     Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = "")
+                    Text(text = itemRealEstate?.numberAndStreet.toString())
                 }
 
-                Row(modifier = Modifier.constrainAs(textPointsOfInterest) {
+                Row(modifier = Modifier.constrainAs(textStatus) {
                     top.linkTo(textAddress.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = "")
-                }
-
-                Row(modifier = Modifier.constrainAs(textStatus) {
-                    top.linkTo(textPointsOfInterest.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = "")
+                    Text(text = itemRealEstate?.status.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textDateOfEntry) {
@@ -190,7 +171,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = "")
+                    Text(text = itemRealEstate?.dateOfEntry.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textDateOfSale) {
@@ -198,7 +179,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Text(text = "")
+                    Text(text = itemRealEstate?.dateOfSale.toString())
                 }
 
                 Row(modifier = Modifier.constrainAs(textRealEstateAgent) {
@@ -206,9 +187,41 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }) {
-                    Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = "")
+                    Text(text = itemRealEstate?.realEstateAgent.toString())
                 }
+
+
+                if(itemRealEstate?.lat != null && itemRealEstate?.lng != null){
+
+                    val latlng  = LatLng(
+                        itemRealEstate?.lat!!, itemRealEstate?.lng!!
+                    )
+
+                    val cameraPositionState = rememberCameraPositionState {
+                        position = CameraPosition.fromLatLngZoom(latlng, 10f)
+                    }
+
+
+
+                    GoogleMap(cameraPositionState = cameraPositionState, modifier = Modifier
+                        .constrainAs(googleMap) {
+                            top.linkTo(textRealEstateAgent.bottom, margin = 5.dp)
+                            start.linkTo(parent.start, margin = 5.dp)
+                            end.linkTo(parent.end, margin = 5.dp)
+                            bottom.linkTo(parent.bottom, margin = 75.dp)
+                        }
+                        .size(200.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                    ) {
+                        Marker(state = MarkerState(position = latlng)) {
+
+                        }
+                    }
+
+                }
+
+
+
 
 
 

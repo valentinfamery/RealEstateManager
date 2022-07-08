@@ -27,13 +27,19 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -41,6 +47,7 @@ import androidx.core.content.ContextCompat
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import java.io.Serializable
 import java.time.format.DateTimeFormatter
@@ -61,8 +68,9 @@ fun NewRealEstateScreen(
     val listPhotos = remember { mutableStateListOf<PhotoWithText>() }
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
-    
-    
+
+    val userDataState by UserViewModel().userData.observeAsState()
+
     var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
 
     val someActivityResultLauncher = rememberLauncherForActivityResult(
@@ -99,14 +107,14 @@ fun NewRealEstateScreen(
             }
         },
     )
-    
+
     if (openDialog.value) {
         Dialog(
             onDismissRequest = { },
         ) {
             Card(
                 shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.defaultMinSize(100.dp,150.dp),
+                modifier = Modifier.defaultMinSize(100.dp, 150.dp),
             ) {
 
                 ConstraintLayout() {
@@ -142,7 +150,7 @@ fun NewRealEstateScreen(
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.size(150.dp)
                             )
-                        }else{
+                        } else {
                             GlideImage(
                                 imageModel = "",
                                 contentScale = ContentScale.Crop,
@@ -209,8 +217,8 @@ fun NewRealEstateScreen(
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = PhotoWithText(null,photoSelect,titlePhoto)
-                            
+                            val photoWithText = PhotoWithText(null, photoSelect, titlePhoto)
+
                             listPhotos.add(photoWithText)
                             openDialog.value = false
                             /*TODO*/
@@ -233,15 +241,24 @@ fun NewRealEstateScreen(
         var entryArea by rememberSaveable { mutableStateOf("") }
         var entryNumberRoom by rememberSaveable { mutableStateOf("") }
         var entryDescription by rememberSaveable { mutableStateOf("") }
-        var entryAddress by rememberSaveable { mutableStateOf("") }
-        var entryPointOfInterest by rememberSaveable { mutableStateOf("") }
+        var entryNumberAndStreet by rememberSaveable { mutableStateOf("") }
+        var entryNumberApartement by rememberSaveable { mutableStateOf("") }
+        var entryCity by rememberSaveable { mutableStateOf("") }
+        var entryRegion by rememberSaveable { mutableStateOf("") }
+        var entryPostalCode by rememberSaveable { mutableStateOf("") }
+        var entryCountry by rememberSaveable { mutableStateOf("") }
         var entryStatus by rememberSaveable { mutableStateOf("") }
 
         var textDateOfEntry by rememberSaveable { mutableStateOf("00/00/0000") }
         var textDateOfSale by rememberSaveable { mutableStateOf("00/00/0000") }
 
+        val checkedStateHopital = remember { mutableStateOf(false) }
+        val checkedStateSchool = remember { mutableStateOf(false) }
+        val checkedStateShops = remember { mutableStateOf(false) }
+        val checkedStateParks = remember { mutableStateOf(false) }
 
-        var listType = listOf("Appartement","Loft","Manoir","Maison")
+        val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
+        val listStatus = listOf("For Sale", "Sold")
 
         ConstraintLayout(
             modifier = Modifier
@@ -249,8 +266,9 @@ fun NewRealEstateScreen(
                 .fillMaxHeight()
         ) {
 
-            val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldPointOfInterest, fieldStatus, rowDateEntryButtonAndText, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto,dropdownMenu) = createRefs()
+            val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
 
+            val (rowHopital, rowSchool, rowShops, rowParks ,dropdownMenuStatus,fieldNumberAndStreet,fieldNumberApartement,fieldCity,fieldRegion,fieldPostalCode,fieldCountry) = createRefs()
             CenterAlignedTopAppBar(
                 title = {
                     Text(text = "New Estate Manager")
@@ -271,8 +289,17 @@ fun NewRealEstateScreen(
             )
 
             var expanded by remember { mutableStateOf(false) }
+            var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
+
+            var expandedStatus by remember { mutableStateOf(false) }
+            var mTextFieldSizeStatus by remember { mutableStateOf(Size.Zero) }
 
             val icon = if (expanded)
+                Icons.Filled.KeyboardArrowUp
+            else
+                Icons.Filled.KeyboardArrowDown
+
+            val iconStatus = if (expandedStatus)
                 Icons.Filled.KeyboardArrowUp
             else
                 Icons.Filled.KeyboardArrowDown
@@ -280,14 +307,18 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryType,
                 onValueChange = { entryType = it },
-                label = {Text("Type")},
+                label = { Text("Type") },
                 modifier = Modifier.constrainAs(fieldType) {
                     top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
                     start.linkTo(parent.start, margin = 50.dp)
                     end.linkTo(parent.end, margin = 50.dp)
+                }.onGloballyPositioned { coordinates ->
+                    // This value is used to assign to
+                    // the DropDown the same width
+                    mTextFieldSize = coordinates.size.toSize()
                 },
                 trailingIcon = {
-                    Icon(icon,"contentDescription",
+                    Icon(icon, "contentDescription",
                         Modifier.clickable { expanded = !expanded })
                 }
 
@@ -296,24 +327,25 @@ fun NewRealEstateScreen(
 
             Box(
                 modifier = Modifier.constrainAs(dropdownMenu) {
-                    top.linkTo(fieldType.bottom, margin = 0.dp)
+                    top.linkTo(fieldType.top, margin = 0.dp)
                     start.linkTo(fieldType.start, margin = 0.dp)
-                    end.linkTo(fieldType.end, margin = 0.dp)
+
                 },
             ) {
 
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
                 ) {
-                    listType.forEach{
+                    listType.forEach {
                         DropdownMenuItem(
                             text = { Text(it) },
                             onClick = {
-                                      entryType = it
+                                entryType = it
                                 expanded = false
-                                      /* Handle edit! */
-                                      },
+                                /* Handle edit! */
+                            },
                         )
                     }
                 }
@@ -333,7 +365,7 @@ fun NewRealEstateScreen(
             )
 
             TextField(
-                value = entryArea,
+                value = entryArea ,
                 onValueChange = { entryArea = it },
                 label = { Text("Area") },
                 singleLine = true,
@@ -370,12 +402,14 @@ fun NewRealEstateScreen(
                 }
             )
 
+
+
             TextField(
-                value = entryAddress,
-                onValueChange = { entryAddress = it },
-                label = { Text("Address") },
+                value = entryNumberAndStreet,
+                onValueChange = { entryNumberAndStreet = it },
+                label = { Text("NumberAndStreet") },
                 singleLine = true,
-                modifier = Modifier.constrainAs(fieldAddress) {
+                modifier = Modifier.constrainAs(fieldNumberAndStreet) {
                     top.linkTo(fieldDescription.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 50.dp)
                     end.linkTo(parent.end, margin = 50.dp)
@@ -383,16 +417,142 @@ fun NewRealEstateScreen(
             )
 
             TextField(
-                value = entryPointOfInterest,
-                onValueChange = { entryPointOfInterest = it },
-                label = { Text("PointOfInterest") },
+                value = entryNumberApartement,
+                onValueChange = { entryNumberApartement = it },
+                label = { Text("NumberApartement") },
                 singleLine = true,
-                modifier = Modifier.constrainAs(fieldPointOfInterest) {
-                    top.linkTo(fieldAddress.bottom, margin = 25.dp)
+                modifier = Modifier.constrainAs(fieldNumberApartement) {
+                    top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 50.dp)
                     end.linkTo(parent.end, margin = 50.dp)
                 }
             )
+
+            TextField(
+                value = entryCity,
+                onValueChange = { entryCity = it },
+                label = { Text("City") },
+                singleLine = true,
+                modifier = Modifier.constrainAs(fieldCity) {
+                    top.linkTo(fieldNumberApartement.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 50.dp)
+                    end.linkTo(parent.end, margin = 50.dp)
+                }
+            )
+
+            TextField(
+                value = entryRegion,
+                onValueChange = { entryRegion = it },
+                label = { Text("Region") },
+                singleLine = true,
+                modifier = Modifier.constrainAs(fieldRegion) {
+                    top.linkTo(fieldCity.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 50.dp)
+                    end.linkTo(parent.end, margin = 50.dp)
+                }
+            )
+
+            TextField(
+                value = entryPostalCode,
+                onValueChange = { entryPostalCode = it },
+                label = { Text("Postal Code") },
+                singleLine = true,
+                modifier = Modifier.constrainAs(fieldPostalCode) {
+                    top.linkTo(fieldRegion.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 50.dp)
+                    end.linkTo(parent.end, margin = 50.dp)
+                }
+            )
+
+            TextField(
+                value = entryCountry,
+                onValueChange = { entryCountry = it },
+                label = { Text("Country") },
+                singleLine = true,
+                modifier = Modifier.constrainAs(fieldCountry) {
+                    top.linkTo(fieldPostalCode.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 50.dp)
+                    end.linkTo(parent.end, margin = 50.dp)
+                }
+            )
+
+
+            Row(
+                modifier = Modifier
+                    .constrainAs(rowHopital) {
+                        top.linkTo(fieldCountry.bottom, margin = 5.dp)
+                        start.linkTo(parent.start, margin = 50.dp)
+                        end.linkTo(parent.end, margin = 50.dp)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+
+                ) {
+
+                Checkbox(
+                    checked = checkedStateHopital.value,
+                    onCheckedChange = { checkedStateHopital.value = it },
+                )
+                Text(text = "Near Hopital")
+            }
+
+            Row(
+                modifier = Modifier
+                    .constrainAs(rowSchool) {
+                        top.linkTo(rowHopital.bottom, margin = 5.dp)
+                        start.linkTo(parent.start, margin = 50.dp)
+                        end.linkTo(parent.end, margin = 50.dp)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+
+                ) {
+                Checkbox(
+                    checked = checkedStateSchool.value,
+                    onCheckedChange = { checkedStateSchool.value = it }
+                )
+                Text(text = "Near School")
+            }
+
+            Row(
+                modifier = Modifier
+                    .constrainAs(rowShops) {
+                        top.linkTo(rowSchool.bottom, margin = 5.dp)
+                        start.linkTo(parent.start, margin = 50.dp)
+                        end.linkTo(parent.end, margin = 50.dp)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Checkbox(
+                    checked = checkedStateShops.value,
+                    onCheckedChange = { checkedStateShops.value = it }
+                )
+                Text(text = "Near Shops")
+            }
+
+            Row(
+                modifier = Modifier
+                    .constrainAs(rowParks) {
+                        top.linkTo(rowShops.bottom, margin = 5.dp)
+                        start.linkTo(parent.start, margin = 50.dp)
+                        end.linkTo(parent.end, margin = 50.dp)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Checkbox(
+                    checked = checkedStateParks.value,
+                    onCheckedChange = { checkedStateParks.value = it }
+                )
+                Text(text = "Near Parks")
+            }
+
+
+
+
+
+
 
             TextField(
                 value = entryStatus,
@@ -400,11 +560,45 @@ fun NewRealEstateScreen(
                 label = { Text("Status") },
                 singleLine = true,
                 modifier = Modifier.constrainAs(fieldStatus) {
-                    top.linkTo(fieldPointOfInterest.bottom, margin = 25.dp)
+                    top.linkTo(rowParks.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 50.dp)
                     end.linkTo(parent.end, margin = 50.dp)
+                }.onGloballyPositioned { coordinates ->
+                    // This value is used to assign to
+                    // the DropDown the same width
+                    mTextFieldSizeStatus = coordinates.size.toSize()
+                },
+                trailingIcon = {
+                    Icon(iconStatus, "contentDescription",
+                        Modifier.clickable { expandedStatus = !expandedStatus })
                 }
             )
+
+            Box(
+                modifier = Modifier.constrainAs(dropdownMenuStatus) {
+                    top.linkTo(fieldStatus.top, margin = 0.dp)
+                    start.linkTo(fieldStatus.start, margin = 0.dp)
+
+                },
+            ) {
+
+                DropdownMenu(
+                    expanded = expandedStatus,
+                    onDismissRequest = { expandedStatus = false },
+                    modifier = Modifier.width(with(LocalDensity.current) { mTextFieldSizeStatus.width.toDp() })
+                ) {
+                    listStatus.forEach {
+                        DropdownMenuItem(
+                            text = { Text(it) },
+                            onClick = {
+                                entryStatus = it
+                                expandedStatus = false
+                                /* Handle edit! */
+                            },
+                        )
+                    }
+                }
+            }
 
 
             val year: Int
@@ -431,28 +625,24 @@ fun NewRealEstateScreen(
                 }, year, month, day
             )
 
-            Row(modifier = Modifier.constrainAs(rowDateEntryButtonAndText) {
-                top.linkTo(fieldStatus.bottom, margin = 25.dp)
-                start.linkTo(parent.start, margin = 50.dp)
-                end.linkTo(parent.end, margin = 50.dp)
-            }) {
-                Text(textDateOfEntry)
-            }
+            if (entryStatus == "Sold") {
 
-            Row(modifier = Modifier.constrainAs(rowDateSaleButtonAndText) {
-                top.linkTo(rowDateEntryButtonAndText.bottom, margin = 25.dp)
-                start.linkTo(parent.start, margin = 50.dp)
-                end.linkTo(parent.end, margin = 50.dp)
-            }) {
-                Text(textDateOfSale)
-                Button(
-                    onClick = {
-                        dateOfSalePickerDialog.show()
-                    },
-                )
-                {
-                    Text("Set Date Of Sale")
+                Row(modifier = Modifier.constrainAs(rowDateSaleButtonAndText) {
+                    top.linkTo(fieldStatus.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 50.dp)
+                    end.linkTo(parent.end, margin = 50.dp)
+                }) {
+                    Text(textDateOfSale)
+                    Button(
+                        onClick = {
+                            dateOfSalePickerDialog.show()
+                        },
+                    )
+                    {
+                        Text("Set Date Of Sale")
+                    }
                 }
+
             }
 
 
@@ -460,39 +650,40 @@ fun NewRealEstateScreen(
 
 
             FlowRow(modifier = Modifier.constrainAs(lazyColumnPhoto) {
-                top.linkTo(rowDateSaleButtonAndText.bottom, margin = 25.dp)
+                top.linkTo(fieldStatus.bottom, margin = 75.dp)
                 start.linkTo(parent.start, margin = 25.dp)
                 end.linkTo(parent.end, margin = 25.dp)
             }) {
                 repeat(listPhotos.size) {
-                        Box(modifier = Modifier.size(184.dp)) {
+                    Box(modifier = Modifier.size(184.dp)) {
 
-                            Column() {
-                                ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+                        Column() {
+                            ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
-                                    val (image,text)  = createRefs()
+                                val (image, text) = createRefs()
 
-                                    GlideImage(
-                                        imageModel = listPhotos[it].photoUri,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier.constrainAs(image){
-                                            top.linkTo(parent.top, margin = 0.dp)
-                                            start.linkTo(parent.start, margin = 0.dp)
-                                            end.linkTo(parent.end, margin = 0.dp)
-                                        }
-                                    )
-                                    Text(text = listPhotos[it].text,modifier = Modifier.constrainAs(text){
+                                GlideImage(
+                                    imageModel = listPhotos[it].photoUri,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.constrainAs(image) {
+                                        top.linkTo(parent.top, margin = 0.dp)
+                                        start.linkTo(parent.start, margin = 0.dp)
+                                        end.linkTo(parent.end, margin = 0.dp)
+                                    }
+                                )
+                                Text(
+                                    text = listPhotos[it].text,
+                                    modifier = Modifier.constrainAs(text) {
                                         top.linkTo(image.bottom, margin = 0.dp)
                                         start.linkTo(parent.start, margin = 0.dp)
                                         end.linkTo(parent.end, margin = 0.dp)
                                     })
 
-                                }
-
-
-
                             }
+
+
                         }
+                    }
                 }
             }
 
@@ -500,8 +691,6 @@ fun NewRealEstateScreen(
                 onClick = {
 
                     openDialog.value = true
-
-
                 },
                 modifier = Modifier.constrainAs(buttonAddPhoto) {
                     top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
@@ -516,29 +705,30 @@ fun NewRealEstateScreen(
                 onClick = {
 
                     try {
-                        val type: String = entryType
-                        val price: Int = Integer.parseInt(entryPrice)
-                        val area: Int = Integer.parseInt(entryArea)
-                        val numberRoom: Int = Integer.parseInt(entryNumberRoom)
-                        val description: String = entryDescription
-                        val address: String = entryAddress
-                        val pointOfInterest: String = entryPointOfInterest
-                        val status: String = entryStatus
 
                         listPhotos.size >= 1
 
                         realEstateViewModel.createRealEstate(
-                            type,
-                            price,
-                            area,
-                            numberRoom,
-                            description,
-                            address,
-                            pointOfInterest,
-                            status,
+                            entryType,
+                            Integer.parseInt(entryPrice),
+                            Integer.parseInt(entryArea),
+                            Integer.parseInt(entryNumberRoom),
+                            entryDescription,
+                            entryNumberAndStreet,
+                            entryNumberApartement,
+                            entryCity,
+                            entryRegion,
+                            entryPostalCode,
+                            entryCountry,
+                            entryStatus,
                             listPhotos,
                             textDateOfEntry,
-                            textDateOfSale
+                            textDateOfSale,
+                            userDataState?.username.toString(),
+                            checkedStateHopital.value,
+                            checkedStateSchool.value,
+                            checkedStateShops.value,
+                            checkedStateParks.value
                         )
 
                         activity.finish()
@@ -565,6 +755,7 @@ fun NewRealEstateScreen(
         }
 
     }
+
 }
 
 

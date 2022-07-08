@@ -5,8 +5,6 @@ import android.content.Intent
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 
 import androidx.compose.material3.*
 
@@ -24,7 +22,6 @@ import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
-import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -58,8 +55,8 @@ fun MainScreen(
                 content = {innerPadding ->
 
                 NavHost(navController = navController, startDestination = "listScreen") {
-                    composable(Screen.ListScreen.route) { ListScreen(drawerState,scope,realEstateViewModel,innerPadding) }
-                    composable(Screen.MapScreen.route) { MapScreen(drawerState,scope,realEstateViewModel) }
+                    composable(Screen.ListScreen.route) { ListScreen(drawerState,scope,realEstateViewModel,innerPadding,navControllerDrawer) }
+                    composable(Screen.MapScreen.route) { MapScreen(drawerState,scope,realEstateViewModel,navControllerDrawer) }
                 }
 
                 },

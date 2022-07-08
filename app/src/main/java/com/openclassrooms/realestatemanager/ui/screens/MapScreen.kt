@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -32,7 +33,8 @@ import kotlinx.coroutines.CoroutineScope
 fun MapScreen(
     drawerState: DrawerState,
     scope: CoroutineScope,
-    realEstateViewModel: RealEstateViewModel
+    realEstateViewModel: RealEstateViewModel,
+    navControllerDrawer: NavController
 ) {
     val navController = rememberNavController()
     val textState = remember { mutableStateOf(TextFieldValue(""))}
@@ -105,7 +107,7 @@ fun MapScreen(
                     end.linkTo(parent.end, margin = 0.dp)
                 }
         ) {
-            composable("topBarMap") { TopBar(scope,drawerState,navController,"Map")}
+            composable("topBarMap") { TopBar(scope,drawerState,navController,"Map",navControllerDrawer)}
         }
 
 

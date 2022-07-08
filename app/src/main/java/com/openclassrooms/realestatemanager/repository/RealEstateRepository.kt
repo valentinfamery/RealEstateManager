@@ -30,14 +30,9 @@ import java.util.*
 
 
 class RealEstateRepository {
-    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
     private val storage = FirebaseStorage.getInstance()
-    private val mInterface: ApiInterface = ApiService.`interface`
-
-
-
     private val usersCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)
-
 
     private fun imagesCollectionRealEstates(restaurantId: String): CollectionReference {
         return FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE).document(restaurantId).collection(COLLECTION_REAL_ESTATE_IMAGES)
@@ -79,16 +74,25 @@ class RealEstateRepository {
         area: Int,
         numberRoom: Int,
         description: String,
-        address: String,
-        pointOfInterest: String,
+        numberAndStreet: String,
+        numberApartment: String,
+        city: String,
+        region: String,
+        postalCode: String,
+        country: String,
         status: String,
         listPhotos: MutableList<PhotoWithText>? = null,
         dateEntry: String,
         dateSale: String,
+        realEstateAgent: String,
+        checkedStateHopital : Boolean,
+        checkedStateSchool : Boolean,
+        checkedStateShops : Boolean,
+        checkedStateParks : Boolean
     ) {
 
 
-        val address3 = "1600 Amphitheatre Parkway, Mountain View, CA"
+        val address3 = "$numberAndStreet,$city,$region"
 
             val id = UUID.randomUUID().toString()
 
@@ -114,14 +118,22 @@ class RealEstateRepository {
                         area,
                         numberRoom,
                         description,
-                        address3,
-                        pointOfInterest,
+                        numberAndStreet,
+                        numberApartment,
+                        city,
+                        region,
+                        postalCode,
+                        country,
                         status,
                         dateEntry,
                         dateSale,
-                        firebaseAuth.currentUser?.displayName,
+                        realEstateAgent,
                         latLng.latitude,
-                        latLng.longitude
+                        latLng.longitude,
+                        checkedStateHopital,
+                        checkedStateSchool,
+                        checkedStateShops,
+                        checkedStateParks
                     )
                     usersCollection.document(id).set(realEstate)
 
@@ -174,11 +186,8 @@ class RealEstateRepository {
     }
 
     fun getLatLngRealEstate(address: String) : LatLng?{
-        var result :LatLng ?=null
-
-
+        val result :LatLng ?=null
         Log.e("result",result.toString())
-
         return result
     }
 

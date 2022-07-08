@@ -74,7 +74,7 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
                     style = MaterialTheme.typography.headlineLarge
                 )
                 Text(
-                    text = item.price.toString(),
+                    text = "$"+item.price.toString(),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }

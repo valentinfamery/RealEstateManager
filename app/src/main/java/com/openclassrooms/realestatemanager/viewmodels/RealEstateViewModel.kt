@@ -19,15 +19,34 @@ class RealEstateViewModel : ViewModel() {
         area: Int,
         numberRoom: Int,
         description: String,
-        address: String,
-        pointOfInterest: String,
+        numberAndStreet: String,
+        numberApartment: String,
+        city: String,
+        region: String,
+        postalCode: String,
+        country: String,
         status: String,
         listPhotosUri: MutableList<PhotoWithText>,
         dateEntry: String,
         dateSale: String,
+        realEstateAgent:String,
+        checkedStateHopital : Boolean,
+        checkedStateSchool : Boolean,
+        checkedStateShops : Boolean,
+        checkedStateParks : Boolean
     ) {
-        realEstateRepository.createRealEstate(type , price , area , numberRoom , description , address , pointOfInterest , status,listPhotosUri,dateEntry,dateSale)
+        realEstateRepository.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
+            numberApartment,
+            city,
+            region,
+            postalCode,
+            country, status,listPhotosUri,dateEntry,dateSale,realEstateAgent,checkedStateHopital,
+            checkedStateSchool,
+            checkedStateShops,
+            checkedStateParks)
     }
+
+
 
     fun deleteRealEstate(idRealEstate : String){
         realEstateRepository.deleteRealEstate(idRealEstate)
