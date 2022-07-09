@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
@@ -25,6 +26,7 @@ import com.google.android.gms.location.LocationServices.getFusedLocationProvider
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -46,6 +48,8 @@ fun MapScreen(
     var userPosition by remember {
         mutableStateOf(LatLng(37.422131,-122.084801))
     }
+
+    val items: List<RealEstate> by realEstateViewModel.getRealEstates.observeAsState(listOf())
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
@@ -130,12 +134,18 @@ fun MapScreen(
             properties = mapProperties,
             uiSettings = uiSettings,
         ) {
-            //for(realEstate in listState){
-                //Marker(
-                    //state = MarkerState(position = userPosition),
-                //)
-            //}
+            items.forEach {
 
+                if(it.lat != null && it.lng != null){
+
+                    val latlng  = LatLng(
+                        it.lat!!, it.lng!!
+                    )
+                    Marker(
+                        state = MarkerState(position = latlng),
+                    )
+                    }
+            }
         }
 
 

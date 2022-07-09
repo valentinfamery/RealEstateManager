@@ -86,7 +86,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
                     repeat(listPhotos?.size ?: 0) {
-                        Box(modifier = Modifier.size(184.dp)) {
+                        Box(modifier = Modifier.size(184.dp).clip(RoundedCornerShape(15.dp))) {
 
                             Column() {
                                 ConstraintLayout(modifier = Modifier.fillMaxSize()) {
