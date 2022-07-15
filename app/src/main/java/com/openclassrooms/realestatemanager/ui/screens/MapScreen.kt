@@ -46,7 +46,7 @@ fun MapScreen(
     val context = LocalContext.current
 
     var userPosition by remember {
-        mutableStateOf(LatLng(37.422131,-122.084801))
+        mutableStateOf(LatLng(0.0,0.0))
     }
 
     val items: List<RealEstate> by realEstateViewModel.getRealEstates.observeAsState(listOf())
@@ -98,7 +98,7 @@ fun MapScreen(
 
 
     ConstraintLayout {
-        val (centerAlignedTopAppBar,map) = createRefs()
+        val (centerAlignedTopAppBar, map) = createRefs()
 
 
         NavHost(
@@ -111,44 +111,56 @@ fun MapScreen(
                     end.linkTo(parent.end, margin = 0.dp)
                 }
         ) {
-            composable("topBarMap") { TopBar(scope,drawerState,navController,"Map",navControllerDrawer)}
-        }
-
-
-        val cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(userPosition, 10f)
-        }
-
-        val mapProperties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
-        val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
-
-        GoogleMap(
-            modifier = Modifier
-                .fillMaxSize()
-                .constrainAs(map) {
-                    top.linkTo(centerAlignedTopAppBar.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            cameraPositionState = cameraPositionState,
-            properties = mapProperties,
-            uiSettings = uiSettings,
-        ) {
-            items.forEach {
-
-                if(it.lat != null && it.lng != null){
-
-                    val latlng  = LatLng(
-                        it.lat!!, it.lng!!
-                    )
-                    Marker(
-                        state = MarkerState(position = latlng),
-                    )
-                    }
+            composable("topBarMap") {
+                TopBar(
+                    scope,
+                    drawerState,
+                    navController,
+                    "Map",
+                    navControllerDrawer
+                )
             }
         }
 
+        if (userPosition != LatLng(0.0, 0.0)) {
 
+            val cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(userPosition, 10f)
+            }
+
+            val mapProperties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
+            val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
+
+            GoogleMap(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .constrainAs(map) {
+                        top.linkTo(centerAlignedTopAppBar.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                cameraPositionState = cameraPositionState,
+                properties = mapProperties,
+                uiSettings = uiSettings,
+            ) {
+                items.forEach {
+
+                    if (it.lat != null && it.lng != null) {
+
+                        val latlng = LatLng(
+                            it.lat!!, it.lng!!
+                        )
+                        Marker(
+                            state = MarkerState(position = latlng),
+                        )
+                    }
+                }
+            }
+
+
+        }else{
+            Text(text = "Impossible de recuperer la localisation des services google play verifier que une localisation a été enregistre dans ceux ci ")
+        }
     }
 
 }
