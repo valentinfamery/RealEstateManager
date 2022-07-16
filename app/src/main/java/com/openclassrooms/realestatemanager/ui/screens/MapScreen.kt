@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.ui.RealEstateDetail
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -39,8 +41,6 @@ fun MapScreen(
     navControllerDrawer: NavController
 ) {
     val navController = rememberNavController()
-    val textState = remember { mutableStateOf(TextFieldValue(""))}
-    val listState = remember{ realEstateViewModel.getRealEstates }
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
@@ -145,6 +145,8 @@ fun MapScreen(
             ) {
                 items.forEach {
 
+                    val realEstate = it
+
                     if (it.lat != null && it.lng != null) {
 
                         val latlng = LatLng(
@@ -152,6 +154,13 @@ fun MapScreen(
                         )
                         Marker(
                             state = MarkerState(position = latlng),
+                            title = "title",
+                            onInfoWindowClick = {
+                                val intent = Intent(context, RealEstateDetail::class.java)
+                                intent.putExtra("itemId",realEstate.id)
+
+                                context.startActivity(intent)
+                            }
                         )
                     }
                 }
