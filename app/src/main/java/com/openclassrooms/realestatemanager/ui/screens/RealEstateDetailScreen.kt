@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowColumn
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
@@ -34,7 +35,11 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: String?) {
+fun RealEstateDetailScreen(
+    realEstateViewModel: RealEstateViewModel,
+    itemId: String?,
+    navController: NavHostController
+) {
 
     val itemRealEstate by realEstateViewModel.getRealEstateById(itemId.toString()).observeAsState()
 
@@ -44,7 +49,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { /* do something */ },
+                onClick = { navController.navigate("EditScreen") },
                 icon = { Icon(Icons.Filled.Edit, "Localized description") },
                 text = { Text(text = "Edit") },
                 modifier = Modifier.clip(RoundedCornerShape(15.dp))
@@ -67,7 +72,7 @@ fun RealEstateDetailScreen(realEstateViewModel: RealEstateViewModel, itemId: Str
                     navigationIcon = {
                         val activity = (LocalContext.current as? Activity)
                         IconButton(onClick = {
-                            activity?.finish()
+                            navController.popBackStack()
                         }) {
                             Icon(Icons.Filled.ArrowBack, "")
                         }

@@ -12,41 +12,47 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.openclassrooms.realestatemanager.models.PhotoWithText
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.openclassrooms.realestatemanager.models.RealEstate
-import com.openclassrooms.realestatemanager.ui.RealEstateDetail
+import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
-import java.io.Serializable
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateViewModel) {
+fun RowList(
+    context: Context,
+    item: RealEstate,
+    realEstateViewModel: RealEstateViewModel,
+    navControllerDrawer: NavController,
+    windowSize: WindowSize,
+    navControllerTwoPane: NavHostController
+) {
 
-    val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.id.toString()).observeAsState()
+    if(windowSize == WindowSize.COMPACT){
+        val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.id.toString()).observeAsState()
 
+        Card(
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(corner = CornerSize(16.dp))
+        ) {
+            Row(Modifier.clickable {
+                navControllerDrawer.navigate("detailScreen/"+item.id.toString())
 
-
-    Card(
-        modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 8.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(corner = CornerSize(16.dp))
-    ) {
-        Row(Modifier.clickable {
-            val intent = Intent(context, RealEstateDetail::class.java)
-            intent.putExtra("itemId",item.id)
-
-            context.startActivity(intent)
-
-        }) {
+            }) {
 
                 Box(
                     modifier = Modifier
@@ -63,23 +69,74 @@ fun RowList(context: Context, item: RealEstate, realEstateViewModel: RealEstateV
 
 
 
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .align(Alignment.CenterVertically)
-            ) {
-                Text(
-                    text = item.type.toString(),
-                    style = MaterialTheme.typography.headlineLarge
-                )
-                Text(
-                    text = "$"+item.price.toString(),
-                    style = MaterialTheme.typography.headlineSmall
-                )
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.CenterVertically)
+                ) {
+                    Text(
+                        text = item.type.toString(),
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Text(
+                        text = "$"+item.price.toString(),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+            }
+        }
+    }else{
+        val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.id.toString()).observeAsState()
+
+        Card(
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(corner = CornerSize(16.dp))
+        ) {
+            Row(Modifier.clickable {
+                if(item.id != null) {
+
+                    navControllerTwoPane.navigate("detailScreen/" + item.id)
+                }
+            }) {
+
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(84.dp)
+                        .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                        .background(MaterialTheme.colorScheme.tertiary)
+                ) {
+                    GlideImage(
+                        imageModel = items2?.get(0)?.photoUrl,
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+
+
+
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.CenterVertically)
+                ) {
+                    Text(
+                        text = item.type.toString(),
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Text(
+                        text = "$"+item.price.toString(),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
             }
         }
     }
+
+
 }
 
 

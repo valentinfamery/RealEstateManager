@@ -28,7 +28,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.models.RealEstate
-import com.openclassrooms.realestatemanager.ui.RealEstateDetail
+
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -145,7 +145,7 @@ fun MapScreen(
             ) {
                 items.forEach {
 
-                    val realEstate = it
+
 
                     if (it.lat != null && it.lng != null) {
 
@@ -156,10 +156,7 @@ fun MapScreen(
                             state = MarkerState(position = latlng),
                             title = "title",
                             onInfoWindowClick = {
-                                val intent = Intent(context, RealEstateDetail::class.java)
-                                intent.putExtra("itemId",realEstate.id)
-
-                                context.startActivity(intent)
+                                //navControllerDrawer.navigate("detailScreen/"+it.id)
                             }
                         )
                     }
