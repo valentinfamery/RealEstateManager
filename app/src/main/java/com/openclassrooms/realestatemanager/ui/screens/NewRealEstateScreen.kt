@@ -50,11 +50,12 @@ import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import java.io.Serializable
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterial3Api
 @Composable
 fun NewRealEstateScreen(
@@ -611,9 +612,10 @@ fun NewRealEstateScreen(
             day = calendar.get(Calendar.DAY_OF_MONTH)
             calendar.time = Date()
 
-            textDateOfEntry = "" + day + "/" + (month + 1) + "/" + year
+            val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+            textDateOfEntry = dateFormat.format(calendar.time)
 
-            textDateOfEntry.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+
 
             val dateOfSalePickerDialog = DatePickerDialog(
                 context,

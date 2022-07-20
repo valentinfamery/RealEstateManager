@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-
+apply plugin: 'kotlin-parcelize'
 android {
     compileSdkVersion 32
     defaultConfig {
@@ -28,8 +28,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        
-
     }
     buildFeatures {
         compose true
@@ -42,6 +40,14 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        }
+    }
+
+
     namespace 'com.openclassrooms.realestatemanager'
 }
 

@@ -8,14 +8,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.R
-import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun FilterScreen(navController: NavHostController) {
@@ -69,7 +67,7 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         start.linkTo(parent.start, margin = 10.dp)
     }) {
 
-        FlowRow() {
+        FlowRow {
             listType.forEach{
                 OutlinedButton(onClick = {
                     filterType = ""
@@ -90,7 +88,7 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         start.linkTo(parent.start, margin = 10.dp)
     }) {
 
-        FlowRow() {
+        FlowRow {
             listNumberRoom.forEach {
                 OutlinedButton(onClick = {  }) { Text(it) }
                 Divider(color = Color.Transparent, modifier = Modifier.fillMaxHeight().width(10.dp))

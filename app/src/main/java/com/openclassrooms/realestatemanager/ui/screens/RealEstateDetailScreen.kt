@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -30,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -37,299 +36,293 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,
-    itemId: String?,
-    navController: NavHostController
-) {
+    itemRealEstate: RealEstate?,
+    navController: NavHostController,
 
-    val itemRealEstate by realEstateViewModel.getRealEstateById(itemId.toString()).observeAsState()
+    ) {
 
-    val listPhotos by realEstateViewModel.getRealEstatePhotosWithId(itemId.toString()).observeAsState()
+    if(itemRealEstate != null) {
 
 
-    Scaffold(
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { navController.navigate("EditScreen") },
-                icon = { Icon(Icons.Filled.Edit, "Localized description") },
-                text = { Text(text = "Edit") },
-                modifier = Modifier.clip(RoundedCornerShape(15.dp))
-            )
-        },
-        content = {
+        val listPhotos by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate.id.toString()).observeAsState()
 
-            ConstraintLayout(modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .fillMaxHeight()) {
 
-                val (centerAlignedTopAppBar,textType,textPrice,textArea,textNumberRoom,textDescription,textAddress,textStatus,textDateOfEntry,textDateOfSale,textRealEstateAgent,lazyColumnPhoto,googleMap) = createRefs()
-
-                val (rowHopital,rowSchool,rowShops,rowParks) = createRefs()
-
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(text = "Estate Manager")
-                    },
-                    navigationIcon = {
-                        val activity = (LocalContext.current as? Activity)
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "")
-                        }
-                    },
-                    modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
-                        top.linkTo(parent.top, margin = 0.dp)
-                        start.linkTo(parent.start, margin = 0.dp)
-                        end.linkTo(parent.end, margin = 0.dp)
-                    }
-
+        Scaffold(
+            floatingActionButton = {
+                ExtendedFloatingActionButton(
+                    onClick = { navController.navigate("editScreen/${itemRealEstate.id}") },
+                    icon = { Icon(Icons.Filled.Edit, "Localized description") },
+                    text = { Text(text = "Edit") },
+                    modifier = Modifier.clip(RoundedCornerShape(15.dp))
                 )
+            },
+            content = {
 
-                FlowColumn(modifier = Modifier.constrainAs(lazyColumnPhoto) {
-                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 25.dp)
-                    end.linkTo(parent.end, margin = 25.dp)
-                }) {
-                    repeat(listPhotos?.size ?: 0) {
-                        Box(modifier = Modifier.size(184.dp).clip(RoundedCornerShape(15.dp))) {
+                ConstraintLayout(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .fillMaxHeight()
+                ) {
 
-                            Column() {
-                                ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+                    val (centerAlignedTopAppBar, textType, textPrice, textArea, textNumberRoom, textDescription, textAddress, textStatus, textDateOfEntry, textDateOfSale, textRealEstateAgent, lazyColumnPhoto, googleMap) = createRefs()
 
-                                    val (image, text) = createRefs()
+                    val (rowHospital, rowSchool, rowShops, rowParks) = createRefs()
 
-                                    GlideImage(
-                                        imageModel = listPhotos?.get(it)?.photoUrl,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier.constrainAs(image) {
-                                            top.linkTo(parent.top, margin = 0.dp)
-                                            start.linkTo(parent.start, margin = 0.dp)
-                                            end.linkTo(parent.end, margin = 0.dp)
-                                        }
-                                    )
-                                    Text(
-                                        text = listPhotos?.get(it)?.text ?:"" ,
-                                        modifier = Modifier.constrainAs(text) {
-                                            top.linkTo(image.bottom, margin = 0.dp)
-                                            start.linkTo(parent.start, margin = 0.dp)
-                                            end.linkTo(parent.end, margin = 0.dp)
-                                        })
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(text = "Estate Manager")
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                navController.popBackStack()
+                            }) {
+                                Icon(Icons.Filled.ArrowBack, "")
+                            }
+                        },
+                        modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                            top.linkTo(parent.top, margin = 0.dp)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
+                        }
+
+                    )
+
+                    FlowColumn(modifier = Modifier.constrainAs(lazyColumnPhoto) {
+                        top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 25.dp)
+                        end.linkTo(parent.end, margin = 25.dp)
+                    }) {
+                        repeat(listPhotos?.size ?: 0) {
+                            Box(modifier = Modifier.size(184.dp).clip(RoundedCornerShape(15.dp))) {
+
+                                Column {
+                                    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+
+                                        val (image, text) = createRefs()
+
+                                        GlideImage(
+                                            imageModel = listPhotos?.get(it)?.photoUrl,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier.constrainAs(image) {
+                                                top.linkTo(parent.top, margin = 0.dp)
+                                                start.linkTo(parent.start, margin = 0.dp)
+                                                end.linkTo(parent.end, margin = 0.dp)
+                                            }
+                                        )
+                                        Text(
+                                            text = listPhotos?.get(it)?.text ?: "",
+                                            modifier = Modifier.constrainAs(text) {
+                                                top.linkTo(image.bottom, margin = 0.dp)
+                                                start.linkTo(parent.start, margin = 0.dp)
+                                                end.linkTo(parent.end, margin = 0.dp)
+                                            })
+
+                                    }
+
 
                                 }
-
-
                             }
                         }
                     }
-                }
 
 
 
-                Row(modifier = Modifier.constrainAs(textType) {
-                    top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Text(text = itemRealEstate?.type.toString())
-                }
+                    Row(modifier = Modifier.constrainAs(textType) {
+                        top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Text(text = itemRealEstate.type.toString())
+                    }
 
-                Row(modifier = Modifier.constrainAs(textPrice) {
-                    top.linkTo(textType.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Text(text = itemRealEstate?.price.toString())
-                }
+                    Row(modifier = Modifier.constrainAs(textPrice) {
+                        top.linkTo(textType.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Text(text = itemRealEstate.price.toString())
+                    }
 
-                Row(modifier = Modifier.constrainAs(textArea) {
-                    top.linkTo(textPrice.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Icon(painter = painterResource(id = R.drawable.ic_baseline_crop_square_24), contentDescription = "")
-                    Text(text = itemRealEstate?.area.toString())
-                }
+                    Row(modifier = Modifier.constrainAs(textArea) {
+                        top.linkTo(textPrice.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_baseline_crop_square_24),
+                            contentDescription = ""
+                        )
+                        Text(text = itemRealEstate.area.toString())
+                    }
 
-                Row(modifier = Modifier.constrainAs(textNumberRoom) {
-                    top.linkTo(textArea.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Icon(painter = painterResource(id = R.drawable.ic_baseline_house_24) , contentDescription = "")
-                    Text(text = itemRealEstate?.numberRoom.toString())
-                }
+                    Row(modifier = Modifier.constrainAs(textNumberRoom) {
+                        top.linkTo(textArea.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_baseline_house_24),
+                            contentDescription = ""
+                        )
+                        Text(text = itemRealEstate.numberRoom.toString())
+                    }
 
-                Row(modifier = Modifier.constrainAs(textDescription) {
-                    top.linkTo(textNumberRoom.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Text(text = itemRealEstate?.description.toString())
-                }
+                    Row(modifier = Modifier.constrainAs(textDescription) {
+                        top.linkTo(textNumberRoom.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Text(text = itemRealEstate.description.toString())
+                    }
 
-                Row(modifier = Modifier.constrainAs(textAddress) {
-                    top.linkTo(textDescription.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Icon(Icons.Filled.LocationOn, contentDescription = "")
-                    Text(text = itemRealEstate?.numberAndStreet.toString())
-                }
+                    Row(modifier = Modifier.constrainAs(textAddress) {
+                        top.linkTo(textDescription.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Icon(Icons.Filled.LocationOn, contentDescription = "")
+                        Text(text = itemRealEstate.numberAndStreet.toString())
+                    }
 
-                Row(
-                    modifier = Modifier
-                        .constrainAs(rowHopital) {
-                            top.linkTo(textAddress.bottom, margin = 5.dp)
-                            start.linkTo(parent.start, margin = 50.dp)
-                            end.linkTo(parent.end, margin = 50.dp)
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
+                    Row(
+                        modifier = Modifier
+                            .constrainAs(rowHospital) {
+                                top.linkTo(textAddress.bottom, margin = 5.dp)
+                                start.linkTo(parent.start, margin = 50.dp)
+                                end.linkTo(parent.end, margin = 50.dp)
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
 
+                        ) {
+
+                        Checkbox(
+                            checked = itemRealEstate.hospitalsNear,
+                            onCheckedChange = { itemRealEstate.hospitalsNear = it },
+                        )
+                        Text(text = "Near Hospital")
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .constrainAs(rowSchool) {
+                                top.linkTo(rowHospital.bottom, margin = 5.dp)
+                                start.linkTo(parent.start, margin = 50.dp)
+                                end.linkTo(parent.end, margin = 50.dp)
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+
+                        ) {
+                        Checkbox(
+                            checked = itemRealEstate.schoolsNear,
+                            onCheckedChange = { itemRealEstate.schoolsNear = it }
+                        )
+                        Text(text = "Near School")
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .constrainAs(rowShops) {
+                                top.linkTo(rowSchool.bottom, margin = 5.dp)
+                                start.linkTo(parent.start, margin = 50.dp)
+                                end.linkTo(parent.end, margin = 50.dp)
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
                     ) {
-
-                    itemRealEstate?.hopitalNear?.let { it1 ->
                         Checkbox(
-                            checked = it1,
-                            onCheckedChange = { itemRealEstate?.hopitalNear = it },
+                            checked = itemRealEstate.shopsNear,
+                            onCheckedChange = { itemRealEstate.shopsNear = it }
                         )
+                        Text(text = "Near Shops")
                     }
-                    Text(text = "Near Hopital")
-                }
 
-                Row(
-                    modifier = Modifier
-                        .constrainAs(rowSchool) {
-                            top.linkTo(rowHopital.bottom, margin = 5.dp)
-                            start.linkTo(parent.start, margin = 50.dp)
-                            end.linkTo(parent.end, margin = 50.dp)
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-
+                    Row(
+                        modifier = Modifier
+                            .constrainAs(rowParks) {
+                                top.linkTo(rowShops.bottom, margin = 5.dp)
+                                start.linkTo(parent.start, margin = 50.dp)
+                                end.linkTo(parent.end, margin = 50.dp)
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
                     ) {
-                    itemRealEstate?.SchoolNear?.let { it1 ->
                         Checkbox(
-                            checked = it1,
-                            onCheckedChange = { itemRealEstate?.SchoolNear = it }
+                            checked = itemRealEstate.parksNear,
+                            onCheckedChange = { itemRealEstate.parksNear = it }
                         )
+                        Text(text = "Near Parks")
                     }
-                    Text(text = "Near School")
-                }
 
-                Row(
-                    modifier = Modifier
-                        .constrainAs(rowShops) {
-                            top.linkTo(rowSchool.bottom, margin = 5.dp)
-                            start.linkTo(parent.start, margin = 50.dp)
-                            end.linkTo(parent.end, margin = 50.dp)
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    itemRealEstate?.shopsNear?.let { it1 ->
-                        Checkbox(
-                            checked = it1,
-                            onCheckedChange = { itemRealEstate?.shopsNear = it }
+                    Row(modifier = Modifier.constrainAs(textStatus) {
+                        top.linkTo(rowParks.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Text(text = itemRealEstate.status.toString())
+                    }
+
+                    Row(modifier = Modifier.constrainAs(textDateOfEntry) {
+                        top.linkTo(textStatus.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Text(text = itemRealEstate.dateOfEntry.toString())
+                    }
+
+                    Row(modifier = Modifier.constrainAs(textDateOfSale) {
+                        top.linkTo(textDateOfEntry.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Text(text = itemRealEstate.dateOfSale.toString())
+                    }
+
+                    Row(modifier = Modifier.constrainAs(textRealEstateAgent) {
+                        top.linkTo(textDateOfSale.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }) {
+                        Text(text = itemRealEstate.realEstateAgent.toString())
+                    }
+
+
+                    if (itemRealEstate.lat != null && itemRealEstate.lng != null) {
+
+                        val latLng = LatLng(
+                            itemRealEstate.lat!!, itemRealEstate.lng!!
                         )
-                    }
-                    Text(text = "Near Shops")
-                }
 
-                Row(
-                    modifier = Modifier
-                        .constrainAs(rowParks) {
-                            top.linkTo(rowShops.bottom, margin = 5.dp)
-                            start.linkTo(parent.start, margin = 50.dp)
-                            end.linkTo(parent.end, margin = 50.dp)
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    itemRealEstate?.parksNear?.let { it1 ->
-                        Checkbox(
-                            checked = it1,
-                            onCheckedChange = { itemRealEstate?.parksNear = it }
-                        )
-                    }
-                    Text(text = "Near Parks")
-                }
-
-                Row(modifier = Modifier.constrainAs(textStatus) {
-                    top.linkTo(rowParks.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Text(text = itemRealEstate?.status.toString())
-                }
-
-                Row(modifier = Modifier.constrainAs(textDateOfEntry) {
-                    top.linkTo(textStatus.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Text(text = itemRealEstate?.dateOfEntry.toString())
-                }
-
-                Row(modifier = Modifier.constrainAs(textDateOfSale) {
-                    top.linkTo(textDateOfEntry.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Text(text = itemRealEstate?.dateOfSale.toString())
-                }
-
-                Row(modifier = Modifier.constrainAs(textRealEstateAgent) {
-                    top.linkTo(textDateOfSale.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }) {
-                    Text(text = itemRealEstate?.realEstateAgent.toString())
-                }
-
-
-                if(itemRealEstate?.lat != null && itemRealEstate?.lng != null){
-
-                    val latlng  = LatLng(
-                        itemRealEstate?.lat!!, itemRealEstate?.lng!!
-                    )
-
-                    val cameraPositionState = rememberCameraPositionState {
-                        position = CameraPosition.fromLatLngZoom(latlng, 10f)
-                    }
-
-
-
-                    GoogleMap(cameraPositionState = cameraPositionState, modifier = Modifier
-                        .constrainAs(googleMap) {
-                            top.linkTo(textRealEstateAgent.bottom, margin = 5.dp)
-                            start.linkTo(parent.start, margin = 5.dp)
-                            end.linkTo(parent.end, margin = 5.dp)
-                            bottom.linkTo(parent.bottom, margin = 75.dp)
+                        val cameraPositionState = rememberCameraPositionState {
+                            position = CameraPosition.fromLatLngZoom(latLng, 10f)
                         }
-                        .size(200.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                    ) {
-                        Marker(state = MarkerState(position = latlng)) {
 
+
+
+                        GoogleMap(cameraPositionState = cameraPositionState, modifier = Modifier
+                            .constrainAs(googleMap) {
+                                top.linkTo(textRealEstateAgent.bottom, margin = 5.dp)
+                                start.linkTo(parent.start, margin = 5.dp)
+                                end.linkTo(parent.end, margin = 5.dp)
+                                bottom.linkTo(parent.bottom, margin = 75.dp)
+                            }
+                            .size(200.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                        ) {
+                            Marker(state = MarkerState(position = latLng)) {
+
+                            }
                         }
+
                     }
 
+
                 }
-
-
-
-
-
-
-
-
-
-
-
             }
-        }
-    )
+        )
+
+    }
 
 
 

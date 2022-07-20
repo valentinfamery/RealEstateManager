@@ -2,12 +2,10 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.openclassrooms.realestatemanager.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -17,7 +15,6 @@ import kotlinx.coroutines.launch
 fun TopBar(
     scope: CoroutineScope,
     drawerState: DrawerState,
-    navController: NavHostController,
     title: String,
     navControllerDrawer: NavController
 ) {

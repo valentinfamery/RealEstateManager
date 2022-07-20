@@ -4,7 +4,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -13,10 +12,7 @@ import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
-import com.openclassrooms.realestatemanager.models.User
 import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
-import com.openclassrooms.realestatemanager.service.ApiInterface
-import com.openclassrooms.realestatemanager.service.ApiService
 import com.openclassrooms.realestatemanager.service.ApiService.`interface`
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,7 +81,7 @@ class RealEstateRepository {
         dateEntry: String,
         dateSale: String,
         realEstateAgent: String,
-        checkedStateHopital : Boolean,
+        checkedStateHospital : Boolean,
         checkedStateSchool : Boolean,
         checkedStateShops : Boolean,
         checkedStateParks : Boolean
@@ -107,7 +103,7 @@ class RealEstateRepository {
                     val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
                     val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
                     Log.e(lat.toString(),lng.toString())
-                    Log.e("latlng",LatLng(lat!!, lng!!).toString())
+                    Log.e("latLng",LatLng(lat!!, lng!!).toString())
                     val latLng = LatLng(lat, lng)
                     Log.e("result",latLng.toString())
 
@@ -130,7 +126,7 @@ class RealEstateRepository {
                         realEstateAgent,
                         latLng.latitude,
                         latLng.longitude,
-                        checkedStateHopital,
+                        checkedStateHospital,
                         checkedStateSchool,
                         checkedStateShops,
                         checkedStateParks
@@ -179,16 +175,6 @@ class RealEstateRepository {
         return withContext(Dispatchers.IO) {
             realEstateImage.putFile(uri).await().storage.downloadUrl.await()
         }.toString()
-    }
-
-    fun deleteRealEstate(id : String) {
-        usersCollection.document(id).delete()
-    }
-
-    fun getLatLngRealEstate(address: String) : LatLng?{
-        val result :LatLng ?=null
-        Log.e("result",result.toString())
-        return result
     }
 
     fun getRealEstateById(id : String): MutableLiveData<RealEstate?>{

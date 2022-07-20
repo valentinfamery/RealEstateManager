@@ -33,7 +33,7 @@ fun ListScreen(
     navControllerDrawer: NavController,
     windowSize: WindowSize,
     navControllerTwoPane: NavHostController, ){
-    val context = LocalContext.current
+
     val items: List<RealEstate> by realEstateViewModel.getRealEstates.observeAsState(listOf())
 
     if(windowSize == WindowSize.COMPACT ){
@@ -70,7 +70,7 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                 ) {
                     items(items) { item ->
-                        RowList(context, item, realEstateViewModel,navControllerDrawer,windowSize,navControllerTwoPane)
+                        RowList(item, realEstateViewModel,navControllerDrawer,windowSize,navControllerTwoPane)
                     }
                 }
             }
@@ -103,7 +103,7 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                 ) {
                     items(items) { item ->
-                        RowList(context, item, realEstateViewModel, navControllerDrawer,windowSize,navControllerTwoPane)
+                        RowList(item, realEstateViewModel, navControllerDrawer,windowSize,navControllerTwoPane)
                     }
                 }
             }

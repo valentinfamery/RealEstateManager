@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.Manifest
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,12 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,7 +37,8 @@ fun MapScreen(
     drawerState: DrawerState,
     scope: CoroutineScope,
     realEstateViewModel: RealEstateViewModel,
-    navControllerDrawer: NavController
+    navControllerDrawer: NavController,
+    navControllerTwoPane: NavHostController
 ) {
     val navController = rememberNavController()
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -115,7 +115,6 @@ fun MapScreen(
                 TopBar(
                     scope,
                     drawerState,
-                    navController,
                     "Map",
                     navControllerDrawer
                 )
@@ -145,18 +144,18 @@ fun MapScreen(
             ) {
                 items.forEach {
 
-
+                    val realEstate : RealEstate = it
 
                     if (it.lat != null && it.lng != null) {
 
-                        val latlng = LatLng(
+                        val latLng = LatLng(
                             it.lat!!, it.lng!!
                         )
                         Marker(
-                            state = MarkerState(position = latlng),
+                            state = MarkerState(position = latLng),
                             title = "title",
                             onInfoWindowClick = {
-                                //navControllerDrawer.navigate("detailScreen/"+it.id)
+                                navControllerTwoPane.navigate("detailScreen/${realEstate.id}")
                             }
                         )
                     }
@@ -165,7 +164,7 @@ fun MapScreen(
 
 
         }else{
-            Text(text = "Impossible de recuperer la localisation des services google play verifier que une localisation a été enregistre dans ceux ci ")
+            Text(text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ")
         }
     }
 

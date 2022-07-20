@@ -25,7 +25,7 @@ fun SettingsScreen(navController: NavController) {
         content = {
 
 
-            ConstraintLayout() {
+            ConstraintLayout {
                 val (centerAlignedTopAppBar,text) = createRefs()
 
                 CenterAlignedTopAppBar(
@@ -48,7 +48,7 @@ fun SettingsScreen(navController: NavController) {
 
                 )
 
-                Text(text = "aaaaaa",modifier = Modifier.constrainAs(text) {
+                Text(text = "",modifier = Modifier.constrainAs(text) {
                     top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)

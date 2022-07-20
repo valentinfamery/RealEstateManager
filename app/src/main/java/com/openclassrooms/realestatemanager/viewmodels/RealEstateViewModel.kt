@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.viewmodels
 
-import android.app.Activity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.models.PhotoWithText
@@ -30,7 +29,7 @@ class RealEstateViewModel : ViewModel() {
         dateEntry: String,
         dateSale: String,
         realEstateAgent:String,
-        checkedStateHopital : Boolean,
+        checkedStateHospital : Boolean,
         checkedStateSchool : Boolean,
         checkedStateShops : Boolean,
         checkedStateParks : Boolean
@@ -40,20 +39,10 @@ class RealEstateViewModel : ViewModel() {
             city,
             region,
             postalCode,
-            country, status,listPhotosUri,dateEntry,dateSale,realEstateAgent,checkedStateHopital,
+            country, status,listPhotosUri,dateEntry,dateSale,realEstateAgent,checkedStateHospital,
             checkedStateSchool,
             checkedStateShops,
             checkedStateParks)
-    }
-
-
-
-    fun deleteRealEstate(idRealEstate : String){
-        realEstateRepository.deleteRealEstate(idRealEstate)
-    }
-
-    fun getLatLngRealEstate(address : String){
-       realEstateRepository.getLatLngRealEstate(address)
     }
 
     fun getRealEstatePhotosWithId(id : String):MutableLiveData<List<PhotoWithTextFirebase>>{

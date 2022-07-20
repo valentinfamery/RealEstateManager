@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,7 +13,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -23,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.WindowSize
@@ -45,7 +44,7 @@ fun MainScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }
-    val items = listOf(Screen.ListScreen, Screen.MapScreen,)
+    val items = listOf(Screen.ListScreen, Screen.MapScreen)
 
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -95,14 +94,15 @@ fun MainScreen(
                                     drawerState,
                                     scope,
                                     realEstateViewModel,
-                                    navControllerDrawer
+                                    navControllerDrawer,
+                                    navControllerTwoPane
                                 )
                             }
                         }
 
                     },
                     bottomBar = {
-                        NavigationBar() {
+                        NavigationBar {
                             items.forEachIndexed { index, item ->
                                 NavigationBarItem(
                                     icon = { Icon(item.icon, contentDescription = null) },
@@ -197,7 +197,8 @@ fun MainScreen(
                                         drawerState,
                                         scope,
                                         realEstateViewModel,
-                                        navControllerDrawer
+                                        navControllerDrawer,
+                                        navControllerTwoPane
                                     )
                                 }
                             }
@@ -233,11 +234,17 @@ fun MainScreen(
                             .clip(RoundedCornerShape(15.dp))) {
 
                             NavHost(navController = navControllerTwoPane, startDestination = "start") {
-                                composable("detailScreen/{itemId}") { backStackEntry ->
+
+
+
+                                composable("detailScreen/{item}") { backStackEntry ->
+
+                                    val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
+
                                     RealEstateDetailScreen(
-                                        realEstateViewModel = realEstateViewModel,
-                                        itemId = backStackEntry.arguments?.getString("itemId"),
-                                        navController = navController
+                                        realEstateViewModel,
+                                        item,
+                                        navController,
                                     ) }
                                 composable("start"){ Start()}
                             }

@@ -22,8 +22,6 @@ class NewRealEstateActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-
-
         setContent {
             Projet_9_OC_RealEstateManagerTheme{
                 // A surface container using the 'background' color from the theme
