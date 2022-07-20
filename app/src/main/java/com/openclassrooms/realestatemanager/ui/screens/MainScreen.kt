@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
@@ -237,7 +238,12 @@ fun MainScreen(
 
 
 
-                                composable("detailScreen/{item}") { backStackEntry ->
+                                composable("detailScreen/{item}",arguments = listOf(
+                                    navArgument("item") {
+                                        type = RealEstate
+                                    }
+                                )
+                                ) { backStackEntry ->
 
                                     val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
 
@@ -294,4 +300,6 @@ fun MainScreen(
 }
 
 @Composable
-fun Start(){}
+fun Start(){
+    Text(text = "")
+}

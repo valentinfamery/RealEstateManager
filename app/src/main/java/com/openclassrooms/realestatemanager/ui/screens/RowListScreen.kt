@@ -94,10 +94,10 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                if(item.id != null) {
 
-                    navControllerTwoPane.navigate("detailScreen/$item")
-                }
+                val item = Uri.encode(Gson().toJson(item))
+
+                navControllerTwoPane.navigate("detailScreen/$item")
             }) {
 
                 Box(
