@@ -8,11 +8,14 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -28,10 +31,13 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.maps.android.compose.*
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.utils.WindowSize
 
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +46,8 @@ fun MapScreen(
     scope: CoroutineScope,
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
-    navControllerTwoPane: NavHostController
+    navControllerTwoPane: NavHostController,
+    windowSize: WindowSize
 ) {
     val navController = rememberNavController()
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -114,12 +121,30 @@ fun MapScreen(
                 }
         ) {
             composable("topBarMap") {
+
+                if(windowSize == WindowSize.COMPACT){
                 TopBar(
                     scope,
                     drawerState,
                     "Map",
                     navControllerDrawer
                 )
+                }else{
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(text = "Map")
+                        },
+                        actions = {
+                            IconButton(onClick = {
+                                navControllerDrawer.navigate("filterScreen")
+
+                            }) {
+                                Icon(painter = painterResource(id = R.drawable.ic_baseline_filter_list_24 ), contentDescription = "")
+                            }
+                        },
+
+                        )
+                }
             }
         }
 

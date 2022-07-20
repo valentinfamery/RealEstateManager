@@ -96,7 +96,8 @@ fun MainScreen(
                                     scope,
                                     realEstateViewModel,
                                     navControllerDrawer,
-                                    navControllerTwoPane
+                                    navControllerTwoPane,
+                                    windowSize
                                 )
                             }
                         }
@@ -199,7 +200,8 @@ fun MainScreen(
                                         scope,
                                         realEstateViewModel,
                                         navControllerDrawer,
-                                        navControllerTwoPane
+                                        navControllerTwoPane,
+                                        windowSize
                                     )
                                 }
                             }
