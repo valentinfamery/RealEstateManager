@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +26,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.models.RealEstate
 
@@ -155,7 +157,9 @@ fun MapScreen(
                             state = MarkerState(position = latLng),
                             title = "title",
                             onInfoWindowClick = {
-                                navControllerTwoPane.navigate("detailScreen/${realEstate.id}")
+                                val item = Uri.encode(Gson().toJson(realEstate))
+
+                                navControllerTwoPane.navigate("detailScreen/$item")
                             }
                         )
                     }
