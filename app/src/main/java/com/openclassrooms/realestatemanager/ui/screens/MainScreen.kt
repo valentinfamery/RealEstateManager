@@ -240,7 +240,7 @@ fun MainScreen(
 
                                 composable("detailScreen/{item}",arguments = listOf(
                                     navArgument("item") {
-                                        type = RealEstate
+                                        type = RealEstate.NavigationType
                                     }
                                 )
                                 ) { backStackEntry ->
@@ -250,7 +250,7 @@ fun MainScreen(
                                     RealEstateDetailScreen(
                                         realEstateViewModel,
                                         item,
-                                        navController,
+                                        navControllerDrawer,
                                     ) }
                                 composable("start"){ Start()}
                             }

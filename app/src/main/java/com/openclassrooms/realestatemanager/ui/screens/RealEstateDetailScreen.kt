@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,12 +20,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowColumn
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.R
@@ -37,8 +40,7 @@ import com.skydoves.landscapist.glide.GlideImage
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,
     itemRealEstate: RealEstate?,
-    navController: NavHostController,
-
+    navController: NavController,
     ) {
 
     if(itemRealEstate != null) {
@@ -50,7 +52,14 @@ fun RealEstateDetailScreen(
         Scaffold(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
-                    onClick = { navController.navigate("editScreen/${itemRealEstate.id}") },
+                    onClick = {
+
+                        val item = Uri.encode(Gson().toJson(itemRealEstate))
+
+                        navController.navigate("editScreen/$item")
+
+
+                              },
                     icon = { Icon(Icons.Filled.Edit, "Localized description") },
                     text = { Text(text = "Edit") },
                     modifier = Modifier.clip(RoundedCornerShape(15.dp))

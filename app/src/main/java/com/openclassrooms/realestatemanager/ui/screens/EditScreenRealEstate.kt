@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -44,6 +45,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.models.PhotoWithText
+import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -51,16 +53,16 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("SimpleDateFormat")
 @ExperimentalMaterial3Api
 @Composable
 fun EditScreenRealEstate(
     realEstateViewModel: RealEstateViewModel,
-    itemId: String?,
+    itemRealEstate: RealEstate?,
     navController: NavHostController
 ) {
-    val itemRealEstate by realEstateViewModel.getRealEstateById(itemId.toString()).observeAsState()
 
-    val listPhotos2 by realEstateViewModel.getRealEstatePhotosWithId(itemId.toString()).observeAsState()
+    val listPhotos2 by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate?.id.toString()).observeAsState()
 
 
 
@@ -119,7 +121,7 @@ fun EditScreenRealEstate(
                 modifier = Modifier.defaultMinSize(100.dp, 150.dp),
             ) {
 
-                ConstraintLayout() {
+                ConstraintLayout {
                     val (titleEntry, imageSelect, buttonCancel, buttonConfirm, buttonAddPhoto) = createRefs()
                     TextField(
                         value = titlePhoto,
@@ -241,26 +243,26 @@ fun EditScreenRealEstate(
         if(itemRealEstate !=null) {
 
 
-            var entryType by rememberSaveable { mutableStateOf(itemRealEstate?.type.toString()) }
-            var entryPrice by rememberSaveable { mutableStateOf(itemRealEstate?.price.toString()) }
-            var entryArea by rememberSaveable { mutableStateOf(itemRealEstate?.area.toString()) }
-            var entryNumberRoom by rememberSaveable { mutableStateOf(itemRealEstate?.numberRoom.toString()) }
-            var entryDescription by rememberSaveable { mutableStateOf(itemRealEstate?.description.toString()) }
-            var entryNumberAndStreet by rememberSaveable { mutableStateOf(itemRealEstate?.numberAndStreet.toString()) }
-            var entryNumberApartement by rememberSaveable { mutableStateOf(itemRealEstate?.numberApartment.toString()) }
-            var entryCity by rememberSaveable { mutableStateOf(itemRealEstate?.city.toString()) }
-            var entryRegion by rememberSaveable { mutableStateOf(itemRealEstate?.region.toString()) }
-            var entryPostalCode by rememberSaveable { mutableStateOf(itemRealEstate?.postalCode.toString()) }
-            var entryCountry by rememberSaveable { mutableStateOf(itemRealEstate?.country.toString()) }
-            var entryStatus by rememberSaveable { mutableStateOf(itemRealEstate?.status.toString()) }
+            var entryType by rememberSaveable { mutableStateOf(itemRealEstate.type.toString()) }
+            var entryPrice by rememberSaveable { mutableStateOf(itemRealEstate.price.toString()) }
+            var entryArea by rememberSaveable { mutableStateOf(itemRealEstate.area.toString()) }
+            var entryNumberRoom by rememberSaveable { mutableStateOf(itemRealEstate.numberRoom.toString()) }
+            var entryDescription by rememberSaveable { mutableStateOf(itemRealEstate.description.toString()) }
+            var entryNumberAndStreet by rememberSaveable { mutableStateOf(itemRealEstate.numberAndStreet.toString()) }
+            var entryNumberApartement by rememberSaveable { mutableStateOf(itemRealEstate.numberApartment.toString()) }
+            var entryCity by rememberSaveable { mutableStateOf(itemRealEstate.city.toString()) }
+            var entryRegion by rememberSaveable { mutableStateOf(itemRealEstate.region.toString()) }
+            var entryPostalCode by rememberSaveable { mutableStateOf(itemRealEstate.postalCode.toString()) }
+            var entryCountry by rememberSaveable { mutableStateOf(itemRealEstate.country.toString()) }
+            var entryStatus by rememberSaveable { mutableStateOf(itemRealEstate.status.toString()) }
 
-            var textDateOfEntry by rememberSaveable { mutableStateOf(itemRealEstate?.dateOfEntry.toString()) }
+            var textDateOfEntry by rememberSaveable { mutableStateOf(itemRealEstate.dateOfEntry.toString()) }
             var textDateOfSale by rememberSaveable { mutableStateOf("00/00/0000") }
 
-            val checkedStateHopital = remember { mutableStateOf(itemRealEstate!!.hospitalsNear) }
-            val checkedStateSchool = remember { mutableStateOf(itemRealEstate!!.schoolsNear) }
-            val checkedStateShops = remember { mutableStateOf(itemRealEstate!!.shopsNear) }
-            val checkedStateParks = remember { mutableStateOf(itemRealEstate!!.parksNear) }
+            val checkedStateHopital = remember { mutableStateOf(itemRealEstate.hospitalsNear) }
+            val checkedStateSchool = remember { mutableStateOf(itemRealEstate.schoolsNear) }
+            val checkedStateShops = remember { mutableStateOf(itemRealEstate.shopsNear) }
+            val checkedStateParks = remember { mutableStateOf(itemRealEstate.parksNear) }
 
             val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
             val listStatus = listOf("For Sale", "Sold")
@@ -271,12 +273,12 @@ fun EditScreenRealEstate(
                     .fillMaxHeight()
             ) {
 
-                val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
+                val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
 
                 val (rowHopital, rowSchool, rowShops, rowParks, dropdownMenuStatus, fieldNumberAndStreet, fieldNumberApartement, fieldCity, fieldRegion, fieldPostalCode, fieldCountry) = createRefs()
                 CenterAlignedTopAppBar(
                     title = {
-                        Text(text = "New Estate Manager")
+                        Text(text = "Edit Estate")
                     },
                     navigationIcon = {
                         IconButton(onClick = {
@@ -662,7 +664,7 @@ fun EditScreenRealEstate(
                     repeat(listPhotos.size) {
                         Box(modifier = Modifier.size(184.dp)) {
 
-                            Column() {
+                            Column {
                                 ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
                                     val (image, text) = createRefs()

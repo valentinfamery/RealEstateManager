@@ -70,10 +70,19 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("filterScreen") { FilterScreen(navController) }
-                    composable("editScreen/{itemId}") { backStackEntry ->
+                    composable("editScreen/{item}",
+                        arguments = listOf(
+                            navArgument("item") {
+                                type = RealEstate.NavigationType
+                            }
+                        )
+                        ) { backStackEntry ->
+
+                        val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
+
                         EditScreenRealEstate(
                             realEstateViewModel,
-                            backStackEntry.arguments?.getString("itemId"),
+                            item,
                             navController
                         )
                     }
