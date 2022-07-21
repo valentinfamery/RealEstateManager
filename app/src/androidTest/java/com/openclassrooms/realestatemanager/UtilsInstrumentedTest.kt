@@ -77,8 +77,10 @@ class UtilsInstrumentedTest {
 
         val appContext: Context = ApplicationProvider.getApplicationContext()
 
+        val cm = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val nInfo: NetworkInfo? = cm.activeNetworkInfo
         
-        assertTrue( Utils.isInternetAvailable(appContext))
+        assertEquals(nInfo?.isConnected, Utils.isInternetAvailable(appContext))
 
     }
 }
