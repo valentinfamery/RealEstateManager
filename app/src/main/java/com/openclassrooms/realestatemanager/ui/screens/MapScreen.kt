@@ -55,7 +55,7 @@ fun MapScreen(
     val context = LocalContext.current
 
     var userPosition by remember {
-        mutableStateOf(LatLng(0.0,0.0))
+        mutableStateOf(LatLng(0.0, 0.0))
     }
 
     val items: List<RealEstate> by realEstateViewModel.getRealEstates.observeAsState(listOf())
@@ -63,7 +63,11 @@ fun MapScreen(
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            userPosition = LatLng(it.latitude,it.longitude)
+
+            if (it != null) {
+                userPosition = LatLng(it.latitude, it.longitude)
+            }
+
         }
     }
 
@@ -81,27 +85,23 @@ fun MapScreen(
 
 
 
-        when {
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                startLocationUpdates()
+    when {
+        ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED -> {
+            startLocationUpdates()
 
 
-
-
-            }
-            ActivityCompat.shouldShowRequestPermissionRationale(activity, "") -> {}
-            else -> {
-                SideEffect {
-                    requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                }
-
-            }
         }
+        ActivityCompat.shouldShowRequestPermissionRationale(activity, "") -> {}
+        else -> {
+            SideEffect {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
 
-
+        }
+    }
 
 
 
@@ -122,14 +122,14 @@ fun MapScreen(
         ) {
             composable("topBarMap") {
 
-                if(windowSize == WindowSize.COMPACT){
-                TopBar(
-                    scope,
-                    drawerState,
-                    "Map",
-                    navControllerDrawer
-                )
-                }else{
+                if (windowSize == WindowSize.COMPACT) {
+                    TopBar(
+                        scope,
+                        drawerState,
+                        "Map",
+                        navControllerDrawer
+                    )
+                } else {
                     CenterAlignedTopAppBar(
                         title = {
                             Text(text = "Map")
@@ -139,7 +139,10 @@ fun MapScreen(
                                 navControllerDrawer.navigate("filterScreen")
 
                             }) {
-                                Icon(painter = painterResource(id = R.drawable.ic_baseline_filter_list_24 ), contentDescription = "")
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
+                                    contentDescription = ""
+                                )
                             }
                         },
 
@@ -171,7 +174,7 @@ fun MapScreen(
             ) {
                 items.forEach {
 
-                    val realEstate : RealEstate = it
+                    val realEstate: RealEstate = it
 
                     if (it.lat != null && it.lng != null) {
 
@@ -192,7 +195,7 @@ fun MapScreen(
             }
 
 
-        }else{
+        } else {
             Text(text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ")
         }
     }
