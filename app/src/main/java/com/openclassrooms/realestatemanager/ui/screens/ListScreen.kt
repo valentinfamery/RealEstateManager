@@ -34,7 +34,7 @@ fun ListScreen(
     windowSize: WindowSize,
     navControllerTwoPane: NavHostController, ){
 
-    val items: List<RealEstate> by realEstateViewModel.getRealEstates.observeAsState(listOf())
+    val items by realEstateViewModel.uiState.collectAsState()
 
     if(windowSize == WindowSize.COMPACT ){
         Scaffold(

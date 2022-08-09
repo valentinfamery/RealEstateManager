@@ -58,7 +58,7 @@ fun MapScreen(
         mutableStateOf(LatLng(0.0, 0.0))
     }
 
-    val items: List<RealEstate> by realEstateViewModel.getRealEstates.observeAsState(listOf())
+    val items: List<RealEstate> by realEstateViewModel.uiState.collectAsState()
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)

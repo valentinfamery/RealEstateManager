@@ -15,6 +15,8 @@ import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
 import com.openclassrooms.realestatemanager.service.ApiService.`interface`
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
@@ -25,7 +27,8 @@ import retrofit2.Response
 import java.util.*
 
 
-class RealEstateRepository {
+class RealEstateRepository() {
+
 
     private val storage = FirebaseStorage.getInstance()
     private val usersCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)
@@ -35,21 +38,25 @@ class RealEstateRepository {
     }
 
     companion object {
-        private const val COLLECTION_REAL_ESTATE = "real_estates"
+        const val COLLECTION_REAL_ESTATE = "real_estates"
         private const val COLLECTION_REAL_ESTATE_IMAGES = "real_estates_images"
     }
 
-    val getRealEstates: MutableLiveData<List<RealEstate>> get() {
-        val result : MutableLiveData<List<RealEstate>> = MutableLiveData<List<RealEstate>>()
-        usersCollection.get().addOnSuccessListener { queryDocumentSnapshots: QuerySnapshot ->
-                val userList = queryDocumentSnapshots.toObjects(
-                    RealEstate::class.java
-                )
-            result.postValue(userList)
 
-            }
-            return result
+
+    val latestRealEstates: Flow<List<RealEstate>> = flow {
+        while(true) {
+            val latestRealEstates = fetchRealEstates()
+            emit(latestRealEstates)
         }
+    }
+
+    private suspend fun fetchRealEstates(): List<RealEstate> {
+        val list = usersCollection.get().await().map { document ->
+            document.toObject(RealEstate::class.java)
+        }
+        return list
+    }
 
     fun getRealEstatePhotosWithId(id : String) : MutableLiveData<List<PhotoWithTextFirebase>> {
         val result : MutableLiveData<List<PhotoWithTextFirebase>> = MutableLiveData<List<PhotoWithTextFirebase>>()
@@ -193,6 +200,11 @@ class RealEstateRepository {
 
 
 }
+
+
+
+
+
 
 
 

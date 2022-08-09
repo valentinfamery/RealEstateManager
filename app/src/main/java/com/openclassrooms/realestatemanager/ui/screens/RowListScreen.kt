@@ -59,10 +59,10 @@ fun RowList(
                         .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
-                    GlideImage(
-                        imageModel = items2?.get(0)?.photoUrl,
-                        contentScale = ContentScale.Crop,
-                    )
+                    //GlideImage(
+                        //imageModel = items2?.get(0)?.photoUrl,
+                        //contentScale = ContentScale.Crop,
+                    //)
                 }
 
 

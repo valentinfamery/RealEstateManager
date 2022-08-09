@@ -2,15 +2,30 @@ package com.openclassrooms.realestatemanager.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.repository.RealEstateRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class RealEstateViewModel : ViewModel() {
     private val realEstateRepository : RealEstateRepository = RealEstateRepository()
 
-    val getRealEstates: MutableLiveData<List<RealEstate>> get() = realEstateRepository.getRealEstates
+    private val _uiState = MutableStateFlow(listOf<RealEstate>())
+    val uiState: StateFlow<List<RealEstate>> = _uiState
+
+    init {
+        viewModelScope.launch {
+            // Trigger the flow and consume its elements using collect
+            realEstateRepository.latestRealEstates.collect { favoriteNews ->
+                _uiState.value = favoriteNews
+                // Update View with the latest favorite news
+            }
+        }
+    }
 
     fun createRealEstate(
         type: String,
@@ -52,5 +67,7 @@ class RealEstateViewModel : ViewModel() {
     fun getRealEstateById(id : String): MutableLiveData<RealEstate?> {
         return realEstateRepository.getRealEstateById(id)
     }
+
+
 
 }
