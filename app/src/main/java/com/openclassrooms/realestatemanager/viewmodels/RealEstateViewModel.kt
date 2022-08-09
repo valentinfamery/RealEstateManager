@@ -14,9 +14,9 @@ class RealEstateViewModel : ViewModel() {
 
     fun createRealEstate(
         type: String,
-        price: Int,
-        area: Int,
-        numberRoom: Int,
+        price: String,
+        area: String,
+        numberRoom: String,
         description: String,
         numberAndStreet: String,
         numberApartment: String,

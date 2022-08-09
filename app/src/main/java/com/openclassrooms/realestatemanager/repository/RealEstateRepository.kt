@@ -66,9 +66,9 @@ class RealEstateRepository {
 
     fun createRealEstate(
         type: String,
-        price: Int,
-        area: Int,
-        numberRoom: Int,
+        price: String,
+        area: String,
+        numberRoom: String,
         description: String,
         numberAndStreet: String,
         numberApartment: String,

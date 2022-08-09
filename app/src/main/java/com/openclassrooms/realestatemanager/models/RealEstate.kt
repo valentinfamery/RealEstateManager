@@ -10,9 +10,9 @@ import kotlinx.parcelize.Parcelize
 data class RealEstate (
     var id: String? = null,
     var type: String? = null,
-    var price: Int? = null,
-    var area: Int? = null,
-    var numberRoom: Int? = null,
+    var price: String? = null,
+    var area: String? = null,
+    var numberRoom: String? = null,
     var description: String? = null,
     var numberAndStreet: String? = null,
     var numberApartment: String? = null,

@@ -221,7 +221,7 @@ fun EditScreenRealEstate(
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = PhotoWithText(null, photoSelect, titlePhoto)
+                            val photoWithText = PhotoWithText(photoSelect, titlePhoto)
 
                             listPhotos.add(photoWithText)
                             openDialog.value = false
@@ -717,9 +717,9 @@ fun EditScreenRealEstate(
 
                             realEstateViewModel.createRealEstate(
                                 entryType,
-                                Integer.parseInt(entryPrice),
-                                Integer.parseInt(entryArea),
-                                Integer.parseInt(entryNumberRoom),
+                                entryPrice,
+                                entryArea,
+                                entryNumberRoom,
                                 entryDescription,
                                 entryNumberAndStreet,
                                 entryNumberApartement,
