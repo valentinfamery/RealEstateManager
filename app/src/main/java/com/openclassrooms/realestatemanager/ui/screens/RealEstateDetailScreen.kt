@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -46,7 +47,7 @@ fun RealEstateDetailScreen(
     if(itemRealEstate != null) {
 
 
-        val listPhotos by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate.id.toString()).observeAsState()
+        val listPhotos by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate.id.toString()).collectAsState()
 
 
         Scaffold(
@@ -102,7 +103,9 @@ fun RealEstateDetailScreen(
                         end.linkTo(parent.end, margin = 25.dp)
                     }) {
                         repeat(listPhotos?.size ?: 0) {
-                            Box(modifier = Modifier.size(184.dp).clip(RoundedCornerShape(15.dp))) {
+                            Box(modifier = Modifier
+                                .size(184.dp)
+                                .clip(RoundedCornerShape(15.dp))) {
 
                                 Column {
                                     ConstraintLayout(modifier = Modifier.fillMaxSize()) {

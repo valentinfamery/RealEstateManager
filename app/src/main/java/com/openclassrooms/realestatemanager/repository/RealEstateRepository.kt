@@ -42,6 +42,13 @@ class RealEstateRepository() {
         private const val COLLECTION_REAL_ESTATE_IMAGES = "real_estates_images"
     }
 
+    fun getRealEstatePhotosWithId(id : String): Flow<List<PhotoWithTextFirebase>> = flow {
+        while(true) {
+            val photosWithId = fetchPhotosWithId(id)
+            emit(photosWithId)
+        }
+    }
+
 
 
     val latestRealEstates: Flow<List<RealEstate>> = flow {
@@ -58,18 +65,14 @@ class RealEstateRepository() {
         return list
     }
 
-    fun getRealEstatePhotosWithId(id : String) : MutableLiveData<List<PhotoWithTextFirebase>> {
-        val result : MutableLiveData<List<PhotoWithTextFirebase>> = MutableLiveData<List<PhotoWithTextFirebase>>()
-
-        imagesCollectionRealEstates(id).get().addOnSuccessListener {queryDocumentSnapshots: QuerySnapshot ->
-            val listPhotoWithText = queryDocumentSnapshots.toObjects(
-                PhotoWithTextFirebase::class.java
-            )
-            result.postValue(listPhotoWithText)
+    private suspend fun fetchPhotosWithId(id : String): List<PhotoWithTextFirebase> {
+        val list = imagesCollectionRealEstates(id).get().await().map { document ->
+            document.toObject(PhotoWithTextFirebase::class.java)
         }
-
-        return result
+        return list
     }
+
+
 
     fun createRealEstate(
         type: String,
@@ -145,6 +148,8 @@ class RealEstateRepository() {
                             runBlocking {
                                 launch {
                                     val urlFinal = uploadImageAndGetUrl(photoWithText.photoUri!!,id)
+
+                                    Log.e("urlFinal",urlFinal)
 
                                     val photoWithTextFirebase = PhotoWithTextFirebase(urlFinal,photoWithText.text)
 

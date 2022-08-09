@@ -62,7 +62,7 @@ fun EditScreenRealEstate(
     navController: NavHostController
 ) {
 
-    val listPhotos2 by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate?.id.toString()).observeAsState()
+    val listPhotos2 by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate?.id.toString()).collectAsState()
 
 
 
@@ -315,15 +315,17 @@ fun EditScreenRealEstate(
                     value = entryType,
                     onValueChange = { entryType = it },
                     label = { Text("Type") },
-                    modifier = Modifier.constrainAs(fieldType) {
-                        top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
-                        start.linkTo(parent.start, margin = 50.dp)
-                        end.linkTo(parent.end, margin = 50.dp)
-                    }.onGloballyPositioned { coordinates ->
-                        // This value is used to assign to
-                        // the DropDown the same width
-                        mTextFieldSize = coordinates.size.toSize()
-                    },
+                    modifier = Modifier
+                        .constrainAs(fieldType) {
+                            top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
+                            start.linkTo(parent.start, margin = 50.dp)
+                            end.linkTo(parent.end, margin = 50.dp)
+                        }
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to
+                            // the DropDown the same width
+                            mTextFieldSize = coordinates.size.toSize()
+                        },
                     trailingIcon = {
                         Icon(icon, "contentDescription",
                             Modifier.clickable { expanded = !expanded })
@@ -566,15 +568,17 @@ fun EditScreenRealEstate(
                     onValueChange = { entryStatus = it },
                     label = { Text("Status") },
                     singleLine = true,
-                    modifier = Modifier.constrainAs(fieldStatus) {
-                        top.linkTo(rowParks.bottom, margin = 25.dp)
-                        start.linkTo(parent.start, margin = 50.dp)
-                        end.linkTo(parent.end, margin = 50.dp)
-                    }.onGloballyPositioned { coordinates ->
-                        // This value is used to assign to
-                        // the DropDown the same width
-                        mTextFieldSizeStatus = coordinates.size.toSize()
-                    },
+                    modifier = Modifier
+                        .constrainAs(fieldStatus) {
+                            top.linkTo(rowParks.bottom, margin = 25.dp)
+                            start.linkTo(parent.start, margin = 50.dp)
+                            end.linkTo(parent.end, margin = 50.dp)
+                        }
+                        .onGloballyPositioned { coordinates ->
+                            // This value is used to assign to
+                            // the DropDown the same width
+                            mTextFieldSizeStatus = coordinates.size.toSize()
+                        },
                     trailingIcon = {
                         Icon(iconStatus, "contentDescription",
                             Modifier.clickable { expandedStatus = !expandedStatus })

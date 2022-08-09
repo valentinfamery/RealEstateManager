@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -56,6 +58,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
+@SuppressLint("LongLogTag")
 @ExperimentalMaterial3Api
 @Composable
 fun NewRealEstateScreen(
@@ -84,6 +87,7 @@ fun NewRealEstateScreen(
 
 
                     photoSelect = uriImageSelected
+                    Log.e("photoSelectResultLauncher",photoSelect.toString())
                 }
 
             }
@@ -707,8 +711,9 @@ fun NewRealEstateScreen(
                 onClick = {
 
                     try {
-
                         listPhotos.size >= 1
+
+                        Log.e("listphotosItem1Uri", listPhotos[0].photoUri.toString())
 
                         realEstateViewModel.createRealEstate(
                             entryType,

@@ -60,9 +60,21 @@ class RealEstateViewModel : ViewModel() {
             checkedStateParks)
     }
 
-    fun getRealEstatePhotosWithId(id : String):MutableLiveData<List<PhotoWithTextFirebase>>{
-       return realEstateRepository.getRealEstatePhotosWithId(id)
+    fun getRealEstatePhotosWithId(id : String):StateFlow<List<PhotoWithTextFirebase>>{
+        val _uiState = MutableStateFlow(listOf<PhotoWithTextFirebase>())
+        val uiState: StateFlow<List<PhotoWithTextFirebase>> = _uiState
+
+        viewModelScope.launch {
+            // Trigger the flow and consume its elements using collect
+            realEstateRepository.getRealEstatePhotosWithId(id).collect { favoriteNews ->
+                _uiState.value = favoriteNews
+                // Update View with the latest favorite news
+            }
+        }
+
+       return uiState
     }
+
 
     fun getRealEstateById(id : String): MutableLiveData<RealEstate?> {
         return realEstateRepository.getRealEstateById(id)
