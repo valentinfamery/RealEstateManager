@@ -4,4 +4,5 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_new_real_estate">NewRealEstateActivity</string>
     <string name="title_activity_real_estate_detail">RealEstateDetail</string>
+    <string name="title_activity_filter">FilterActivity</string>
 </resources>

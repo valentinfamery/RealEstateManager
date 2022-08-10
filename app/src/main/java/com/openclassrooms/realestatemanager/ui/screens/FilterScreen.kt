@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -16,7 +18,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.R
 
 @Composable
-fun FilterScreen(navController: NavHostController) {
+fun FilterScreen() {
 
     var sliderPositionPrice by rememberSaveable { mutableStateOf(0f) }
     var filterType by rememberSaveable { mutableStateOf("") }
@@ -25,6 +27,8 @@ fun FilterScreen(navController: NavHostController) {
     val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
 
     val listNumberRoom = listOf("1", "2", "3", "4","5","6","7","8")
+
+    val activity = LocalContext.current as Activity
 
 ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
@@ -44,7 +48,7 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
     IconButton(
         onClick = {
-                  navController.popBackStack()
+                  activity.finish()
         },
         modifier = Modifier.constrainAs(buttonClose) {
             top.linkTo(parent.top, margin = 10.dp)

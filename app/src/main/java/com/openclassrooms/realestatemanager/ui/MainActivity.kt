@@ -69,7 +69,6 @@ class MainActivity : ComponentActivity() {
                             userViewModel = userViewModel
                         )
                     }
-                    composable("filterScreen") { FilterScreen(navController) }
                     composable("editScreen/{item}",
                         arguments = listOf(
                             navArgument("item") {
