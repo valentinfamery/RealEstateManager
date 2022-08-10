@@ -1,9 +1,11 @@
 package com.openclassrooms.realestatemanager.models
 
 import android.os.Bundle
+import android.os.Parcel
 import android.os.Parcelable
 import androidx.navigation.NavType
 import com.google.gson.Gson
+import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

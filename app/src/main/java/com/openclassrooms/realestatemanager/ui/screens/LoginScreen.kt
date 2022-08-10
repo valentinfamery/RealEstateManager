@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +22,7 @@ import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }

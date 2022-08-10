@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }

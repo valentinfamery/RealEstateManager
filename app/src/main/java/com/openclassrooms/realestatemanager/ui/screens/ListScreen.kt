@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.FilterActivity
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
@@ -36,19 +37,28 @@ fun ListScreen(
     innerPadding: PaddingValues,
     navControllerDrawer: NavController,
     windowSize: WindowSize,
-    navControllerTwoPane: NavHostController, ){
+    navControllerTwoPane: NavHostController, ) {
 
     val items by realEstateViewModel.uiState.collectAsState()
 
+    var listFilter = mutableListOf<RealEstate>()
+
+    var filterState by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
 
-    val launcherActivityResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-        if(result.resultCode == Activity.RESULT_OK){
-            val intent = result.data
-        }
-    }
+    val launcherActivityResult =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (!data?.getParcelableArrayExtra("filterList").isNullOrEmpty()) {
+                    filterState = true
 
-    if(windowSize == WindowSize.COMPACT ){
+                }
+            }
+        }
+
+    if (windowSize == WindowSize.COMPACT) {
         Scaffold(
             modifier = Modifier.padding(innerPadding),
             topBar = {
@@ -66,10 +76,12 @@ fun ListScreen(
                     },
                     actions = {
                         IconButton(onClick = {
-
-
-
-                            launcherActivityResult.launch(Intent(context, FilterActivity::class.java))
+                            launcherActivityResult.launch(
+                                Intent(
+                                    context,
+                                    FilterActivity::class.java
+                                )
+                            )
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
@@ -84,13 +96,31 @@ fun ListScreen(
                 LazyColumn(
                     modifier = Modifier.padding(it),
                 ) {
-                    items(items) { item ->
-                        RowList(item, realEstateViewModel,navControllerDrawer,windowSize,navControllerTwoPane)
+                    if (filterState == false) {
+                        items(items) { item ->
+                            RowList(
+                                item,
+                                realEstateViewModel,
+                                navControllerDrawer,
+                                windowSize,
+                                navControllerTwoPane
+                            )
+                        }
+                    } else {
+                        items(listFilter) { item ->
+                            RowList(
+                                item,
+                                realEstateViewModel,
+                                navControllerDrawer,
+                                windowSize,
+                                navControllerTwoPane
+                            )
+                        }
                     }
                 }
             }
         )
-    }else {
+    } else {
 
         Scaffold(
             modifier = Modifier.padding(innerPadding),
@@ -118,7 +148,13 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                 ) {
                     items(items) { item ->
-                        RowList(item, realEstateViewModel, navControllerDrawer,windowSize,navControllerTwoPane)
+                        RowList(
+                            item,
+                            realEstateViewModel,
+                            navControllerDrawer,
+                            windowSize,
+                            navControllerTwoPane
+                        )
                     }
                 }
             }
