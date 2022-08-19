@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.repository
 
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.CollectionReference
@@ -9,26 +10,39 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
 import com.openclassrooms.realestatemanager.service.ApiService.`interface`
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
 
-class RealEstateRepository() {
+class RealEstateRepository(private val realEstateDao: RealEstateDao) {
 
+    val realEstates: LiveData<List<RealEstate>> = realEstateDao.realEstates()
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    fun insertRealEstate(realEstate: RealEstate) {
+        coroutineScope.launch(Dispatchers.IO) {
+            realEstateDao.insertRealEstate(realEstate)
+        }
+    }
+
+    fun clearRoomDatabase() {
+        coroutineScope.launch(Dispatchers.IO) {
+            realEstateDao.clear()
+        }
+    }
 
     private val storage = FirebaseStorage.getInstance()
     private val usersCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)
@@ -43,26 +57,26 @@ class RealEstateRepository() {
     }
 
     fun getRealEstatePhotosWithId(id : String): Flow<List<PhotoWithTextFirebase>> = flow {
-        while(true) {
             val photosWithId = fetchPhotosWithId(id)
             emit(photosWithId)
-        }
     }
 
 
 
     val latestRealEstates: Flow<List<RealEstate>> = flow {
-        while(true) {
             val latestRealEstates = fetchRealEstates()
             emit(latestRealEstates)
-        }
     }
 
     private suspend fun fetchRealEstates(): List<RealEstate> {
         val list = usersCollection.get().await().map { document ->
             document.toObject(RealEstate::class.java)
         }
-        return list
+        clearRoomDatabase()
+        for (item in  list){
+            insertRealEstate(item)
+        }
+        return realEstates.value ?: listOf()
     }
 
     private suspend fun fetchPhotosWithId(id : String): List<PhotoWithTextFirebase> {

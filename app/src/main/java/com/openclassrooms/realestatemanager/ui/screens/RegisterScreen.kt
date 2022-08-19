@@ -91,7 +91,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
         Button(
             onClick = {
 
-                userViewModel.registerUser(email,username,password).observeForever{
+                userViewModel.registerUser(username,email,password).observeForever{
                     when(it){
                         is Resource.Loading -> {
                         }

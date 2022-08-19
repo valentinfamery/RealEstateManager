@@ -1,16 +1,18 @@
 package com.openclassrooms.realestatemanager.models
 
 import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.navigation.NavType
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.Gson
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
+@Entity
 @Parcelize
 data class RealEstate (
-    var id: String? = null,
+    @PrimaryKey()
+    var id: String,
     var type: String? = null,
     var price: String? = null,
     var area: String? = null,

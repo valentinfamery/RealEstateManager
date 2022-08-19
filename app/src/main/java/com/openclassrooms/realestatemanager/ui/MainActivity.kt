@@ -1,11 +1,16 @@
 package com.openclassrooms.realestatemanager.ui
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -13,6 +18,7 @@ import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.openclassrooms.realestatemanager.di.RealEstateViewModelFactory
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.screens.*
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
@@ -23,7 +29,7 @@ import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
 class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
-    private val realEstateViewModel: RealEstateViewModel by viewModels()
+
     private lateinit var auth: FirebaseAuth
     private lateinit var startScreen : String
 
@@ -44,68 +50,81 @@ class MainActivity : ComponentActivity() {
 
                 val windowSize = rememberWindowSizeClass()
 
+                val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application)
 
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = startScreen) {
-                    composable("mainScreen") {
-                        MainScreen(
-                            navControllerDrawer = navController,
-                            auth = auth,
-                            userViewModel,
-                            realEstateViewModel,
-                            windowSize
-                        )
-                    }
-                    composable("settingsScreen") { SettingsScreen(navController = navController) }
-                    composable("registerScreen") {
-                        RegisterScreen(
-                            navController = navController,
-                            userViewModel = userViewModel
-                        )
-                    }
-                    composable("signInScreen") {
-                        SignInScreen(
-                            navController = navController,
-                            userViewModel = userViewModel
-                        )
-                    }
-                    composable("editScreen/{item}",
-                        arguments = listOf(
-                            navArgument("item") {
-                                type = RealEstate.NavigationType
-                            }
-                        )
+                val owner = LocalViewModelStoreOwner.current
+
+                owner?.let {
+                    val realEstateViewModel: RealEstateViewModel = viewModel(
+                        it,
+                        "MainViewModel",
+                        viewModelFactory
+                    )
+
+
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = startScreen) {
+                        composable("mainScreen") {
+                            MainScreen(
+                                navControllerDrawer = navController,
+                                auth = auth,
+                                userViewModel,
+                                realEstateViewModel,
+                                windowSize
+                            )
+                        }
+                        composable("settingsScreen") { SettingsScreen(navController = navController) }
+                        composable("registerScreen") {
+                            RegisterScreen(
+                                navController = navController,
+                                userViewModel = userViewModel
+                            )
+                        }
+                        composable("signInScreen") {
+                            SignInScreen(
+                                navController = navController,
+                                userViewModel = userViewModel
+                            )
+                        }
+                        composable("editScreen/{item}",
+                            arguments = listOf(
+                                navArgument("item") {
+                                    type = RealEstate.NavigationType
+                                }
+                            )
                         ) { backStackEntry ->
 
-                        val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
+                            val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
 
-                        EditScreenRealEstate(
-                            realEstateViewModel,
-                            item,
-                            navController
-                        )
+                            EditScreenRealEstate(
+                                realEstateViewModel,
+                                item,
+                                navController
+                            )
+                        }
+
+
+                        composable(
+                            route = "detailScreen/{item}",
+                            arguments = listOf(
+                                navArgument("item") {
+                                    type = RealEstate.NavigationType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
+
+                            RealEstateDetailScreen(
+                                realEstateViewModel,
+                                item,
+                                navController
+                            )
+                        }
+
+
                     }
-
-
-                    composable(
-                        route = "detailScreen/{item}",
-                        arguments = listOf(
-                            navArgument("item") {
-                                type = RealEstate.NavigationType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
-
-                        RealEstateDetailScreen(
-                            realEstateViewModel,
-                            item,
-                            navController
-                        )
-                    }
-
-
                 }
+
 
 
 
