@@ -3,6 +3,8 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.FilterActivity
+import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -97,15 +100,28 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                 ) {
                     if (filterState == false) {
-                        items(items) { item ->
-                            RowList(
-                                item,
-                                realEstateViewModel,
-                                navControllerDrawer,
-                                windowSize,
-                                navControllerTwoPane
-                            )
+                        when (items) {
+                            is Resource.Loading -> {
+                            }
+                            is Resource.Success -> {
+                                Log.e("items","listScreen")
+                                items.data?.let {items->
+                                    items(items) { item ->
+                                        RowList(
+                                            item,
+                                            realEstateViewModel,
+                                            navControllerDrawer,
+                                            windowSize,
+                                            navControllerTwoPane
+                                        )
+                                    }
+                                }
+                            }
                         }
+
+
+
+
                     } else {
                         items(listFilter) { item ->
                             RowList(
@@ -147,14 +163,22 @@ fun ListScreen(
                 LazyColumn(
                     modifier = Modifier.padding(it),
                 ) {
-                    items(items) { item ->
-                        RowList(
-                            item,
-                            realEstateViewModel,
-                            navControllerDrawer,
-                            windowSize,
-                            navControllerTwoPane
-                        )
+                    when (items) {
+                        is Resource.Loading -> {
+                        }
+                        is Resource.Success -> {
+                            items.data?.let {items->
+                                items(items) { item ->
+                                    RowList(
+                                        item,
+                                        realEstateViewModel,
+                                        navControllerDrawer,
+                                        windowSize,
+                                        navControllerTwoPane
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

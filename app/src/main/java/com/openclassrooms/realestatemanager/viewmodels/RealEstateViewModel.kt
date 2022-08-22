@@ -10,29 +10,30 @@ import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.repository.RealEstateRepository
+import com.openclassrooms.realestatemanager.utils.Resource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class RealEstateViewModel(application: Application) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
 
 
-    private val _uiState = MutableStateFlow(listOf<RealEstate>())
-    val uiState: StateFlow<List<RealEstate>> = _uiState
-
     init {
         val database = RealEstateRoomDatabase.getInstance(application)
         val realEstateDao = database.realEstateDao()
         realEstateRepository = RealEstateRepository(realEstateDao)
-        viewModelScope.launch {
-            // Trigger the flow and consume its elements using collect
-            realEstateRepository.latestRealEstates.collect { favoriteNews ->
-                _uiState.value = favoriteNews
-                // Update View with the latest favorite news
-            }
-        }
     }
+
+
+    val uiState: StateFlow<Resource<List<RealEstate>>> = realEstateRepository.latestRealEstates.stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5000),
+            initialValue = Resource.Loading()
+        )
 
 
 

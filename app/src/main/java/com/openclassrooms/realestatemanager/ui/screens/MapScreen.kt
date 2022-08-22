@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -33,6 +34,7 @@ import com.google.gson.Gson
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.utils.WindowSize
 
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
@@ -58,7 +60,7 @@ fun MapScreen(
         mutableStateOf(LatLng(0.0, 0.0))
     }
 
-    val items: List<RealEstate> by realEstateViewModel.uiState.collectAsState()
+    val items by realEstateViewModel.uiState.collectAsState()
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
@@ -172,26 +174,35 @@ fun MapScreen(
                 properties = mapProperties,
                 uiSettings = uiSettings,
             ) {
-                items.forEach {
+                when (items) {
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Success -> {
+                        items.data?.let {items->
+                            items.forEach {
 
-                    val realEstate: RealEstate = it
+                                val realEstate: RealEstate = it
 
-                    if (it.lat != null && it.lng != null) {
+                                if (it.lat != null && it.lng != null) {
 
-                        val latLng = LatLng(
-                            it.lat!!, it.lng!!
-                        )
-                        Marker(
-                            state = MarkerState(position = latLng),
-                            title = "title",
-                            onInfoWindowClick = {
-                                val item = Uri.encode(Gson().toJson(realEstate))
+                                    val latLng = LatLng(
+                                        it.lat!!, it.lng!!
+                                    )
+                                    Marker(
+                                        state = MarkerState(position = latLng),
+                                        title = "title",
+                                        onInfoWindowClick = {
+                                            val item = Uri.encode(Gson().toJson(realEstate))
 
-                                navControllerTwoPane.navigate("detailScreen/$item")
+                                            navControllerTwoPane.navigate("detailScreen/$item")
+                                        }
+                                    )
+                                }
                             }
-                        )
+                        }
                     }
                 }
+
             }
 
 

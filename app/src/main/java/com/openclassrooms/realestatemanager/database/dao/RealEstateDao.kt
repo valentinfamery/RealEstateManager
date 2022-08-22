@@ -13,7 +13,7 @@ interface RealEstateDao {
     fun insertRealEstate(realEstate: RealEstate)
 
     @Query("SELECT * FROM RealEstate")
-    fun realEstates(): LiveData<List<RealEstate>>
+    fun realEstates(): List<RealEstate>
 
     @Query("DELETE FROM RealEstate")
     fun clear()

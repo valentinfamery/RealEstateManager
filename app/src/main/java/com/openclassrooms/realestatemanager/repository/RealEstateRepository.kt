@@ -14,8 +14,11 @@ import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.models.User
 import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
 import com.openclassrooms.realestatemanager.service.ApiService.`interface`
+import com.openclassrooms.realestatemanager.utils.Resource
+import com.openclassrooms.realestatemanager.utils.safeCall
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -27,8 +30,6 @@ import java.util.*
 
 
 class RealEstateRepository(private val realEstateDao: RealEstateDao) {
-
-    val realEstates: LiveData<List<RealEstate>> = realEstateDao.realEstates()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -63,20 +64,26 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao) {
 
 
 
-    val latestRealEstates: Flow<List<RealEstate>> = flow {
+    val latestRealEstates: Flow<Resource<List<RealEstate>>> = flow {
             val latestRealEstates = fetchRealEstates()
             emit(latestRealEstates)
     }
 
-    private suspend fun fetchRealEstates(): List<RealEstate> {
-        val list = usersCollection.get().await().map { document ->
-            document.toObject(RealEstate::class.java)
+    private suspend fun fetchRealEstates(): Resource<List<RealEstate>> {
+        return withContext(Dispatchers.IO) {
+            safeCall {
+                Log.e("items","repo1")
+                val list = usersCollection.get().await().map { document ->
+                    document.toObject(RealEstate::class.java)
+                }
+                realEstateDao.clear()
+                for (item in  list){
+                    realEstateDao.insertRealEstate(item)
+                }
+                Log.e("items","repo2")
+                Resource.Success(realEstateDao.realEstates())
+            }
         }
-        clearRoomDatabase()
-        for (item in  list){
-            insertRealEstate(item)
-        }
-        return realEstates.value ?: listOf()
     }
 
     private suspend fun fetchPhotosWithId(id : String): List<PhotoWithTextFirebase> {
