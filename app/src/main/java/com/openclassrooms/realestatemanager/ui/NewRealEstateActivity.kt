@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui
 
+import android.app.Application
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,18 +10,19 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.openclassrooms.realestatemanager.di.RealEstateViewModelFactory
 import com.openclassrooms.realestatemanager.ui.screens.NewRealEstateScreen
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 
 class NewRealEstateActivity : ComponentActivity() {
 
-    private val realEstateViewModel: RealEstateViewModel by viewModels()
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         setContent {
             Projet_9_OC_RealEstateManagerTheme{
@@ -29,9 +31,19 @@ class NewRealEstateActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application)
 
+                    val owner = LocalViewModelStoreOwner.current
 
-                    NewRealEstateScreen(realEstateViewModel)
+                    owner?.let {
+                        val realEstateViewModel: RealEstateViewModel = viewModel(
+                            it,
+                            "MainViewModel",
+                            viewModelFactory
+                        )
+
+                        NewRealEstateScreen(realEstateViewModel)
+                    }
                 }
             }
         }
