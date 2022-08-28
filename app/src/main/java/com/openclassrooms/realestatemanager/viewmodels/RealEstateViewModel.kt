@@ -1,7 +1,7 @@
 package com.openclassrooms.realestatemanager.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,27 +9,28 @@ import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
 import com.openclassrooms.realestatemanager.models.PhotoWithText
 import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.utils.Resource
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class RealEstateViewModel(application: Application) : ViewModel() {
+class RealEstateViewModel(application: Application,lifeCycleScope: LifecycleCoroutineScope) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
 
 
     init {
         val database = RealEstateRoomDatabase.getInstance(application)
         val realEstateDao = database.realEstateDao()
-        realEstateRepository = RealEstateRepository(realEstateDao)
+        realEstateRepository = RealEstateRepository(realEstateDao,lifeCycleScope)
     }
 
 
-    val uiState: StateFlow<Resource<List<RealEstate>>> = realEstateRepository.latestRealEstates.stateIn(
+    val uiState: StateFlow<Resource<List<RealEstateDatabase>>> = flow {
+        emit(realEstateRepository.fetchRealEstates())
+    }.stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5000),
             initialValue = Resource.Loading()

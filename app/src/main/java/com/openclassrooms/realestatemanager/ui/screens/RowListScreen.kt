@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -30,7 +31,7 @@ import com.skydoves.landscapist.glide.GlideImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RowList(
-    item: RealEstate,
+    item: RealEstateDatabase,
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
     windowSize: WindowSize,

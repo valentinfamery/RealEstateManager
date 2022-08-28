@@ -2,16 +2,16 @@ package com.openclassrooms.realestatemanager.models
 
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.annotation.NonNull
 import androidx.navigation.NavType
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 
+@Entity
 @Parcelize
-data class RealEstate (
-    var id: String?=null,
+data class RealEstateDatabase(
+    @PrimaryKey var id: String,
     var type: String? = null,
     var price: String? = null,
     var area: String? = null,
@@ -33,7 +33,6 @@ data class RealEstate (
     var schoolsNear : Boolean = false,
     var shopsNear : Boolean = false,
     var parksNear : Boolean = false
-
 ): Parcelable {
     companion object NavigationType : NavType<RealEstate>(isNullableAllowed = false) {
         override fun get(bundle: Bundle, key: String): RealEstate? {

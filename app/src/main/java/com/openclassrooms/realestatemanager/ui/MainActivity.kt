@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.material3.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -50,7 +50,9 @@ class MainActivity : ComponentActivity() {
 
                 val windowSize = rememberWindowSizeClass()
 
-                val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application)
+
+
+                val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application,lifecycleScope)
 
                 val owner = LocalViewModelStoreOwner.current
 

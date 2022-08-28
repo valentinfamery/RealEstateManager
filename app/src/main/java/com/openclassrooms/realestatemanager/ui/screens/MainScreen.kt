@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -87,7 +88,6 @@ fun MainScreen(
                                     navControllerDrawer,
                                     windowSize,
                                     navControllerTwoPane
-
                                 )
                             }
                             composable(Screen.MapScreen.route) {
@@ -190,7 +190,7 @@ fun MainScreen(
                                         realEstateViewModel,
                                         innerPadding,
                                         navControllerDrawer,
-                                        windowSize ,
+                                        windowSize,
                                         navControllerTwoPane
                                     )
                                 }

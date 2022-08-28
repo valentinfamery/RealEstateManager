@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.repository
 
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
@@ -11,10 +12,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
-import com.openclassrooms.realestatemanager.models.PhotoWithText
-import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
-import com.openclassrooms.realestatemanager.models.RealEstate
-import com.openclassrooms.realestatemanager.models.User
+import com.openclassrooms.realestatemanager.models.*
 import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
 import com.openclassrooms.realestatemanager.service.ApiService.`interface`
 import com.openclassrooms.realestatemanager.utils.Resource
@@ -29,21 +27,7 @@ import retrofit2.Response
 import java.util.*
 
 
-class RealEstateRepository(private val realEstateDao: RealEstateDao) {
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
-    fun insertRealEstate(realEstate: RealEstate) {
-        coroutineScope.launch(Dispatchers.IO) {
-            realEstateDao.insertRealEstate(realEstate)
-        }
-    }
-
-    fun clearRoomDatabase() {
-        coroutineScope.launch(Dispatchers.IO) {
-            realEstateDao.clear()
-        }
-    }
+class RealEstateRepository(private val realEstateDao: RealEstateDao,private val lifeCycleScope :LifecycleCoroutineScope) {
 
     private val storage = FirebaseStorage.getInstance()
     private val usersCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)
@@ -62,28 +46,47 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao) {
             emit(photosWithId)
     }
 
-
-
-    val latestRealEstates: Flow<Resource<List<RealEstate>>> = flow {
-            val latestRealEstates = fetchRealEstates()
-            emit(latestRealEstates)
-    }
-
-    private suspend fun fetchRealEstates(): Resource<List<RealEstate>> {
-        return withContext(Dispatchers.IO) {
-            safeCall {
-                Log.e("items","repo1")
-                val list = usersCollection.get().await().map { document ->
-                    document.toObject(RealEstate::class.java)
-                }
-                realEstateDao.clear()
-                for (item in  list){
-                    realEstateDao.insertRealEstate(item)
-                }
-                Log.e("items","repo2")
-                Resource.Success(realEstateDao.realEstates())
+    suspend fun fetchRealEstates(): Resource<List<RealEstateDatabase>> {
+        Log.e("items","repo1")
+        val list = usersCollection.get().await().map { document ->
+            document.toObject(RealEstate::class.java)
+        }
+        Log.e("items1", list[0].city.toString())
+        lifeCycleScope.launch(Dispatchers.IO) {
+            realEstateDao.clear()
+        }
+        for (item in  list){
+                val realEstateDatabase = RealEstateDatabase(
+                    item.id!!,
+                    item.type!!,
+                    item.price!!,
+                    item.area!!,
+                    item.numberRoom!!,
+                    item.description!!,
+                    item.numberAndStreet!!,
+                    item.numberApartment!!,
+                    item.city!!,
+                    item.region!!,
+                    item.postalCode!!,
+                    item.country!!,
+                    item.status!!,
+                    item.dateOfEntry!!,
+                    item.dateOfSale!!,
+                    item.realEstateAgent!!,
+                    item.lat!!,
+                    item.lng!!,
+                    item.hospitalsNear,
+                    item.schoolsNear,
+                    item.shopsNear,
+                    item.parksNear
+                )
+            lifeCycleScope.launch(Dispatchers.IO) {
+                realEstateDao.insertRealEstate(realEstateDatabase)
             }
         }
+        Log.e("items","repo2")
+
+        return safeCall { Resource.Success(realEstateDao.realEstates()) }
     }
 
     private suspend fun fetchPhotosWithId(id : String): List<PhotoWithTextFirebase> {

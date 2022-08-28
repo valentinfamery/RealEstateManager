@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,6 +35,7 @@ import com.google.gson.Gson
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.utils.WindowSize
 
@@ -181,7 +183,7 @@ fun MapScreen(
                         items.data?.let {items->
                             items.forEach {
 
-                                val realEstate: RealEstate = it
+                                val realEstate: RealEstateDatabase = it
 
                                 if (it.lat != null && it.lng != null) {
 

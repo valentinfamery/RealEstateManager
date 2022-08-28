@@ -1,16 +1,14 @@
 package com.openclassrooms.realestatemanager.ui
 
 import android.app.Application
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.openclassrooms.realestatemanager.di.RealEstateViewModelFactory
@@ -31,7 +29,10 @@ class NewRealEstateActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application)
+                    val viewModelFactory = RealEstateViewModelFactory(
+                        LocalContext.current.applicationContext as Application,
+                        lifecycleScope
+                    )
 
                     val owner = LocalViewModelStoreOwner.current
 

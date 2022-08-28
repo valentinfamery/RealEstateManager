@@ -18,10 +18,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.ui.FilterActivity
 import com.openclassrooms.realestatemanager.utils.Resource
 import com.openclassrooms.realestatemanager.utils.WindowSize
@@ -40,11 +42,12 @@ fun ListScreen(
     innerPadding: PaddingValues,
     navControllerDrawer: NavController,
     windowSize: WindowSize,
-    navControllerTwoPane: NavHostController, ) {
+    navControllerTwoPane: NavHostController,
+) {
 
     val items by realEstateViewModel.uiState.collectAsState()
 
-    var listFilter = mutableListOf<RealEstate>()
+    var listFilter = mutableListOf<RealEstateDatabase>()
 
     var filterState by remember { mutableStateOf(false) }
 

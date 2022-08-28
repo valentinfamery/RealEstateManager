@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.models.RealEstate
+import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 
-@Database(entities = [(RealEstate::class)], version = 1)
+@Database(entities = [(RealEstateDatabase::class)], version = 1)
 abstract class RealEstateRoomDatabase: RoomDatabase() {
 
     abstract fun realEstateDao(): RealEstateDao
