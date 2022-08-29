@@ -55,10 +55,9 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao,private val 
                 }
 
                 Log.e("items1Repo1", list[0].city.toString())
-                lifeCycleScope.launch(Dispatchers.Default) {
-                    Log.e("itemClear","repo4")
+
                     realEstateDao.clear()
-                }
+
                 for (item in  list){
                     val realEstateDatabase = RealEstateDatabase(
                         item.id!!,
@@ -84,10 +83,9 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao,private val 
                         item.shopsNear,
                         item.parksNear
                     )
-                    lifeCycleScope.launch(Dispatchers.Default) {
-                        Log.e("itemInsert","repo3")
+
                         realEstateDao.insertRealEstate(realEstateDatabase)
-                    }
+
                 }
 
                 Log.e("items","repo2")
