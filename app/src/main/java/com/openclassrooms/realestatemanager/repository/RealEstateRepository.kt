@@ -47,46 +47,53 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao,private val 
     }
 
     suspend fun fetchRealEstates(): Resource<List<RealEstateDatabase>> {
-        Log.e("items","repo1")
-        val list = usersCollection.get().await().map { document ->
-            document.toObject(RealEstate::class.java)
-        }
-        Log.e("items1", list[0].city.toString())
-        lifeCycleScope.launch(Dispatchers.IO) {
-            realEstateDao.clear()
-        }
-        for (item in  list){
-                val realEstateDatabase = RealEstateDatabase(
-                    item.id!!,
-                    item.type!!,
-                    item.price!!,
-                    item.area!!,
-                    item.numberRoom!!,
-                    item.description!!,
-                    item.numberAndStreet!!,
-                    item.numberApartment!!,
-                    item.city!!,
-                    item.region!!,
-                    item.postalCode!!,
-                    item.country!!,
-                    item.status!!,
-                    item.dateOfEntry!!,
-                    item.dateOfSale!!,
-                    item.realEstateAgent!!,
-                    item.lat!!,
-                    item.lng!!,
-                    item.hospitalsNear,
-                    item.schoolsNear,
-                    item.shopsNear,
-                    item.parksNear
-                )
-            lifeCycleScope.launch(Dispatchers.IO) {
-                realEstateDao.insertRealEstate(realEstateDatabase)
+        return withContext(Dispatchers.IO) {
+            safeCall {
+                Log.e("items","repo1")
+                val list = usersCollection.get().await().map { document ->
+                    document.toObject(RealEstate::class.java)
+                }
+
+                Log.e("items1Repo1", list[0].city.toString())
+                lifeCycleScope.launch(Dispatchers.Default) {
+                    Log.e("itemClear","repo4")
+                    realEstateDao.clear()
+                }
+                for (item in  list){
+                    val realEstateDatabase = RealEstateDatabase(
+                        item.id!!,
+                        item.type!!,
+                        item.price!!,
+                        item.area!!,
+                        item.numberRoom!!,
+                        item.description!!,
+                        item.numberAndStreet!!,
+                        item.numberApartment!!,
+                        item.city!!,
+                        item.region!!,
+                        item.postalCode!!,
+                        item.country!!,
+                        item.status!!,
+                        item.dateOfEntry!!,
+                        item.dateOfSale!!,
+                        item.realEstateAgent!!,
+                        item.lat!!,
+                        item.lng!!,
+                        item.hospitalsNear,
+                        item.schoolsNear,
+                        item.shopsNear,
+                        item.parksNear
+                    )
+                    lifeCycleScope.launch(Dispatchers.Default) {
+                        Log.e("itemInsert","repo3")
+                        realEstateDao.insertRealEstate(realEstateDatabase)
+                    }
+                }
+
+                Log.e("items","repo2")
+                Resource.Success(realEstateDao.realEstates())
             }
         }
-        Log.e("items","repo2")
-
-        return safeCall { Resource.Success(realEstateDao.realEstates()) }
     }
 
     private suspend fun fetchPhotosWithId(id : String): List<PhotoWithTextFirebase> {

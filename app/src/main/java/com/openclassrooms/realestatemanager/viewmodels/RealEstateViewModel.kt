@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
