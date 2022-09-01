@@ -27,7 +27,7 @@ import retrofit2.Response
 import java.util.*
 
 
-class RealEstateRepository(private val realEstateDao: RealEstateDao,private val lifeCycleScope :LifecycleCoroutineScope) {
+class RealEstateRepository(private val realEstateDao: RealEstateDao) {
 
     private val storage = FirebaseStorage.getInstance()
     private val usersCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)

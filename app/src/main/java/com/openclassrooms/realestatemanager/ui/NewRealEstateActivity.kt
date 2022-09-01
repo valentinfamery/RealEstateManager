@@ -30,8 +30,7 @@ class NewRealEstateActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val viewModelFactory = RealEstateViewModelFactory(
-                        LocalContext.current.applicationContext as Application,
-                        lifecycleScope
+                        LocalContext.current.applicationContext as Application
                     )
 
                     val owner = LocalViewModelStoreOwner.current

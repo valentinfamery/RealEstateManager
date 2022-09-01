@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-                val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application,lifecycleScope)
+                val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application)
 
                 val owner = LocalViewModelStoreOwner.current
 

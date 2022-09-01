@@ -18,14 +18,14 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.launch
 
-class RealEstateViewModel(application: Application,lifeCycleScope: LifecycleCoroutineScope) : ViewModel() {
+class RealEstateViewModel(application: Application) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
 
 
     init {
         val database = RealEstateRoomDatabase.getInstance(application)
         val realEstateDao = database.realEstateDao()
-        realEstateRepository = RealEstateRepository(realEstateDao,lifeCycleScope)
+        realEstateRepository = RealEstateRepository(realEstateDao)
     }
 
 
@@ -36,6 +36,12 @@ class RealEstateViewModel(application: Application,lifeCycleScope: LifecycleCoro
             started = WhileSubscribed(5000),
             initialValue = Resource.Loading()
         )
+
+    fun refreshRealEstates(){
+        viewModelScope.launch {
+            realEstateRepository.fetchRealEstates()
+        }
+    }
 
 
 

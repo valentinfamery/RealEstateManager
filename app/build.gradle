@@ -113,6 +113,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     implementation "com.google.accompanist:accompanist-flowlayout:0.20.0"
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.20.0"
 
     implementation "com.github.skydoves:landscapist-glide:1.5.2"
 

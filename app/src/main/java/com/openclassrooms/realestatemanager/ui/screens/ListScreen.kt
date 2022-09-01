@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.RealEstateDatabase
@@ -52,6 +54,8 @@ fun ListScreen(
     var filterState by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+
+    var refreshing by remember { mutableStateOf(false) }
 
     val launcherActivityResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -99,41 +103,48 @@ fun ListScreen(
 
             },
             content = {
-                LazyColumn(
+                SwipeRefresh(
                     modifier = Modifier.padding(it),
+                    state = rememberSwipeRefreshState(refreshing),
+                    onRefresh = {
+                        refreshing = !refreshing
+                        realEstateViewModel.refreshRealEstates()
+                        refreshing = !refreshing
+                                },
                 ) {
-                    if (filterState == false) {
-                        when (items) {
-                            is Resource.Loading -> {
-                            }
-                            is Resource.Success -> {
-                                Log.e("items","listScreen")
-                                items.data?.let {items->
-                                    items(items) { item ->
-                                        RowList(
-                                            item,
-                                            realEstateViewModel,
-                                            navControllerDrawer,
-                                            windowSize,
-                                            navControllerTwoPane
-                                        )
+                    LazyColumn(
+                    ) {
+                        if (filterState == false) {
+                            when (items) {
+                                is Resource.Loading -> {
+                                }
+                                is Resource.Success -> {
+                                    Log.e("items", "listScreen")
+                                    items.data?.let { items ->
+                                        items(items) { item ->
+                                            RowList(
+                                                item,
+                                                realEstateViewModel,
+                                                navControllerDrawer,
+                                                windowSize,
+                                                navControllerTwoPane
+                                            )
+                                        }
                                     }
                                 }
                             }
-                        }
 
 
-
-
-                    } else {
-                        items(listFilter) { item ->
-                            RowList(
-                                item,
-                                realEstateViewModel,
-                                navControllerDrawer,
-                                windowSize,
-                                navControllerTwoPane
-                            )
+                        } else {
+                            items(listFilter) { item ->
+                                RowList(
+                                    item,
+                                    realEstateViewModel,
+                                    navControllerDrawer,
+                                    windowSize,
+                                    navControllerTwoPane
+                                )
+                            }
                         }
                     }
                 }
