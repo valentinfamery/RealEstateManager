@@ -1,8 +1,6 @@
 package com.openclassrooms.realestatemanager.viewmodels
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,29 +11,27 @@ import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.utils.Resource
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.launch
 
 class RealEstateViewModel(application: Application) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
 
 
+    private val _myUiState = MutableStateFlow<Resource<List<RealEstateDatabase>>>(Resource.Loading())
+    val uiState: StateFlow<Resource<List<RealEstateDatabase>>> = _myUiState
+
     init {
         val database = RealEstateRoomDatabase.getInstance(application)
         val realEstateDao = database.realEstateDao()
         realEstateRepository = RealEstateRepository(realEstateDao)
+        viewModelScope.launch {
+            _myUiState.value = realEstateRepository.fetchRealEstates()
+        }
     }
 
 
-    val uiState: StateFlow<Resource<List<RealEstateDatabase>>> = flow {
-        emit(realEstateRepository.fetchRealEstates())
-    }.stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5000),
-            initialValue = Resource.Loading()
-        )
+
 
     fun refreshRealEstates(){
         viewModelScope.launch {

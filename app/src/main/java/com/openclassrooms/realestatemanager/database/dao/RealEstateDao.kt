@@ -12,12 +12,12 @@ import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 interface RealEstateDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertRealEstate(realEstate: RealEstateDatabase)
+    suspend fun insertRealEstate(realEstate: RealEstateDatabase)
 
     @Query("SELECT * FROM RealEstateDatabase")
-    fun realEstates(): List<RealEstateDatabase>
+    suspend fun realEstates(): List<RealEstateDatabase>
 
     @Query("DELETE FROM RealEstateDatabase")
-    fun clear()
+    suspend fun clear()
 
 }

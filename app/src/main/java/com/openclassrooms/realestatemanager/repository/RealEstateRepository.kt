@@ -47,51 +47,57 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao) {
     }
 
     suspend fun fetchRealEstates(): Resource<List<RealEstateDatabase>> {
-        return withContext(Dispatchers.IO) {
-            safeCall {
+
                 Log.e("items","repo1")
                 val list = usersCollection.get().await().map { document ->
                     document.toObject(RealEstate::class.java)
                 }
 
+
                 Log.e("items1Repo1", list[0].city.toString())
 
-                    realEstateDao.clear()
+                clearDataBase()
 
-                for (item in  list){
-                    val realEstateDatabase = RealEstateDatabase(
-                        item.id!!,
-                        item.type!!,
-                        item.price!!,
-                        item.area!!,
-                        item.numberRoom!!,
-                        item.description!!,
-                        item.numberAndStreet!!,
-                        item.numberApartment!!,
-                        item.city!!,
-                        item.region!!,
-                        item.postalCode!!,
-                        item.country!!,
-                        item.status!!,
-                        item.dateOfEntry!!,
-                        item.dateOfSale!!,
-                        item.realEstateAgent!!,
-                        item.lat!!,
-                        item.lng!!,
-                        item.hospitalsNear,
-                        item.schoolsNear,
-                        item.shopsNear,
-                        item.parksNear
-                    )
+            for (item in list) {
+                val realEstateDatabase = RealEstateDatabase(
+                    item.id!!,
+                    item.type!!,
+                    item.price!!,
+                    item.area!!,
+                    item.numberRoom!!,
+                    item.description!!,
+                    item.numberAndStreet!!,
+                    item.numberApartment!!,
+                    item.city!!,
+                    item.region!!,
+                    item.postalCode!!,
+                    item.country!!,
+                    item.status!!,
+                    item.dateOfEntry!!,
+                    item.dateOfSale!!,
+                    item.realEstateAgent!!,
+                    item.lat!!,
+                    item.lng!!,
+                    item.hospitalsNear,
+                    item.schoolsNear,
+                    item.shopsNear,
+                    item.parksNear
+                )
 
-                        realEstateDao.insertRealEstate(realEstateDatabase)
+                        insertRealEstate(realEstateDatabase)
 
-                }
-
-                Log.e("items","repo2")
-                Resource.Success(realEstateDao.realEstates())
-            }
         }
+                Log.e("items","repo2")
+
+        return Resource.Success(realEstateDao.realEstates())
+    }
+
+    private suspend fun clearDataBase(){
+        realEstateDao.clear()
+    }
+
+    private suspend fun insertRealEstate(realEstateDatabase: RealEstateDatabase){
+        realEstateDao.insertRealEstate(realEstateDatabase)
     }
 
     private suspend fun fetchPhotosWithId(id : String): List<PhotoWithTextFirebase> {
