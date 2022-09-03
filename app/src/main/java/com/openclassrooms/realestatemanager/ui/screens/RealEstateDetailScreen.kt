@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -36,6 +37,7 @@ import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealEstateDetailScreen(
@@ -47,7 +49,7 @@ fun RealEstateDetailScreen(
     if(itemRealEstate != null) {
 
 
-        val listPhotos by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate.id.toString()).collectAsState()
+        val listPhotos = itemRealEstate.listPhotoWithText
 
 
         Scaffold(

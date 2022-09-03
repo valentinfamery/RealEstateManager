@@ -39,7 +39,7 @@ fun RowList(
 ) {
 
     if(windowSize == WindowSize.COMPACT){
-        val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.id.toString()).collectAsState()
+        val items2  = item.listPhotoWithText
 
         Card(
             modifier = Modifier
@@ -61,14 +61,12 @@ fun RowList(
                         .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
-                    if(items2.isNotEmpty()) {
-                        if(items2[0].photoUrl != null) {
+                        if(items2?.get(0)?.photoUrl != null) {
                             GlideImage(
                                 imageModel = items2[0].photoUrl,
                                 contentScale = ContentScale.Crop,
                             )
                         }
-                    }
                 }
 
 
@@ -91,7 +89,7 @@ fun RowList(
             }
         }
     }else{
-        val items2  by realEstateViewModel.getRealEstatePhotosWithId(item.id.toString()).collectAsState()
+        val items2  = item.listPhotoWithText
 
         Card(
             modifier = Modifier
@@ -114,7 +112,7 @@ fun RowList(
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
                     GlideImage(
-                        imageModel = items2[0].photoUrl,
+                        imageModel = items2?.get(0)?.photoUrl,
                         contentScale = ContentScale.Crop,
                     )
                 }

@@ -53,7 +53,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-@SuppressLint("SimpleDateFormat")
+@SuppressLint("SimpleDateFormat", "UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
 @Composable
 fun EditScreenRealEstate(
@@ -62,7 +62,7 @@ fun EditScreenRealEstate(
     navController: NavHostController
 ) {
 
-    val listPhotos2 by realEstateViewModel.getRealEstatePhotosWithId(itemRealEstate?.id.toString()).collectAsState()
+    val listPhotos2 = itemRealEstate?.listPhotoWithText
 
 
 

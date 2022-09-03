@@ -32,7 +32,8 @@ data class RealEstate (
     var hospitalsNear : Boolean = false,
     var schoolsNear : Boolean = false,
     var shopsNear : Boolean = false,
-    var parksNear : Boolean = false
+    var parksNear : Boolean = false,
+    var listPhotoWithText : List<PhotoWithTextFirebase> ?=null,
 
 ): Parcelable {
     companion object NavigationType : NavType<RealEstate>(isNullableAllowed = false) {

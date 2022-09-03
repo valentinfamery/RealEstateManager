@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.viewmodels
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class RealEstateViewModel(application: Application) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
+    private val context : Context
 
 
     private val _myUiState = MutableStateFlow<Resource<List<RealEstateDatabase>>>(Resource.Loading())
@@ -24,9 +26,10 @@ class RealEstateViewModel(application: Application) : ViewModel() {
     init {
         val database = RealEstateRoomDatabase.getInstance(application)
         val realEstateDao = database.realEstateDao()
+        context = application.applicationContext
         realEstateRepository = RealEstateRepository(realEstateDao)
         viewModelScope.launch {
-            _myUiState.value = realEstateRepository.fetchRealEstates()
+            _myUiState.value = realEstateRepository.fetchRealEstates(context)
         }
     }
 
@@ -35,7 +38,7 @@ class RealEstateViewModel(application: Application) : ViewModel() {
 
     fun refreshRealEstates(){
         viewModelScope.launch {
-            realEstateRepository.fetchRealEstates()
+            realEstateRepository.fetchRealEstates(context)
         }
     }
 
@@ -74,25 +77,7 @@ class RealEstateViewModel(application: Application) : ViewModel() {
             checkedStateParks)
     }
 
-    fun getRealEstatePhotosWithId(id : String):StateFlow<List<PhotoWithTextFirebase>>{
-        val _uiState = MutableStateFlow(listOf<PhotoWithTextFirebase>())
-        val uiState: StateFlow<List<PhotoWithTextFirebase>> = _uiState
 
-        viewModelScope.launch {
-            // Trigger the flow and consume its elements using collect
-            realEstateRepository.getRealEstatePhotosWithId(id).collect { favoriteNews ->
-                _uiState.value = favoriteNews
-                // Update View with the latest favorite news
-            }
-        }
-
-       return uiState
-    }
-
-
-    fun getRealEstateById(id : String): MutableLiveData<RealEstate?> {
-        return realEstateRepository.getRealEstateById(id)
-    }
 
 
 
