@@ -13,28 +13,27 @@ import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.utils.Resource
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.launch
 
 class RealEstateViewModel(application: Application) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
     private val context : Context
 
-
-    private val _myUiState = MutableStateFlow<Resource<List<RealEstateDatabase>>>(Resource.Loading())
-    val uiState: StateFlow<Resource<List<RealEstateDatabase>>> = _myUiState
-
     init {
         val database = RealEstateRoomDatabase.getInstance(application)
         val realEstateDao = database.realEstateDao()
         context = application.applicationContext
         realEstateRepository = RealEstateRepository(realEstateDao)
-        viewModelScope.launch {
-            _myUiState.value = realEstateRepository.fetchRealEstates(context)
-        }
     }
 
-
-
+    val uiState: StateFlow<Resource<List<RealEstateDatabase>>> = flow {
+        emit(realEstateRepository.fetchRealEstates(context))
+    }.stateIn(
+        scope = viewModelScope,
+        started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
+        initialValue = Resource.Loading()
+    )
 
     fun refreshRealEstates(){
         viewModelScope.launch {

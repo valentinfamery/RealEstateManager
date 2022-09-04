@@ -39,7 +39,7 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao) {
             }
 
 
-            Log.e("items1Repo1", list[0].city.toString())
+            
 
             clearDataBase()
 
