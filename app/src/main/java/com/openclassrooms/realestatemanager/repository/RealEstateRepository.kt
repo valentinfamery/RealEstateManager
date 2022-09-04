@@ -32,14 +32,13 @@ class RealEstateRepository(private val realEstateDao: RealEstateDao) {
     }
 
     suspend fun fetchRealEstates(context: Context): Resource<List<RealEstateDatabase>> {
+        Log.e("networkState",Utils.isInternetAvailable(context).toString())
         if(Utils.isInternetAvailable(context)) {
+
             Log.e("items", "repo1")
             val list = realEstatesCollection.get().await().map { document ->
                 document.toObject(RealEstate::class.java)
             }
-
-
-            
 
             clearDataBase()
 

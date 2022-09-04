@@ -46,14 +46,14 @@ fun ListScreen(
     windowSize: WindowSize,
     navControllerTwoPane: NavHostController,
 ) {
+    val context = LocalContext.current
 
-    val items by realEstateViewModel.uiState.collectAsState()
+    val items by realEstateViewModel.uiState(context).collectAsState()
 
     var listFilter = mutableListOf<RealEstateDatabase>()
 
     var filterState by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
 
     var refreshing by remember { mutableStateOf(false) }
 
@@ -108,7 +108,7 @@ fun ListScreen(
                     state = rememberSwipeRefreshState(refreshing),
                     onRefresh = {
                         refreshing = !refreshing
-                        realEstateViewModel.refreshRealEstates()
+                        realEstateViewModel.refreshRealEstates(context)
                         refreshing = !refreshing
                                 },
                 ) {

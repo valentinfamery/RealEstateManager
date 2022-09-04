@@ -18,30 +18,29 @@ import kotlinx.coroutines.launch
 
 class RealEstateViewModel(application: Application) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
-    private val context : Context
+
 
     init {
         val database = RealEstateRoomDatabase.getInstance(application)
         val realEstateDao = database.realEstateDao()
-        context = application.applicationContext
         realEstateRepository = RealEstateRepository(realEstateDao)
     }
 
-    val uiState: StateFlow<Resource<List<RealEstateDatabase>>> = flow {
-        emit(realEstateRepository.fetchRealEstates(context))
-    }.stateIn(
-        scope = viewModelScope,
-        started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
-        initialValue = Resource.Loading()
-    )
+    fun uiState(context: Context) :  StateFlow<Resource<List<RealEstateDatabase>>>{
+        return flow {
+            emit(realEstateRepository.fetchRealEstates(context))
+        }.stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
+            initialValue = Resource.Loading()
+        )
+    }
 
-    fun refreshRealEstates(){
+    fun refreshRealEstates(context: Context){
         viewModelScope.launch {
             realEstateRepository.fetchRealEstates(context)
         }
     }
-
-
 
     fun createRealEstate(
         type: String,
