@@ -4,10 +4,21 @@ import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
+import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
+import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 
 
 class RealEstatesContentProvider : ContentProvider() {
+
+    val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
+
+    val TABLE_NAME = RealEstateDatabase::class.java.simpleName
+
+    val URI_REAL_ESTATE = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
+
+
     override fun onCreate(): Boolean {
+        return true
         TODO("Not yet implemented")
     }
 
@@ -17,7 +28,13 @@ class RealEstatesContentProvider : ContentProvider() {
         p2: String?,
         p3: Array<out String>?,
         p4: String?
-    ): Cursor? {
+    ): Cursor {
+
+        if (context != null) {
+            val cursor : Cursor = RealEstateRoomDatabase.getInstance(context!!).realEstateDao().getRealEstatesWithCursor()
+            cursor.setNotificationUri(context!!.contentResolver, p0);
+            return cursor
+        }
         TODO("Not yet implemented")
     }
 

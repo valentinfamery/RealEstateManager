@@ -38,6 +38,15 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+
+        <provider
+
+            android:name=".provider.RealEstatesContentProvider"
+
+            android:authorities="com.openclassrooms.realestatemanager.provider"
+
+            android:exported="false"/>
+
     </application>
 
 </manifest>

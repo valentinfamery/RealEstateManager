@@ -20,6 +20,6 @@ interface RealEstateDao {
     suspend fun clear()
 
     @Query("SELECT * FROM RealEstateDatabase")
-    fun getRealEstatesWithCursor(): Cursor?
+    fun getRealEstatesWithCursor(): Cursor
 
 }
