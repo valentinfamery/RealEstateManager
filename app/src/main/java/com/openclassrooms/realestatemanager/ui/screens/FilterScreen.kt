@@ -2,37 +2,53 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.app.Activity
 import android.content.Intent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.models.FilterResult
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterScreen() {
-
-    var areaAppartementFilter200300 by remember { mutableStateOf(false) }
-    var schoolsFilter by remember { mutableStateOf(false) }
-    var shopsFilter  by remember { mutableStateOf(false) }
-    var lastWeekFilterForSale  by remember { mutableStateOf(false) }
-    var last3MonthsHouseFilterSold  by remember { mutableStateOf(false) }
-    var longIslandFilter by remember { mutableStateOf(false) }
-    var min3Photos by remember { mutableStateOf(false) }
-    var priceFilter1500000200000 by remember { mutableStateOf(false) }
-
+    val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
     val activity = LocalContext.current as Activity
+    var expanded by remember { mutableStateOf(false) }
+
+    var entryType by rememberSaveable { mutableStateOf("") }
+    var entryCity by rememberSaveable { mutableStateOf("") }
+    var entryMinSurface by rememberSaveable { mutableStateOf("") }
+    var entryMaxSurface by rememberSaveable { mutableStateOf("") }
+    var entryMinPrice by rememberSaveable { mutableStateOf("") }
+    var entryMaxPrice by rememberSaveable { mutableStateOf("") }
+    var onTheMarketLessALastWeek by rememberSaveable{ mutableStateOf(false)}
+    var soldOn3LastMonth by rememberSaveable{ mutableStateOf(false)}
+    var min3photos by rememberSaveable{ mutableStateOf(false)}
+    var schools by rememberSaveable{ mutableStateOf(false)}
+    var shops by rememberSaveable{ mutableStateOf(false)}
+
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
 
 ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
-    val (buttonClose,buttonReset,column) = createRefs()
+    val (buttonClose,buttonReset,column,buttonFilter) = createRefs()
 
     Button(
         onClick = {
@@ -52,40 +68,83 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         end.linkTo(parent.end)
     }) {
 
-
-        Switch(
-            checked = areaAppartementFilter200300,
-            onCheckedChange = { areaAppartementFilter200300 = it },
+        TextField(
+            value = entryType,
+            onValueChange = { entryType = it },
+            label = { Text("Type") },
+            trailingIcon = {
+                Icon(icon, "contentDescription",
+                    Modifier.clickable { expanded = !expanded })
+            }
         )
 
-        Switch(
-            checked = schoolsFilter,
-            onCheckedChange = { schoolsFilter = it })
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                listType.forEach {
+                    DropdownMenuItem(
+                        text = { Text(it) },
+                        onClick = {
+                            entryType = it
+                            expanded = false
+                            /* Handle edit! */
+                        },
+                    )
+                }
+            }
 
-        Switch(
-            checked = shopsFilter,
-            onCheckedChange = { shopsFilter = it })
+        TextField(
+            value = entryCity,
+            onValueChange = { entryCity = it },
+            label = { Text("City") },
+            singleLine = true
+        )
 
-        Switch(
-            checked = lastWeekFilterForSale,
-            onCheckedChange = { lastWeekFilterForSale = it })
+        Row() {
+            TextField(
+                value = entryMinSurface,
+                onValueChange = { entryMinSurface = it },
+                label = { Text("MinSurface") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(0.4f)
+            )
+            TextField(
+                value = entryMaxSurface,
+                onValueChange = { entryMaxSurface = it },
+                label = { Text("MaxSurface") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(0.4f)
+            )
+        }
 
-        Switch(
-            checked = last3MonthsHouseFilterSold,
-            onCheckedChange = { last3MonthsHouseFilterSold = it })
+        Row() {
+            TextField(
+                value = entryMinPrice,
+                onValueChange = { entryMinPrice = it },
+                label = { Text("MinPrice") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(0.4f)
+            )
+            TextField(
+                value = entryMaxPrice,
+                onValueChange = { entryMaxPrice = it },
+                label = { Text("MaxPrice") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(0.4f)
+            )
+        }
 
-        Switch(
-            checked = longIslandFilter,
-            onCheckedChange = { longIslandFilter = it })
-
-        Switch(
-            checked = min3Photos,
-            onCheckedChange = { min3Photos = it })
-
-        Switch(
-            checked = priceFilter1500000200000,
-            onCheckedChange = { priceFilter1500000200000 = it })
-
+        Text(text = "onTheMarketLessALastWeek")
+        Checkbox(checked = onTheMarketLessALastWeek, onCheckedChange ={onTheMarketLessALastWeek = it})
+        Text(text = "soldOn3LastMonth")
+        Checkbox(checked = soldOn3LastMonth, onCheckedChange ={soldOn3LastMonth = it})
+        Text(text = "min3photos")
+        Checkbox(checked = min3photos, onCheckedChange ={min3photos = it})
+        Text(text = "schools")
+        Checkbox(checked = schools, onCheckedChange ={schools = it})
+        Text(text = "shops")
+        Checkbox(checked = shops, onCheckedChange ={shops = it})
     }
 
 
@@ -105,10 +164,31 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         )
     }
 
-    Button(onClick = {
+    Button(
+        onClick = {
+        var resultFilter = FilterResult(
+            entryType,
+            entryCity,
+            entryMinSurface,
+            entryMaxSurface,
+            entryMinPrice,
+            entryMaxPrice,
+            onTheMarketLessALastWeek,
+            soldOn3LastMonth,
+            min3photos,
+            schools,
+            shops
+        )
         val intent = Intent()
+        intent.putExtra("resultFilter",resultFilter)
         activity.setResult(0,intent)
-    }) {
+            activity.finish()
+    },
+        modifier = Modifier.constrainAs(buttonFilter){
+            bottom.linkTo(parent.bottom, margin = 10.dp)
+        }
+
+    ) {
 
     }
 

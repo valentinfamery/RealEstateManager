@@ -24,6 +24,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.Utils
+import com.openclassrooms.realestatemanager.models.FilterResult
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.ui.FilterActivity
@@ -48,12 +50,13 @@ fun ListScreen(
 ) {
     val context = LocalContext.current
 
-    val items by realEstateViewModel.uiState(context).collectAsState()
+    val items by realEstateViewModel.uiState(Utils.isInternetAvailable(context)).collectAsState()
 
     var listFilter = mutableListOf<RealEstateDatabase>()
 
     var filterState by remember { mutableStateOf(false) }
 
+    lateinit var resultFilter : FilterResult
 
     var refreshing by remember { mutableStateOf(false) }
 
@@ -61,10 +64,12 @@ fun ListScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data
-                if (!data?.getParcelableArrayExtra("filterList").isNullOrEmpty()) {
+
                     filterState = true
 
-                }
+
+                resultFilter = data?.getParcelableExtra("resultFilter")!!
+
             }
         }
 
@@ -107,9 +112,7 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                     state = rememberSwipeRefreshState(refreshing),
                     onRefresh = {
-                        refreshing = !refreshing
                         realEstateViewModel.refreshRealEstates(context)
-                        refreshing = !refreshing
                                 },
                 ) {
                     LazyColumn(
@@ -132,10 +135,18 @@ fun ListScreen(
                                         }
                                     }
                                 }
+                                else -> {}
                             }
 
 
                         } else {
+                            listFilter.filter {realEstate->
+                                realEstate.type.equals(resultFilter.type)
+                                realEstate.city.equals(resultFilter.city)
+                                realEstate.schoolsNear == resultFilter.schools
+                                realEstate.shopsNear == resultFilter.shops
+                            }
+
                             items(listFilter) { item ->
                                 RowList(
                                     item,

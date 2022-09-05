@@ -26,9 +26,9 @@ class RealEstateViewModel(application: Application) : ViewModel() {
         realEstateRepository = RealEstateRepository(realEstateDao)
     }
 
-    fun uiState(context: Context) :  StateFlow<Resource<List<RealEstateDatabase>>>{
+    fun uiState(isNetWorkAvailable : Boolean) : StateFlow<Resource<List<RealEstateDatabase>>> {
         return flow {
-            emit(realEstateRepository.fetchRealEstates(context))
+            emit(realEstateRepository.fetchRealEstates(isNetWorkAvailable))
         }.stateIn(
             scope = viewModelScope,
             started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
@@ -36,9 +36,9 @@ class RealEstateViewModel(application: Application) : ViewModel() {
         )
     }
 
-    fun refreshRealEstates(context: Context){
+    fun refreshRealEstates(isNetWorkAvailable : Boolean){
         viewModelScope.launch {
-            realEstateRepository.fetchRealEstates(context)
+            realEstateRepository.fetchRealEstates(isNetWorkAvailable)
         }
     }
 

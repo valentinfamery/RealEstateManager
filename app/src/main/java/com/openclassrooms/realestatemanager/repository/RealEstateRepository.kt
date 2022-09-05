@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.Utils
@@ -25,15 +26,23 @@ import java.util.*
 class RealEstateRepository(private val realEstateDao: RealEstateDao) {
 
     private val storage = FirebaseStorage.getInstance()
-    private val realEstatesCollection: CollectionReference get() = FirebaseFirestore.getInstance().collection(COLLECTION_REAL_ESTATE)
+    private val fireStore = FirebaseFirestore.getInstance()
+
+    private val realEstatesCollection: CollectionReference get() = fireStore.collection(COLLECTION_REAL_ESTATE)
 
     companion object {
         const val COLLECTION_REAL_ESTATE = "real_estates"
     }
 
-    suspend fun fetchRealEstates(context: Context): Resource<List<RealEstateDatabase>> {
-        Log.e("networkState",Utils.isInternetAvailable(context).toString())
-        if(Utils.isInternetAvailable(context)) {
+    init {
+        val settings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build()
+        fireStore.firestoreSettings = settings
+    }
+
+    suspend fun fetchRealEstates(isNetWorkAvailable : Boolean): Resource<List<RealEstateDatabase>> {
+
+        Log.e("networkState",isNetWorkAvailable.toString())
+        if(isNetWorkAvailable) {
 
             Log.e("items", "repo1")
             val list = realEstatesCollection.get().await().map { document ->

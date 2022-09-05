@@ -58,7 +58,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-@SuppressLint("LongLogTag")
+@SuppressLint("LongLogTag", "UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
 @Composable
 fun NewRealEstateScreen(

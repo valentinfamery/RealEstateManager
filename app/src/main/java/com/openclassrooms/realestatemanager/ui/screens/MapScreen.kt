@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.utils.Resource
@@ -62,7 +63,7 @@ fun MapScreen(
         mutableStateOf(LatLng(0.0, 0.0))
     }
 
-    val items by realEstateViewModel.uiState(context).collectAsState()
+    val items by realEstateViewModel.uiState(Utils.isInternetAvailable(context)).collectAsState()
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
