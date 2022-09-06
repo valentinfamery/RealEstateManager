@@ -112,7 +112,7 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                     state = rememberSwipeRefreshState(refreshing),
                     onRefresh = {
-                        realEstateViewModel.refreshRealEstates(context)
+                        realEstateViewModel.refreshRealEstates(Utils.isInternetAvailable(context))
                                 },
                 ) {
                     LazyColumn(

@@ -1,20 +1,16 @@
 package com.openclassrooms.realestatemanager.viewmodels
 
 import android.app.Application
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
 import com.openclassrooms.realestatemanager.models.PhotoWithText
-import com.openclassrooms.realestatemanager.models.PhotoWithTextFirebase
-import com.openclassrooms.realestatemanager.models.RealEstate
 import com.openclassrooms.realestatemanager.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.utils.Resource
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.launch
+
 
 class RealEstateViewModel(application: Application) : ViewModel() {
     private val realEstateRepository : RealEstateRepository
@@ -26,19 +22,19 @@ class RealEstateViewModel(application: Application) : ViewModel() {
         realEstateRepository = RealEstateRepository(realEstateDao)
     }
 
+    private val _myUiState = MutableStateFlow<Resource<List<RealEstateDatabase>>>(Resource.Loading())
+
     fun uiState(isNetWorkAvailable : Boolean) : StateFlow<Resource<List<RealEstateDatabase>>> {
-        return flow {
-            emit(realEstateRepository.fetchRealEstates(isNetWorkAvailable))
-        }.stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5000), // Or Lazily because it's a one-shot
-            initialValue = Resource.Loading()
-        )
+        viewModelScope.launch {
+            val result = realEstateRepository.fetchRealEstates(isNetWorkAvailable)
+            _myUiState.value = result
+        }
+        return _myUiState
     }
 
     fun refreshRealEstates(isNetWorkAvailable : Boolean){
         viewModelScope.launch {
-            realEstateRepository.fetchRealEstates(isNetWorkAvailable)
+            _myUiState.value = realEstateRepository.fetchRealEstates(isNetWorkAvailable)
         }
     }
 
