@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.openclassrooms.realestatemanager.di.RealEstateViewModelFactory
 import com.openclassrooms.realestatemanager.ui.screens.NewRealEstateScreen
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
-import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 
 class NewRealEstateActivity : ComponentActivity() {
 

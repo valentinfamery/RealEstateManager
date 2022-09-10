@@ -2,7 +2,7 @@ package com.openclassrooms.realestatemanager.service
 
 import com.openclassrooms.realestatemanager.BuildConfig
 import retrofit2.http.GET
-import com.openclassrooms.realestatemanager.models.resultGeocoding.ResultGeocoding
+import com.openclassrooms.realestatemanager.domain.models.resultGeocoding.ResultGeocoding
 import retrofit2.Call
 import retrofit2.http.Query
 

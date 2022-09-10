@@ -11,16 +11,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.models.FilterResult
+import com.openclassrooms.realestatemanager.domain.models.FilterResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -44,10 +44,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
-import com.openclassrooms.realestatemanager.models.PhotoWithText
-import com.openclassrooms.realestatemanager.models.RealEstate
-import com.openclassrooms.realestatemanager.viewmodels.RealEstateViewModel
-import com.openclassrooms.realestatemanager.viewmodels.UserViewModel
+import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
+import com.openclassrooms.realestatemanager.domain.models.RealEstate
+import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
 import java.text.DateFormat
 import java.text.SimpleDateFormat

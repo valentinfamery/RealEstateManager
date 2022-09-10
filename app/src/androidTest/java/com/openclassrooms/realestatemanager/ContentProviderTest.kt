@@ -8,7 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
-import com.openclassrooms.realestatemanager.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Before

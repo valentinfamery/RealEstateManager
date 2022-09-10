@@ -3,17 +3,12 @@ package com.openclassrooms.realestatemanager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.openclassrooms.realestatemanager.utils.Utils
 import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
-import kotlinx.serialization.StringFormat
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.reflect.Method
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 
