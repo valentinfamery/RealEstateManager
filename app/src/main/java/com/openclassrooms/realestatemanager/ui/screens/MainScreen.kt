@@ -28,11 +28,13 @@ import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterial3Api
+@InternalCoroutinesApi
 fun MainScreen(
     navControllerDrawer: NavController,
     auth: FirebaseAuth,

@@ -18,11 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.openclassrooms.realestatemanager.domain.models.Response
+import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
+@InternalCoroutinesApi
 @Composable
 fun DrawerScreen(
     drawerState: DrawerState,
@@ -36,7 +40,6 @@ fun DrawerScreen(
     val selectedItem = remember { mutableStateOf(items[0]) }
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
         val (userProfilePicture,username,userEmail,drawerItems,buttonLogout) = createRefs()
-        val userDataState by userViewModel.userData.observeAsState()
 
         Box(
             modifier = Modifier
@@ -50,17 +53,26 @@ fun DrawerScreen(
                 }
         )
 
+        when(userViewModel.userDataResponse){
+            is Response.Success ->{
+                (userViewModel.userDataResponse as Response.Success<User?>).data.let { response ->
 
-        Text(text = userDataState?.username ?:"",modifier = Modifier.constrainAs(username) {
-            top.linkTo(userProfilePicture.bottom, margin = 15.dp)
-            start.linkTo(parent.start, margin = 0.dp)
-            end.linkTo(parent.end, margin = 0.dp)
-        })
-        Text(text = userDataState?.email ?:"",modifier = Modifier.constrainAs(userEmail) {
-            top.linkTo(username.bottom, margin = 5.dp)
-            start.linkTo(parent.start, margin = 0.dp)
-            end.linkTo(parent.end, margin = 0.dp)
-        })
+                    Text(text = response!!.email ?:"",modifier = Modifier.constrainAs(username) {
+                    top.linkTo(userProfilePicture.bottom, margin = 15.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp) })
+
+                    Text(text = response.username ?:"",modifier = Modifier.constrainAs(userEmail) {
+                        top.linkTo(username.bottom, margin = 5.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    })
+
+                }
+
+
+            }
+        }
 
         items.forEach { item ->
             NavigationDrawerItem(

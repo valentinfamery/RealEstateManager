@@ -1,15 +1,11 @@
 package com.openclassrooms.realestatemanager.ui
 
-import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.material3.*
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -32,7 +28,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class MainActivity : ComponentActivity() {
 
-    private val userViewModel: UserViewModel by viewModels()
+
 
     private lateinit var auth: FirebaseAuth
     private lateinit var startScreen : String
@@ -54,18 +50,11 @@ class MainActivity : ComponentActivity() {
 
                 val windowSize = rememberWindowSizeClass()
 
+                val userViewModel: UserViewModel = hiltViewModel()
+                val realEstateViewModel: RealEstateViewModel = hiltViewModel()
 
 
-                val viewModelFactory = RealEstateViewModelFactory(LocalContext.current.applicationContext as Application)
 
-                val owner = LocalViewModelStoreOwner.current
-
-                owner?.let {
-                    val realEstateViewModel: RealEstateViewModel = viewModel(
-                        it,
-                        "MainViewModel",
-                        viewModelFactory
-                    )
 
 
                     val navController = rememberNavController()
@@ -129,7 +118,7 @@ class MainActivity : ComponentActivity() {
 
 
                     }
-                }
+
 
 
 

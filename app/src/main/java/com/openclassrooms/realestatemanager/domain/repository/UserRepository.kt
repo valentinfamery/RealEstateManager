@@ -1,30 +1,30 @@
 package com.openclassrooms.realestatemanager.domain.repository
 
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.AuthResult
 import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.domain.models.Response
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    fun logout()
+    suspend fun logout() : Flow<Response<Void?>>
 
-    suspend fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String): Response<AuthResult>
+    suspend fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String): Flow<Response<AuthResult>>
 
-    suspend fun loginUser(email: String, password: String): Response<AuthResult>
+    suspend fun loginUser(email: String, password: String): Flow<Response<AuthResult>>
 
-    suspend fun sendPasswordResetEmail(email: String): Response<Boolean>
+    suspend fun sendPasswordResetEmail(email: String): Flow<Response<Void?>>
 
-    fun deleteUser()
+    suspend fun deleteUser() : Flow<Response<Void?>>
 
-    fun userData(): MutableLiveData<User?>
+    fun userData(): Flow<Response<User?>>
 
-    fun getUsers(): MutableLiveData<List<User>>
+    fun getUsers(): Flow<Response<List<User>>>
 
-    fun setUserEmail(email: String?)
+    suspend fun setUserEmail(email: String?) : Flow<Response<Void?>>
 
-    fun setUsername(username: String?)
+    suspend fun setUsername(username: String?) : Flow<Response<Void?>>
 
-    fun setPhotoUrl(photoUrl: String?)
+    suspend fun setPhotoUrl(photoUrl: String?) : Flow<Response<Void?>>
 
 }

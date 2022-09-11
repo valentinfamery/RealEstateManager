@@ -1,101 +1,100 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
-import android.content.Context
-import android.util.Patterns
-import androidx.lifecycle.LiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.openclassrooms.realestatemanager.domain.repository.UserRepository
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
+import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.models.User
-import kotlinx.coroutines.Dispatchers
+import com.openclassrooms.realestatemanager.domain.use_case.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserViewModel : ViewModel {
-    var userRepository: UserRepository
+@HiltViewModel
+@InternalCoroutinesApi
+class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
 
-    constructor() {
-        userRepository = UserRepository()
-    }
+    private var logoutResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
 
-    constructor(userRepository: UserRepository) {
-        this.userRepository = userRepository
-    }
+    private var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
 
-    fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) : LiveData<Resource<AuthResult>> {
+    private var loginUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
 
-        val userRegistrationStatus = MutableLiveData<Resource<AuthResult>>()
+    private var sendPasswordResetEmailResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
 
-        val error =
-            if (userEmailAddress.isEmpty() || userName.isEmpty() || userLoginPassword.isEmpty() ) {
-                "Please fill all the fields"
-            } else if (!Patterns.EMAIL_ADDRESS.matcher(userEmailAddress).matches()) {
-                "Not a valid Email"
-            } else null
+    private var deleteUserResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
 
-        error?.let {
-            userRegistrationStatus.postValue(Resource.Error(it))
-            return userRegistrationStatus
+    var userDataResponse by mutableStateOf<Response<User?>>(Response.Loading)
+
+    var usersResponse by mutableStateOf<Response<List<User>>>(Response.Loading)
+
+    private var setUsernameResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+
+    private var setUserEmailResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+
+    private var setPhotoUrlResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+
+    fun logout() = viewModelScope.launch {
+        useCases.logout.invoke().collect{ response ->
+            logoutResponse = response
         }
-        userRegistrationStatus.postValue(Resource.Loading())
+    }
 
-        viewModelScope.launch(Dispatchers.Main) {
-            val registerResult = userRepository.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword)
-            userRegistrationStatus.postValue(registerResult)
+    fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
+        useCases.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword).collect{ response ->
+            registerUserResponse = response
         }
-        return userRegistrationStatus
     }
 
-    fun loginUser(userEmailAddress: String, userLoginPassword: String) : MutableLiveData<Resource<AuthResult>>{
-        val userSignUpStatus = MutableLiveData<Resource<AuthResult>>()
-        if (userEmailAddress.isEmpty() || userLoginPassword.isEmpty()) {
-            userSignUpStatus.postValue(Resource.Error("Please fill all the fields"))
-        } else {
-            userSignUpStatus.postValue(Resource.Loading())
-            viewModelScope.launch(Dispatchers.Main) {
-                val loginResult = userRepository.loginUser(userEmailAddress, userLoginPassword)
-                userSignUpStatus.postValue(loginResult)
-            }
+    fun loginUser(userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
+        useCases.loginUser(userEmailAddress, userLoginPassword).collect{ response ->
+            loginUserResponse = response
         }
-        return userSignUpStatus
     }
 
-    fun sendPasswordResetEmail(userEmailAddress: String) : MutableLiveData<Resource<Boolean>>{
-        val userPasswordResetStatus = MutableLiveData<Resource<Boolean>>()
-        if (userEmailAddress.isEmpty()) {
-            userPasswordResetStatus.postValue(Resource.Error("Please fill the email field"))
-        } else {
-            userPasswordResetStatus.postValue(Resource.Loading())
-            viewModelScope.launch(Dispatchers.Main) {
-                val sendPasswordResetEmailResult = userRepository.sendPasswordResetEmail(userEmailAddress)
-                userPasswordResetStatus.postValue(sendPasswordResetEmailResult)
-            }
+    fun sendPasswordResetEmail(userEmailAddress: String) = viewModelScope.launch {
+        useCases.sendPasswordResetEmail(userEmailAddress).collect{ response ->
+            sendPasswordResetEmailResponse = response
         }
-        return userPasswordResetStatus
     }
 
-
-    fun signOut(context: Context?) {
-        userRepository.logout(context)
+    fun deleteUser() = viewModelScope.launch{
+        useCases.deleteUser.invoke().collect{ response ->
+            deleteUserResponse = response
+        }
     }
 
-    fun deleteUser(context: Context?) {
-        userRepository.deleteUser(context)
+    fun userData() = viewModelScope.launch {
+        useCases.userData.invoke().collect{ response ->
+            userDataResponse = response
+        }
     }
 
-    val userData: MutableLiveData<User?> get() = userRepository.userData
-    val getUsers: MutableLiveData<List<User>> get() = userRepository.getUsers
-
-    fun setUserName(userName: String?) {
-        userRepository.setUsername(userName)
+    fun getUsers() = viewModelScope.launch {
+        useCases.getUsers.invoke().collect{ response ->
+            usersResponse = response
+        }
     }
 
-    fun setUserEmail(email: String?) {
-        userRepository.setUserEmail(email)
+    fun setUserName(userName: String?) = viewModelScope.launch {
+        useCases.setUsername.invoke(userName).collect{ response ->
+            setUsernameResponse = response
+        }
     }
 
-    fun setPhotoUrl(photoUrl: String?) {
-        userRepository.setPhotoUrl(photoUrl)
+    fun setUserEmail(email: String?) = viewModelScope.launch {
+        useCases.setUserEmail.invoke(email).collect{ response ->
+            setUserEmailResponse = response
+        }
+    }
+
+    fun setPhotoUrl(photoUrl: String?) = viewModelScope.launch {
+        useCases.setPhotoUrl.invoke(photoUrl).collect{ response ->
+            setPhotoUrlResponse = response
+        }
     }
 }

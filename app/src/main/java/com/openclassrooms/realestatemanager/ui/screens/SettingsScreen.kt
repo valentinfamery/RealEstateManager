@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -12,15 +13,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterial3Api
 fun SettingsScreen(navController: NavController) {
 
     Scaffold(
-
-
-
-
 
         content = {
 

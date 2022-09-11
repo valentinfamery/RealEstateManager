@@ -18,10 +18,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
+import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+@InternalCoroutinesApi
 @Composable
 fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }
@@ -78,22 +81,19 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
 
         TextButton(
             onClick = {
-                userViewModel.sendPasswordResetEmail(email).observeForever{
-                    when (it) {
-                        is Resource.Loading -> {
-                        }
-                        is Resource.Error -> {
-                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                        }
-                        else -> {
-                            if(it.data == true){
-                                Toast.makeText(context, "Email sent", Toast.LENGTH_SHORT).show()
-                            }else{
-                                Toast.makeText(context, "Error email not sent", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
+                userViewModel.sendPasswordResetEmail(email)
+
+
+                        //Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+
+
+                        //if(it.data == true){
+                            //Toast.makeText(context, "Email sent", Toast.LENGTH_SHORT).show()
+                        //}else{
+                            //Toast.makeText(context, "Error email not sent", Toast.LENGTH_SHORT).show()
+                        //}
+
+
             },
             modifier = Modifier.constrainAs(buttonResetPassword) {
                 top.linkTo(entryPassword.bottom, margin = 0.dp)
@@ -109,21 +109,14 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
         Button(
             onClick = {
 
-                userViewModel.loginUser(email,password).observeForever {
-                    when (it) {
-                        is Resource.Loading -> {
-                        }
-                        is Resource.Success -> {
-                            navController.navigate("mainScreen")
+                userViewModel.loginUser(email,password)
 
-                            Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                        is Resource.Error -> {
-                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+                            //navController.navigate("mainScreen")
+
+                            //Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
+
+                            //Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+
             },
 
 

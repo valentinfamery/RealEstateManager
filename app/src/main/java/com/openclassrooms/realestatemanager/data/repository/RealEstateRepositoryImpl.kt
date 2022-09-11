@@ -6,14 +6,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
-import com.openclassrooms.realestatemanager.domain.models.RealEstate
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.domain.models.resultGeocoding.ResultGeocoding
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.service.ApiService
-import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
@@ -35,63 +31,62 @@ class RealEstateRepositoryImpl @Inject constructor(
     private val context: Context,
     private val realEstateDao: RealEstateDao): RealEstateRepository {
 
-    override fun getRealEstatesFromFirestore() = callbackFlow {
+    override suspend fun getRealEstatesFromFirestore() = flow {
 
-        Log.e("items", "repo1")
+        try {
+            emit(Response.Loading)
 
-        val isNetWorkAvailable = Utils.isInternetAvailable(context)
+            Log.e("items", "repo1")
 
-        val snapshotListener = realEstatesRef.addSnapshotListener { snapshot, e ->
-            val response = if (snapshot != null) {
-                if(isNetWorkAvailable) {
-                    val realEstates = snapshot.toObjects(RealEstate::class.java)
+            val isNetWorkAvailable = Utils.isInternetAvailable(context)
 
-                    realEstateDao.clear()
+            if(isNetWorkAvailable){
 
-                    for (realEstate in realEstates) {
 
-                        Log.e("items","repo2")
-
-                        val realEstateDatabase = RealEstateDatabase(
-                            realEstate.id!!,
-                            realEstate.type!!,
-                            realEstate.price!!,
-                            realEstate.area!!,
-                            realEstate.numberRoom!!,
-                            realEstate.description!!,
-                            realEstate.numberAndStreet!!,
-                            realEstate.numberApartment!!,
-                            realEstate.city!!,
-                            realEstate.region!!,
-                            realEstate.postalCode!!,
-                            realEstate.country!!,
-                            realEstate.status!!,
-                            realEstate.dateOfEntry!!,
-                            realEstate.dateOfSale!!,
-                            realEstate.realEstateAgent!!,
-                            realEstate.lat!!,
-                            realEstate.lng!!,
-                            realEstate.hospitalsNear,
-                            realEstate.schoolsNear,
-                            realEstate.shopsNear,
-                            realEstate.parksNear,
-                            realEstate.listPhotoWithText,
-                        )
-                        realEstateDao.insertRealEstate(realEstateDatabase)
-                    }
+                val realEstates = realEstatesRef.get().await().map {
+                    it.toObject(RealEstate::class.java)
                 }
 
-                Log.e("items","repo3")
+                realEstateDao.clear()
 
-                Response.Success(realEstateDao.realEstates())
-            } else {
-                Response.Failure(e)
+                for (realEstate in realEstates) {
+
+                    Log.e("items","repo2")
+
+                    val realEstateDatabase = RealEstateDatabase(
+                        realEstate.id!!,
+                        realEstate.type!!,
+                        realEstate.price!!,
+                        realEstate.area!!,
+                        realEstate.numberRoom!!,
+                        realEstate.description!!,
+                        realEstate.numberAndStreet!!,
+                        realEstate.numberApartment!!,
+                        realEstate.city!!,
+                        realEstate.region!!,
+                        realEstate.postalCode!!,
+                        realEstate.country!!,
+                        realEstate.status!!,
+                        realEstate.dateOfEntry!!,
+                        realEstate.dateOfSale!!,
+                        realEstate.realEstateAgent!!,
+                        realEstate.lat!!,
+                        realEstate.lng!!,
+                        realEstate.hospitalsNear,
+                        realEstate.schoolsNear,
+                        realEstate.shopsNear,
+                        realEstate.parksNear,
+                        realEstate.listPhotoWithText,
+                    )
+                    realEstateDao.insertRealEstate(realEstateDatabase)
+                }
             }
-            trySend(response).isSuccess
+
+            emit(Response.Success(realEstateDao.realEstates()))
+        }catch (e: Exception){
+            emit(Response.Failure(e))
         }
-        awaitClose {
-            snapshotListener.remove()
-        }
+
     }
 
     override suspend fun createRealEstate(
@@ -192,7 +187,7 @@ class RealEstateRepositoryImpl @Inject constructor(
                         )
                         realEstatesRef.document(id).set(realEstate)
 
-                        emit(Response.Success(realEstate))
+
                     }
                 }
 

@@ -17,8 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(ExperimentalMaterial3Api::class)
+@InternalCoroutinesApi
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }
@@ -90,32 +92,21 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
         Button(
             onClick = {
 
-                userViewModel.registerUser(username,email,password).observeForever{
-                    when(it){
-                        is Resource.Loading -> {
-                        }
-                        is Resource.Success -> {
-                            userViewModel.loginUser(email,password).observeForever {
-                                when (it) {
-                                    is Resource.Loading -> {
-                                    }
-                                    is Resource.Success -> {
-                                        navController.navigate("mainScreen")
+                userViewModel.registerUser(username,email,password)
 
-                                        Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
-                                    is Resource.Error -> {
-                                        Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        }
-                        is Resource.Error -> {
-                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+
+                            userViewModel.loginUser(email,password)
+
+
+                                        //navController.navigate("mainScreen")
+
+                                        //Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
+
+                                        //Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+
+
+
+                            //Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
 
             },
             modifier = Modifier.size(width = 275.dp, height = 50.dp).constrainAs(buttonRegister) {

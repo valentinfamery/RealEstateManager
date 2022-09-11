@@ -19,6 +19,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.InternalCoroutinesApi
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,9 +32,7 @@ object AppModule {
     fun provideFirebaseFirestore() = FirebaseFirestore.getInstance()
 
     @Provides
-    fun provideRealEstatesRef(
-        db: FirebaseFirestore
-    ) = db.collection("real_estates")
+    fun provideRealEstatesRef(db: FirebaseFirestore) = db.collection("real_estates")
 
     @Provides
     fun provideUsersRef(db: FirebaseFirestore) = db.collection("users")
@@ -50,7 +52,8 @@ object AppModule {
     fun provideAuthUI() = AuthUI.getInstance()
 
     @Provides
-    fun provideRealEstateRoomDatabase(@ActivityContext context: Context) = RealEstateRoomDatabase.getInstance(context)
+    @Singleton
+    fun provideRealEstateRoomDatabase(@ApplicationContext context: Context) = RealEstateRoomDatabase.getInstance(context)
 
     @Provides
     fun provideRealEstateDao(roomDatabase: RealEstateRoomDatabase): RealEstateDao {
@@ -58,19 +61,21 @@ object AppModule {
     }
 
     @Provides
+    @InternalCoroutinesApi
     fun provideRealEstatesRepository(
         realEstatesRef: CollectionReference,
         storageRef : StorageReference,
-        @ActivityContext context: Context,
+        @ApplicationContext context: Context,
         realEstateDao: RealEstateDao
     ): RealEstateRepository = RealEstateRepositoryImpl(realEstatesRef,storageRef,context,realEstateDao)
 
     @Provides
+    @InternalCoroutinesApi
     fun provideUsersRepository(
         firebaseAuth : FirebaseAuth,
         authUI: AuthUI,
         usersRef : CollectionReference,
-        @ActivityContext context: Context?
+        @ApplicationContext context: Context?
     ): UserRepository = UserRepositoryImpl(firebaseAuth,authUI,usersRef,context)
 
     @Provides

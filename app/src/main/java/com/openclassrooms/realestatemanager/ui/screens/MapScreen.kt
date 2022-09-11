@@ -31,12 +31,15 @@ import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.utils.WindowSize
 
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(ExperimentalMaterial3Api::class)
+@InternalCoroutinesApi
 @Composable
 fun MapScreen(
     drawerState: DrawerState,
@@ -55,7 +58,7 @@ fun MapScreen(
         mutableStateOf(LatLng(0.0, 0.0))
     }
 
-    val items by realEstateViewModel.uiState(Utils.isInternetAvailable(context)).collectAsState()
+    val items = realEstateViewModel.realEstatesResponse
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
@@ -170,10 +173,10 @@ fun MapScreen(
                 uiSettings = uiSettings,
             ) {
                 when (items) {
-                    is Resource.Loading -> {
+                    is Response.Loading -> {
                     }
-                    is Resource.Success -> {
-                        items.data?.let {items->
+                    is Response.Success -> {
+                        items.data.let { items->
                             items.forEach {
 
                                 val realEstate: RealEstateDatabase = it

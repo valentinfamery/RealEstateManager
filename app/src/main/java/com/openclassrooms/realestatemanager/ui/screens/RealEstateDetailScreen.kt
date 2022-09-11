@@ -32,9 +32,11 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstate
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.InternalCoroutinesApi
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
+@InternalCoroutinesApi
 @Composable
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,

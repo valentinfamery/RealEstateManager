@@ -23,8 +23,10 @@ import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(ExperimentalMaterial3Api::class)
+@InternalCoroutinesApi
 @Composable
 fun RowList(
     item: RealEstateDatabase,

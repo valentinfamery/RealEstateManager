@@ -22,18 +22,19 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.domain.models.FilterResult
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.ui.FilterActivity
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
-
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
+@InternalCoroutinesApi
 @Composable
 fun ListScreen(
     drawerState: DrawerState,
@@ -46,15 +47,15 @@ fun ListScreen(
 ) {
     val context = LocalContext.current
 
-    val items by realEstateViewModel.uiState(Utils.isInternetAvailable(context)).collectAsState()
+    val items = realEstateViewModel.realEstatesResponse
 
-    var listFilter = mutableListOf<RealEstateDatabase>()
+    val listFilter = mutableListOf<RealEstateDatabase>()
 
     var filterState by remember { mutableStateOf(false) }
 
     lateinit var resultFilter : FilterResult
 
-    var refreshing by remember { mutableStateOf(false) }
+    val refreshing by remember { mutableStateOf(false) }
 
     val launcherActivityResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -108,19 +109,17 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                     state = rememberSwipeRefreshState(refreshing),
                     onRefresh = {
-                        realEstateViewModel.refreshRealEstates(Utils.isInternetAvailable(context))
+
                                 },
                 ) {
-                    LazyColumn(
-                    ) {
-                        if (filterState == false) {
-                            when (items) {
-                                is Resource.Loading -> {
-                                }
-                                is Resource.Success -> {
-                                    Log.e("items", "listScreen")
-                                    items.data?.let { items ->
-                                        items(items) { item ->
+                    LazyColumn {
+                        if (!filterState) {
+                            when(items){
+                                is Response.Success ->{
+                                    (items).data.let { response ->
+
+                                        Log.e("items", "listScreen")
+                                        items(response) { item ->
                                             RowList(
                                                 item,
                                                 realEstateViewModel,
@@ -134,14 +133,7 @@ fun ListScreen(
                                 else -> {}
                             }
 
-
                         } else {
-                            listFilter.filter {realEstate->
-                                realEstate.type.equals(resultFilter.type)
-                                realEstate.city.equals(resultFilter.city)
-                                realEstate.schoolsNear == resultFilter.schools
-                                realEstate.shopsNear == resultFilter.shops
-                            }
 
                             items(listFilter) { item ->
                                 RowList(
@@ -184,22 +176,19 @@ fun ListScreen(
                 LazyColumn(
                     modifier = Modifier.padding(it),
                 ) {
-                    when (items) {
-                        is Resource.Loading -> {
-                        }
-                        is Resource.Success -> {
-                            items.data?.let {items->
-                                items(items) { item ->
-                                    RowList(
-                                        item,
-                                        realEstateViewModel,
-                                        navControllerDrawer,
-                                        windowSize,
-                                        navControllerTwoPane
-                                    )
-                                }
+                    when(items){
+                        is Response.Success ->{
+                            items((items).data) { item ->
+                                RowList(
+                                    item,
+                                    realEstateViewModel,
+                                    navControllerDrawer,
+                                    windowSize,
+                                    navControllerTwoPane
+                                )
                             }
                         }
+                        else -> {}
                     }
                 }
             }

@@ -42,24 +42,30 @@ import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
 import com.openclassrooms.realestatemanager.domain.models.RealEstate
+import com.openclassrooms.realestatemanager.domain.models.Response
+import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 @SuppressLint("SimpleDateFormat", "UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
+@InternalCoroutinesApi
 @Composable
 fun EditScreenRealEstate(
     realEstateViewModel: RealEstateViewModel,
     itemRealEstate: RealEstate?,
-    navController: NavHostController
+    navController: NavHostController,
+    userViewModel: UserViewModel = hiltViewModel()
 ) {
 
     val listPhotos2 = itemRealEstate?.listPhotoWithText
@@ -73,7 +79,7 @@ fun EditScreenRealEstate(
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
-    val userDataState by UserViewModel().userData.observeAsState()
+    val userDataState  = userViewModel.userData()
 
     var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
 
@@ -717,33 +723,43 @@ fun EditScreenRealEstate(
 
                         try {
 
-                            listPhotos.size >= 1
+                            when(userViewModel.userDataResponse){
+                                is Response.Success ->{
+                                    (userViewModel.userDataResponse as Response.Success<User?>).data.let { response ->
 
-                            realEstateViewModel.createRealEstate(
-                                entryType,
-                                entryPrice,
-                                entryArea,
-                                entryNumberRoom,
-                                entryDescription,
-                                entryNumberAndStreet,
-                                entryNumberApartement,
-                                entryCity,
-                                entryRegion,
-                                entryPostalCode,
-                                entryCountry,
-                                entryStatus,
-                                listPhotos,
-                                textDateOfEntry,
-                                textDateOfSale,
-                                userDataState?.username.toString(),
-                                checkedStateHopital.value,
-                                checkedStateSchool.value,
-                                checkedStateShops.value,
-                                checkedStateParks.value
-                            )
+                                        listPhotos.size >= 1
 
-                            activity.finish()
+                                        realEstateViewModel.createRealEstate(
+                                            entryType,
+                                            entryPrice,
+                                            entryArea,
+                                            entryNumberRoom,
+                                            entryDescription,
+                                            entryNumberAndStreet,
+                                            entryNumberApartement,
+                                            entryCity,
+                                            entryRegion,
+                                            entryPostalCode,
+                                            entryCountry,
+                                            entryStatus,
+                                            listPhotos,
+                                            textDateOfEntry,
+                                            textDateOfSale,
+                                            response!!.username.toString(),
+                                            checkedStateHopital.value,
+                                            checkedStateSchool.value,
+                                            checkedStateShops.value,
+                                            checkedStateParks.value
+                                        )
 
+                                        activity.finish()
+
+
+                                    }
+
+
+                                }
+                            }
 
                         } catch (e: Exception) {
                             Toast.makeText(
