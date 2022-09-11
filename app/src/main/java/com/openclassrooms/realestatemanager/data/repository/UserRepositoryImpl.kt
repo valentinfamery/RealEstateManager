@@ -4,6 +4,7 @@ import android.content.Context
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.domain.repository.UserRepository
 import com.openclassrooms.realestatemanager.domain.models.Response
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 class UserRepositoryImpl @Inject constructor(
     private val firebaseAuth : FirebaseAuth,
     private val authUI: AuthUI,
-    private val usersRef : CollectionReference,
+    private val firestore: FirebaseFirestore,
     private val context: Context?
 ): UserRepository{
 
@@ -46,7 +47,7 @@ class UserRepositoryImpl @Inject constructor(
                     val urlPicture = if (user.photoUrl != null) user.photoUrl.toString() else null
                     val uid = user.uid
                     val userToCreate = User(uid, userName, urlPicture, userEmailAddress)
-                    usersRef.document(uid).set(userToCreate)
+                    firestore.collection("users").document(uid).set(userToCreate)
                 }
 
                 emit(Response.Success(registrationResult))
@@ -91,7 +92,7 @@ class UserRepositoryImpl @Inject constructor(
 
             val uid = firebaseAuth.uid
             if (uid != null) {
-                usersRef.document(uid).delete()
+                firestore.collection("users").document(uid).delete()
             }
             authUI.delete(context!!)
 
@@ -108,7 +109,7 @@ class UserRepositoryImpl @Inject constructor(
             val user = firebaseAuth.currentUser
             val uid = user?.uid
 
-            val userData = usersRef.document(uid!!).get().await().toObject(User::class.java)
+            val userData = firestore.collection("users").document(uid!!).get().await().toObject(User::class.java)
 
             emit(Response.Success(userData))
         }catch (e: Exception){
@@ -122,7 +123,7 @@ class UserRepositoryImpl @Inject constructor(
         try {
             emit(Response.Loading)
 
-            val list = usersRef.get().await().map {
+            val list = firestore.collection("users").get().await().map {
                 it.toObject(User::class.java)
             }.toMutableList()
 
@@ -147,7 +148,7 @@ class UserRepositoryImpl @Inject constructor(
             emit(Response.Loading)
 
             firebaseAuth.currentUser!!.updateEmail(email!!)
-            usersRef.document(firebaseAuth.uid!!).update("email", email)
+            firestore.collection("users").document(firebaseAuth.uid!!).update("email", email)
 
             emit(Response.Success(null))
         }catch (e : Exception){
@@ -160,7 +161,7 @@ class UserRepositoryImpl @Inject constructor(
         try {
             emit(Response.Loading)
 
-            usersRef.document(firebaseAuth.uid!!).update("username", username)
+            firestore.collection("users").document(firebaseAuth.uid!!).update("username", username)
 
             emit(Response.Success(null))
         }catch (e : Exception){
@@ -172,7 +173,7 @@ class UserRepositoryImpl @Inject constructor(
         try {
             emit(Response.Loading)
 
-            usersRef.document(firebaseAuth.uid!!).update("urlPicture", photoUrl)
+            firestore.collection("users").document(firebaseAuth.uid!!).update("urlPicture", photoUrl)
 
             emit(Response.Success(null))
         }catch (e : Exception){

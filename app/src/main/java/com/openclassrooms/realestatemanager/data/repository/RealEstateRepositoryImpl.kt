@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.domain.models.*
@@ -26,7 +27,7 @@ import javax.inject.Singleton
 @Singleton
 @InternalCoroutinesApi
 class RealEstateRepositoryImpl @Inject constructor(
-    private val realEstatesRef: CollectionReference,
+    private val firebaseFirestore: FirebaseFirestore,
     private val storageRef : StorageReference,
     private val context: Context,
     private val realEstateDao: RealEstateDao): RealEstateRepository {
@@ -43,7 +44,7 @@ class RealEstateRepositoryImpl @Inject constructor(
             if(isNetWorkAvailable){
 
 
-                val realEstates = realEstatesRef.get().await().map {
+                val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
                     it.toObject(RealEstate::class.java)
                 }
 
@@ -185,7 +186,7 @@ class RealEstateRepositoryImpl @Inject constructor(
                             checkedStateParks,
                             listPhotoWithTextFirebaseFinal
                         )
-                        realEstatesRef.document(id).set(realEstate)
+                        firebaseFirestore.collection("real_estates").document(id).set(realEstate)
 
 
                     }

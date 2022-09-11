@@ -4,7 +4,6 @@ import android.content.Context
 import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -18,10 +17,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.InternalCoroutinesApi
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
@@ -30,12 +27,6 @@ object AppModule {
 
     @Provides
     fun provideFirebaseFirestore() = FirebaseFirestore.getInstance()
-
-    @Provides
-    fun provideRealEstatesRef(db: FirebaseFirestore) = db.collection("real_estates")
-
-    @Provides
-    fun provideUsersRef(db: FirebaseFirestore) = db.collection("users")
 
     @Provides
     fun provideFirebaseStorage() = FirebaseStorage.getInstance()
@@ -63,20 +54,20 @@ object AppModule {
     @Provides
     @InternalCoroutinesApi
     fun provideRealEstatesRepository(
-        realEstatesRef: CollectionReference,
+        fireStore: FirebaseFirestore,
         storageRef : StorageReference,
         @ApplicationContext context: Context,
         realEstateDao: RealEstateDao
-    ): RealEstateRepository = RealEstateRepositoryImpl(realEstatesRef,storageRef,context,realEstateDao)
+    ): RealEstateRepository = RealEstateRepositoryImpl(fireStore,storageRef,context,realEstateDao)
 
     @Provides
     @InternalCoroutinesApi
     fun provideUsersRepository(
-        firebaseAuth : FirebaseAuth,
+        firebaseAuth: FirebaseAuth,
         authUI: AuthUI,
-        usersRef : CollectionReference,
+        fireStore: FirebaseFirestore,
         @ApplicationContext context: Context?
-    ): UserRepository = UserRepositoryImpl(firebaseAuth,authUI,usersRef,context)
+    ): UserRepository = UserRepositoryImpl(firebaseAuth,authUI,fireStore,context)
 
     @Provides
     fun provideUseCases(userRepository: UserRepository,realEstateRepository: RealEstateRepository) = UseCases(
