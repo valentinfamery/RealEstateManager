@@ -78,7 +78,10 @@ class MainActivity : ComponentActivity() {
                         composable("signInScreen") {
                             SignInScreen(
                                 navController = navController,
-                                userViewModel = userViewModel
+                                userViewModel = userViewModel,
+                                loginUserCompose = { email, password ->
+                                   userViewModel.loginUser(email,password)
+                                }
                             )
                         }
                         composable("editScreen/{item}",

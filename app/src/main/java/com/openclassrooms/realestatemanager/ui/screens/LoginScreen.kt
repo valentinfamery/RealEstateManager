@@ -18,7 +18,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -26,7 +25,11 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @OptIn(ExperimentalMaterial3Api::class)
 @InternalCoroutinesApi
 @Composable
-fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
+fun SignInScreen(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    loginUserCompose: (email:String,password:String) -> Unit
+){
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
@@ -81,6 +84,9 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
 
         TextButton(
             onClick = {
+
+
+
                 userViewModel.sendPasswordResetEmail(email)
 
 
@@ -109,13 +115,9 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
         Button(
             onClick = {
 
-                userViewModel.loginUser(email,password)
+                loginUserCompose(email,password)
 
-                            //navController.navigate("mainScreen")
 
-                            //Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
-
-                            //Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
 
             },
 
@@ -134,4 +136,26 @@ fun SignInScreen(navController: NavController, userViewModel: UserViewModel){
         }
 
     }
+
+    LoginUserCompose(
+        loadingEnabled ={
+
+        },
+        successLoginUser = {
+            Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
+            navController.navigate("mainScreen")
+        },
+        failureLoginUser = {e->
+            Toast.makeText(context,e, Toast.LENGTH_SHORT).show()
+        }
+
+    )
+
+
+
+
+
+
+
 }
+
