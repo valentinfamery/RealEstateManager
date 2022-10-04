@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -112,40 +111,9 @@ fun ListScreen(
 
                                 },
                 ) {
-                    LazyColumn {
-                        if (!filterState) {
-                            when(items){
-                                is Response.Success ->{
-                                    (items).data.let { response ->
+                    ListResponse(items,filterState,listFilter,navControllerDrawer,navControllerTwoPane,windowSize)
 
-                                        Log.e("items", "listScreen")
-                                        items(response) { item ->
-                                            RowList(
-                                                item,
-                                                realEstateViewModel,
-                                                navControllerDrawer,
-                                                windowSize,
-                                                navControllerTwoPane
-                                            )
-                                        }
-                                    }
-                                }
-                                else -> {}
-                            }
 
-                        } else {
-
-                            items(listFilter) { item ->
-                                RowList(
-                                    item,
-                                    realEstateViewModel,
-                                    navControllerDrawer,
-                                    windowSize,
-                                    navControllerTwoPane
-                                )
-                            }
-                        }
-                    }
                 }
             }
         )

@@ -1,9 +1,11 @@
 package com.openclassrooms.realestatemanager.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -27,8 +29,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class MainActivity : ComponentActivity() {
-
-
 
     private lateinit var auth: FirebaseAuth
     private lateinit var startScreen : String
@@ -54,9 +54,6 @@ class MainActivity : ComponentActivity() {
                 val realEstateViewModel: RealEstateViewModel = hiltViewModel()
 
 
-
-
-
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = startScreen) {
                         composable("mainScreen") {
@@ -76,13 +73,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("signInScreen") {
-                            SignInScreen(
-                                navController = navController,
-                                userViewModel = userViewModel,
-                                loginUserCompose = { email, password ->
-                                   userViewModel.loginUser(email,password)
-                                }
-                            )
+                                    SignInScreen(
+                                        navController = navController
+                                    )
                         }
                         composable("editScreen/{item}",
                             arguments = listOf(

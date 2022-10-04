@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,11 +11,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -27,12 +26,11 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @Composable
 fun SignInScreen(
     navController: NavController,
-    userViewModel: UserViewModel,
-    loginUserCompose: (email:String,password:String) -> Unit
+    userViewModel: UserViewModel = hiltViewModel()
 ){
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val context = LocalContext.current
+    val responseLogin = userViewModel.loginUserResponse
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().also {
         it.padding(250.dp,250.dp,250.dp,250.dp)
@@ -84,9 +82,6 @@ fun SignInScreen(
 
         TextButton(
             onClick = {
-
-
-
                 userViewModel.sendPasswordResetEmail(email)
 
 
@@ -98,8 +93,6 @@ fun SignInScreen(
                         //}else{
                             //Toast.makeText(context, "Error email not sent", Toast.LENGTH_SHORT).show()
                         //}
-
-
             },
             modifier = Modifier.constrainAs(buttonResetPassword) {
                 top.linkTo(entryPassword.bottom, margin = 0.dp)
@@ -114,16 +107,8 @@ fun SignInScreen(
 
         Button(
             onClick = {
-
-                loginUserCompose(email,password)
-
-
-
+                userViewModel.loginUser(email,password)
             },
-
-
-
-
             modifier = Modifier
                 .size(width = 275.dp, height = 50.dp)
                 .constrainAs(buttonLogin) {
@@ -136,20 +121,10 @@ fun SignInScreen(
         }
 
     }
+    LoginUserCompose(navController,responseLogin)
 
-    LoginUserCompose(
-        loadingEnabled ={
 
-        },
-        successLoginUser = {
-            Toast.makeText(context, "Login Successfully", Toast.LENGTH_SHORT).show()
-            navController.navigate("mainScreen")
-        },
-        failureLoginUser = {e->
-            Toast.makeText(context,e, Toast.LENGTH_SHORT).show()
-        }
 
-    )
 
 
 

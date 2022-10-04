@@ -1,24 +1,29 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import com.google.firebase.auth.AuthResult
 import com.openclassrooms.realestatemanager.domain.models.Response
-import com.openclassrooms.realestatemanager.domain.use_case.LoginUser
-import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
 @Composable
 fun LoginUserCompose(
-    userViewModel: UserViewModel = hiltViewModel(),
-    loadingEnabled : () -> Unit,
-    successLoginUser: () -> Unit,
-    failureLoginUser: (e:String) -> Unit
+    navController: NavController,
+    responseLogin: Response<AuthResult>
 ) {
-    when(val loginUserResponse = userViewModel.loginUserResponse){
-        is Response.Failure -> failureLoginUser(loginUserResponse.e.toString())
-        is Response.Loading -> loadingEnabled
-        is Response.Success -> successLoginUser
+
+    val context = LocalContext.current
+
+    when(responseLogin){
+        is Response.Failure -> {
+            Toast.makeText(context,responseLogin.e.toString(), Toast.LENGTH_SHORT).show()
+        }
+        is Response.Loading ->{}
+        is Response.Success -> {
+            navController.navigate("mainScreen")
+        }
     }
 }
