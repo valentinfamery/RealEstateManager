@@ -28,7 +28,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : 
 
 
     private fun getRealEstates() = viewModelScope.launch {
-        useCases.getRealEstates.invoke().collect{ response->
+        useCases.getRealEstates().collect{ response ->
             realEstatesResponse = response
         }
     }

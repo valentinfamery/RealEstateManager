@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -26,6 +25,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    val responseRegisterUser = userViewModel.registerUserResponse
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (centerAlignedTopAppBar,entryEmail,entryUsername,entryPassword,buttonRegister) = createRefs()
@@ -91,31 +91,18 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
 
         Button(
             onClick = {
-
                 userViewModel.registerUser(username,email,password)
-
-
-                            userViewModel.loginUser(email,password)
-
-
-                                        //navController.navigate("mainScreen")
-
-                                        //Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-
-                                        //Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-
-
-
-                            //Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-
             },
-            modifier = Modifier.size(width = 275.dp, height = 50.dp).constrainAs(buttonRegister) {
-                top.linkTo(entryPassword.bottom, margin = 25.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            },
+            modifier = Modifier
+                .size(width = 275.dp, height = 50.dp)
+                .constrainAs(buttonRegister) {
+                    top.linkTo(entryPassword.bottom, margin = 25.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                },
         ) {
             Text("Register")
         }
     }
+    RegisterUser(responseRegisterUser,navController,email,password)
 }

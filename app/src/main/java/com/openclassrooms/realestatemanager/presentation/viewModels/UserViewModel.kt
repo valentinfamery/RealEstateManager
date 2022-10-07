@@ -20,7 +20,7 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
 
     private var logoutResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
 
-    private var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
+    var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
 
     var loginUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
 
@@ -44,7 +44,11 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
         }
     }
 
-    fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
+    fun registerUser(
+        userName: String,
+        userEmailAddress: String,
+        userLoginPassword: String
+    ) = viewModelScope.launch {
         useCases.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword).collect{ response ->
             registerUserResponse = response
         }

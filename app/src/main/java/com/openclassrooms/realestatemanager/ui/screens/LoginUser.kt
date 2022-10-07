@@ -10,7 +10,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
 @Composable
-fun LoginUserCompose(
+fun LoginUser(
     navController: NavController,
     responseLogin: Response<AuthResult>
 ) {
@@ -23,6 +23,7 @@ fun LoginUserCompose(
         }
         is Response.Loading ->{}
         is Response.Success -> {
+            Toast.makeText(context,"Connexion Réussi", Toast.LENGTH_SHORT).show()
             navController.navigate("mainScreen")
         }
     }
