@@ -19,13 +19,11 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewMode
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(ExperimentalMaterial3Api::class)
-@InternalCoroutinesApi
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
     var email by rememberSaveable { mutableStateOf("") }
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val responseRegisterUser = userViewModel.registerUserResponse
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (centerAlignedTopAppBar,entryEmail,entryUsername,entryPassword,buttonRegister) = createRefs()
@@ -104,5 +102,5 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
             Text("Register")
         }
     }
-    RegisterUser(responseRegisterUser,navController,email,password)
+    RegisterUser(navController,email,password, userViewModel)
 }

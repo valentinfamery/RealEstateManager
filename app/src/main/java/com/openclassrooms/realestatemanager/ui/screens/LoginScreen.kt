@@ -5,32 +5,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@InternalCoroutinesApi
 @Composable
 fun SignInScreen(
     navController: NavController,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel
 ){
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val responseLogin = userViewModel.loginUserResponse
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().also {
         it.padding(250.dp,250.dp,250.dp,250.dp)
@@ -102,12 +95,11 @@ fun SignInScreen(
             Text("Forgot password ?")
         }
 
-
-
-
         Button(
             onClick = {
                 userViewModel.loginUser(email,password)
+
+
             },
             modifier = Modifier
                 .size(width = 275.dp, height = 50.dp)
@@ -121,15 +113,9 @@ fun SignInScreen(
         }
 
     }
-    LoginUser(navController,responseLogin)
 
 
-
-
-
-
-
-
+        LoginUser(userViewModel,navController)
 
 
 }

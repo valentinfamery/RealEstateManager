@@ -36,7 +36,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
-@InternalCoroutinesApi
 @Composable
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,

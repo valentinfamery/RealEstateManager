@@ -26,7 +26,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-@InternalCoroutinesApi
 @Composable
 fun DrawerScreen(
     drawerState: DrawerState,

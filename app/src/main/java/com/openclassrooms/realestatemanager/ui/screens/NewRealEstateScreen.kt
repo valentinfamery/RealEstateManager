@@ -59,7 +59,6 @@ import java.util.*
 
 @SuppressLint("LongLogTag", "UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
-@InternalCoroutinesApi
 @Composable
 fun NewRealEstateScreen(
     realEstateViewModel: RealEstateViewModel,

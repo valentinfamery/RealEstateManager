@@ -59,7 +59,6 @@ import java.util.*
 
 @SuppressLint("SimpleDateFormat", "UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
-@InternalCoroutinesApi
 @Composable
 fun EditScreenRealEstate(
     realEstateViewModel: RealEstateViewModel,

@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-@InternalCoroutinesApi
 class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
 
     var realEstatesResponse by mutableStateOf<Response<List<RealEstateDatabase>>>(Response.Loading)

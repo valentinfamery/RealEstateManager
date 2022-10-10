@@ -26,7 +26,6 @@ import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @OptIn(ExperimentalMaterial3Api::class)
-@InternalCoroutinesApi
 @Composable
 fun RowList(
     item: RealEstateDatabase,

@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
-@InternalCoroutinesApi
 class NewRealEstateActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)

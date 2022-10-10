@@ -25,7 +25,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@InternalCoroutinesApi
 class RealEstateRepositoryImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val storageRef : StorageReference,

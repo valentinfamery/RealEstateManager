@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.data.repository
 
 import android.content.Context
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +16,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@InternalCoroutinesApi
 class UserRepositoryImpl @Inject constructor(
     private val firebaseAuth : FirebaseAuth,
     private val authUI: AuthUI,
@@ -23,23 +23,18 @@ class UserRepositoryImpl @Inject constructor(
     private val context: Context?
 ): UserRepository{
 
-    override suspend fun logout() = flow {
-        try {
-            emit(Response.Loading)
-
+    override suspend fun logout() : Response<Boolean> {
+        return try {
             authUI.signOut(context!!)
-
-            emit(Response.Success(null))
+            Response.Success(true)
         }catch (e: Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
     }
 
-    override suspend fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) = flow {
+    override suspend fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) : Response<AuthResult> {
 
-            try{
-                emit(Response.Loading)
-
+            return try{
                 val registrationResult = firebaseAuth.createUserWithEmailAndPassword(userEmailAddress, userLoginPassword).await()
 
                 val user = firebaseAuth.currentUser
@@ -50,45 +45,42 @@ class UserRepositoryImpl @Inject constructor(
                     firestore.collection("users").document(uid).set(userToCreate)
                 }
 
-                emit(Response.Success(registrationResult))
+                Response.Success(registrationResult)
             }catch (e: Exception){
-                emit(Response.Failure(e))
+                Response.Failure(e)
             }
 
     }
 
 
-    override suspend fun loginUser(email: String, password: String) = flow {
+    override suspend fun loginUser(email: String, password: String) : Response<AuthResult> {
 
-        try {
-            emit(Response.Loading)
+        return try {
 
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
 
-            emit(Response.Success(result))
+            Response.Success(result)
         }catch (e: Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
 
     }
 
-    override suspend fun sendPasswordResetEmail(email: String) = flow {
+    override suspend fun sendPasswordResetEmail(email: String) : Response<Boolean> {
 
-        try {
-            emit(Response.Loading)
+        return try {
 
             firebaseAuth.sendPasswordResetEmail(email).await()
 
-            emit(Response.Success(null))
+            Response.Success(true)
         }catch (e: Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
 
     }
 
-    override suspend fun deleteUser() = flow {
-        try {
-            emit(Response.Loading)
+    override suspend fun deleteUser() : Response<Boolean> {
+        return try {
 
             val uid = firebaseAuth.uid
             if (uid != null) {
@@ -96,9 +88,9 @@ class UserRepositoryImpl @Inject constructor(
             }
             authUI.delete(context!!)
 
-            emit(Response.Success(null))
+            Response.Success(true)
         }catch (e: Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
     }
 
@@ -143,41 +135,38 @@ class UserRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun setUserEmail(email: String?) = flow {
-        try {
-            emit(Response.Loading)
+    override suspend fun setUserEmail(email: String?) : Response<Boolean> {
+        return try {
 
             firebaseAuth.currentUser!!.updateEmail(email!!)
             firestore.collection("users").document(firebaseAuth.uid!!).update("email", email)
 
-            emit(Response.Success(null))
+            Response.Success(true)
         }catch (e : Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
 
     }
 
-    override suspend fun setUsername(username: String?) = flow {
-        try {
-            emit(Response.Loading)
+    override suspend fun setUsername(username: String?) : Response<Boolean> {
+        return try {
 
             firestore.collection("users").document(firebaseAuth.uid!!).update("username", username)
 
-            emit(Response.Success(null))
+            Response.Success(true)
         }catch (e : Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
     }
 
-    override suspend fun setPhotoUrl(photoUrl: String?) = flow {
-        try {
-            emit(Response.Loading)
+    override suspend fun setPhotoUrl(photoUrl: String?) : Response<Boolean> {
+        return try {
 
             firestore.collection("users").document(firebaseAuth.uid!!).update("urlPicture", photoUrl)
 
-            emit(Response.Success(null))
+            Response.Success(true)
         }catch (e : Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
     }
 

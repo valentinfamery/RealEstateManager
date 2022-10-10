@@ -26,8 +26,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
-@InternalCoroutinesApi
-@ExperimentalCoroutinesApi
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -74,7 +72,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("signInScreen") {
                                     SignInScreen(
-                                        navController = navController
+                                        navController = navController,
+                                        userViewModel
                                     )
                         }
                         composable("editScreen/{item}",

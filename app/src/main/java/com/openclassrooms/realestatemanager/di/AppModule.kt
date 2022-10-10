@@ -52,7 +52,6 @@ object AppModule {
     }
 
     @Provides
-    @InternalCoroutinesApi
     fun provideRealEstatesRepository(
         fireStore: FirebaseFirestore,
         storageRef : StorageReference,
@@ -61,7 +60,6 @@ object AppModule {
     ): RealEstateRepository = RealEstateRepositoryImpl(fireStore,storageRef,context,realEstateDao)
 
     @Provides
-    @InternalCoroutinesApi
     fun provideUsersRepository(
         firebaseAuth: FirebaseAuth,
         authUI: AuthUI,

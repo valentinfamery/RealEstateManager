@@ -13,27 +13,22 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateVi
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import kotlinx.coroutines.InternalCoroutinesApi
 
-@OptIn(InternalCoroutinesApi::class)
 @Composable
 fun ListResponse(
-    items: Response<List<RealEstateDatabase>>,
     filterState: Boolean,
     listFilter: MutableList<RealEstateDatabase>,
     navControllerDrawer: NavController,
     navControllerTwoPane: NavHostController,
     windowSize: WindowSize,
-    realEstateViewModel: RealEstateViewModel = hiltViewModel()
+    realEstateViewModel: RealEstateViewModel
 ) {
-
     LazyColumn {
-
 
         if (!filterState) {
 
-
-
-            when(items){
+            when( val items = realEstateViewModel.realEstatesResponse){
                 is Response.Success ->{
+                    Log.i("items","Success")
                     (items).data.let { response ->
 
                         Log.e("items", "listScreen")
@@ -48,7 +43,9 @@ fun ListResponse(
                         }
                     }
                 }
-                else -> {}
+                else -> {
+
+                }
             }
 
         } else {

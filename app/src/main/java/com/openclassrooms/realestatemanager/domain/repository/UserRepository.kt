@@ -7,24 +7,24 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    suspend fun logout() : Flow<Response<Void?>>
+    suspend fun logout() : Response<Boolean>
 
-    suspend fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String): Flow<Response<AuthResult>>
+    suspend fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String): Response<AuthResult>
 
-    suspend fun loginUser(email: String, password: String): Flow<Response<AuthResult>>
+    suspend fun loginUser(email: String, password: String): Response<AuthResult>
 
-    suspend fun sendPasswordResetEmail(email: String): Flow<Response<Void?>>
+    suspend fun sendPasswordResetEmail(email: String): Response<Boolean>
 
-    suspend fun deleteUser() : Flow<Response<Void?>>
+    suspend fun deleteUser() : Response<Boolean>
 
     fun userData(): Flow<Response<User?>>
 
     fun getUsers(): Flow<Response<List<User>>>
 
-    suspend fun setUserEmail(email: String?) : Flow<Response<Void?>>
+    suspend fun setUserEmail(email: String?) : Response<Boolean>
 
-    suspend fun setUsername(username: String?) : Flow<Response<Void?>>
+    suspend fun setUsername(username: String?) : Response<Boolean>
 
-    suspend fun setPhotoUrl(photoUrl: String?) : Flow<Response<Void?>>
+    suspend fun setPhotoUrl(photoUrl: String?) : Response<Boolean>
 
 }

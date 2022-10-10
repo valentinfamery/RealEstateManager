@@ -10,38 +10,34 @@ import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-@InternalCoroutinesApi
 class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
 
-    private var logoutResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+    var logoutResponse by mutableStateOf<Response<Boolean>>(Response.Loading)
 
     var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
 
     var loginUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
 
-    private var sendPasswordResetEmailResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+    var sendPasswordResetEmailResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
-    private var deleteUserResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+    var deleteUserResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
     var userDataResponse by mutableStateOf<Response<User?>>(Response.Loading)
 
     var usersResponse by mutableStateOf<Response<List<User>>>(Response.Loading)
 
-    private var setUsernameResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+    var setUsernameResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
-    private var setUserEmailResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+    var setUserEmailResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
-    private var setPhotoUrlResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+    var setPhotoUrlResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
     fun logout() = viewModelScope.launch {
-        useCases.logout.invoke().collect{ response ->
-            logoutResponse = response
-        }
+        logoutResponse = useCases.logout()
     }
 
     fun registerUser(
@@ -49,56 +45,43 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
         userEmailAddress: String,
         userLoginPassword: String
     ) = viewModelScope.launch {
-        useCases.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword).collect{ response ->
-            registerUserResponse = response
-        }
+        registerUserResponse = useCases.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword)
     }
 
     fun loginUser(userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
-        useCases.loginUser(userEmailAddress, userLoginPassword).collect{ response ->
-            loginUserResponse = response
-        }
+        loginUserResponse = Response.Loading
+        loginUserResponse = useCases.loginUser(userEmailAddress, userLoginPassword)
     }
 
     fun sendPasswordResetEmail(userEmailAddress: String) = viewModelScope.launch {
-        useCases.sendPasswordResetEmail(userEmailAddress).collect{ response ->
-            sendPasswordResetEmailResponse = response
-        }
+        sendPasswordResetEmailResponse = useCases.sendPasswordResetEmail(userEmailAddress)
     }
 
     fun deleteUser() = viewModelScope.launch{
-        useCases.deleteUser.invoke().collect{ response ->
-            deleteUserResponse = response
-        }
+        deleteUserResponse = useCases.deleteUser()
     }
 
     fun userData() = viewModelScope.launch {
-        useCases.userData.invoke().collect{ response ->
+        useCases.userData().collect{ response ->
             userDataResponse = response
         }
     }
 
     fun getUsers() = viewModelScope.launch {
-        useCases.getUsers.invoke().collect{ response ->
+        useCases.getUsers().collect{ response ->
             usersResponse = response
         }
     }
 
     fun setUserName(userName: String?) = viewModelScope.launch {
-        useCases.setUsername.invoke(userName).collect{ response ->
-            setUsernameResponse = response
-        }
+        setUsernameResponse = useCases.setUsername(userName)
     }
 
     fun setUserEmail(email: String?) = viewModelScope.launch {
-        useCases.setUserEmail.invoke(email).collect{ response ->
-            setUserEmailResponse = response
-        }
+        setUserEmailResponse = useCases.setUserEmail(email)
     }
 
     fun setPhotoUrl(photoUrl: String?) = viewModelScope.launch {
-        useCases.setPhotoUrl.invoke(photoUrl).collect{ response ->
-            setPhotoUrlResponse = response
-        }
+        setPhotoUrlResponse = useCases.setPhotoUrl(photoUrl)
     }
 }

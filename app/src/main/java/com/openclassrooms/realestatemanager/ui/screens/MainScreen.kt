@@ -34,7 +34,6 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterial3Api
-@InternalCoroutinesApi
 fun MainScreen(
     navControllerDrawer: NavController,
     auth: FirebaseAuth,
