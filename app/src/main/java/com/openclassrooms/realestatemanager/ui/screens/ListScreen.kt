@@ -110,7 +110,7 @@ fun ListScreen(
 
                                 },
                 ) {
-                    //ListResponse(filterState,listFilter,navControllerDrawer,navControllerTwoPane,windowSize)
+                    ListResponse(filterState,listFilter,navControllerDrawer,navControllerTwoPane,windowSize,realEstateViewModel)
 
 
                 }

@@ -29,9 +29,11 @@ fun ListResponse(
             when( val items = realEstateViewModel.realEstatesResponse){
                 is Response.Success ->{
                     Log.i("items","Success")
+
                     (items).data.let { response ->
 
                         Log.e("items", "listScreen")
+                        Log.e("items", response[0].city.toString())
                         items(response) { item ->
                             RowList(
                                 item,

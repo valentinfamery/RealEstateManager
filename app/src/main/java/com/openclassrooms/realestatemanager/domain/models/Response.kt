@@ -1,6 +1,9 @@
 package com.openclassrooms.realestatemanager.domain.models
 
 sealed class Response<out T> {
+
+    object Empty: Response<Nothing>()
+
     object Loading: Response<Nothing>()
 
     data class Success<out T>(

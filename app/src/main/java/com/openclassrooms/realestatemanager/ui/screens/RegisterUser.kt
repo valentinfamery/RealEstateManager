@@ -29,6 +29,6 @@ fun RegisterUser(navController: NavController,email : String,password : String,u
         }
     }
 
-    LoginUser(userViewModel,navController)
+
 
 }

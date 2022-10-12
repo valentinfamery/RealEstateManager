@@ -18,9 +18,9 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
 
     var logoutResponse by mutableStateOf<Response<Boolean>>(Response.Loading)
 
-    var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
+    var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Empty)
 
-    var loginUserResponse by mutableStateOf<Response<AuthResult>>(Response.Loading)
+    var loginUserResponse by mutableStateOf<Response<AuthResult>>(Response.Empty)
 
     var sendPasswordResetEmailResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
