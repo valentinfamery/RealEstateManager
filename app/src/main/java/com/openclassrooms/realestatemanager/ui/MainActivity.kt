@@ -1,11 +1,10 @@
 package com.openclassrooms.realestatemanager.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.*
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.collectAsState
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -22,8 +21,6 @@ import com.openclassrooms.realestatemanager.utils.rememberWindowSizeClass
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -70,12 +67,12 @@ class MainActivity : ComponentActivity() {
                                 userViewModel = userViewModel
                             )
                         }
-                        composable("signInScreen") {
-                                    SignInScreen(
-                                        navController = navController,
-                                        userViewModel
-                                    )
-                        }
+                        composable("signInScreen") { SignInScreen(
+                            navigateToMainScreen = {
+                                navController.navigate("mainScreen")
+                        }, navigateToRegisterScreen = {
+                                navController.navigate("registerScreen")
+                        }) }
                         composable("editScreen/{item}",
                             arguments = listOf(
                                 navArgument("item") {

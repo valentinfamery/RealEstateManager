@@ -1,8 +1,6 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
@@ -17,14 +15,13 @@ import javax.inject.Inject
 @HiltViewModel
 class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
 
-    var realEstatesResponse by mutableStateOf<Response<List<RealEstateDatabase>>>(Response.Loading)
+    var realEstatesResponse by mutableStateOf<Response<List<RealEstateDatabase>>>(Response.Empty)
 
     var createRealEstateResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
 
     init {
         getRealEstates()
     }
-
 
     private fun getRealEstates() = viewModelScope.launch {
         useCases.getRealEstates().collect{ response ->
@@ -67,9 +64,4 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : 
 
         }
     }
-
-
-
-
-
 }

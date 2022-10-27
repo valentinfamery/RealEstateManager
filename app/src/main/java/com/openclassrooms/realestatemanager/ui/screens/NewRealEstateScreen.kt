@@ -748,6 +748,7 @@ fun NewRealEstateScreen(
 
 
                             }
+                            else ->{}
                         }
 
                     } catch (e: Exception) {

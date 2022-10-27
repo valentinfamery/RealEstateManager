@@ -27,6 +27,7 @@ fun RegisterUser(navController: NavController,email : String,password : String,u
             Log.i("responseRegisterUser","Success")
             userViewModel.loginUser(email,password)
         }
+        else ->{}
     }
 
 

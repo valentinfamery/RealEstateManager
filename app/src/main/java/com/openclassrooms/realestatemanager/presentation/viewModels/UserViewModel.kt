@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -51,6 +52,7 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
     fun loginUser(userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
         loginUserResponse = Response.Loading
         loginUserResponse = useCases.loginUser(userEmailAddress, userLoginPassword)
+
     }
 
     fun sendPasswordResetEmail(userEmailAddress: String) = viewModelScope.launch {

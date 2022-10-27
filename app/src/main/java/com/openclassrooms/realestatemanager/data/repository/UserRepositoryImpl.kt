@@ -58,8 +58,8 @@ class UserRepositoryImpl @Inject constructor(
         return try {
 
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-
             Response.Success(result)
+
         }catch (e: Exception){
             Response.Failure(e)
         }

@@ -198,6 +198,7 @@ fun MapScreen(
                             }
                         }
                     }
+                    else ->{}
                 }
 
             }
