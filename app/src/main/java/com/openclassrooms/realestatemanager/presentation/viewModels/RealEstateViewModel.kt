@@ -8,6 +8,7 @@ import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : 
         getRealEstates()
     }
 
-    private fun getRealEstates() = viewModelScope.launch {
+      private fun getRealEstates() = viewModelScope.launch(Dispatchers.IO) {
         useCases.getRealEstates().collect{ response ->
             realEstatesResponse = response
         }

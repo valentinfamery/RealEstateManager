@@ -33,55 +33,54 @@ class RealEstateRepositoryImpl @Inject constructor(
 
     override suspend fun getRealEstatesFromFirestore() = flow {
 
-        try {
-            emit(Response.Loading)
+        Log.e("items", "repo1")
 
-            Log.e("items", "repo1")
+        val isNetWorkAvailable = Utils.isInternetAvailable(context)
 
-            val isNetWorkAvailable = Utils.isInternetAvailable(context)
-
-            if(isNetWorkAvailable){
+        if(isNetWorkAvailable){
 
 
-                val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
-                    it.toObject(RealEstate::class.java)
-                }
-
-                realEstateDao.clear()
-
-                for (realEstate in realEstates) {
-
-                    Log.e("items","repo2")
-
-                    val realEstateDatabase = RealEstateDatabase(
-                        realEstate.id!!,
-                        realEstate.type!!,
-                        realEstate.price!!,
-                        realEstate.area!!,
-                        realEstate.numberRoom!!,
-                        realEstate.description!!,
-                        realEstate.numberAndStreet!!,
-                        realEstate.numberApartment!!,
-                        realEstate.city!!,
-                        realEstate.region!!,
-                        realEstate.postalCode!!,
-                        realEstate.country!!,
-                        realEstate.status!!,
-                        realEstate.dateOfEntry!!,
-                        realEstate.dateOfSale!!,
-                        realEstate.realEstateAgent!!,
-                        realEstate.lat!!,
-                        realEstate.lng!!,
-                        realEstate.hospitalsNear,
-                        realEstate.schoolsNear,
-                        realEstate.shopsNear,
-                        realEstate.parksNear,
-                        realEstate.listPhotoWithText,
-                    )
-                    realEstateDao.insertRealEstate(realEstateDatabase)
-                }
+            val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
+                it.toObject(RealEstate::class.java)
             }
 
+            realEstateDao.clear()
+
+            for (realEstate in realEstates) {
+
+                Log.e("items","repo2")
+
+                val realEstateDatabase = RealEstateDatabase(
+                    realEstate.id!!,
+                    realEstate.type!!,
+                    realEstate.price!!,
+                    realEstate.area!!,
+                    realEstate.numberRoom!!,
+                    realEstate.description!!,
+                    realEstate.numberAndStreet!!,
+                    realEstate.numberApartment!!,
+                    realEstate.city!!,
+                    realEstate.region!!,
+                    realEstate.postalCode!!,
+                    realEstate.country!!,
+                    realEstate.status!!,
+                    realEstate.dateOfEntry!!,
+                    realEstate.dateOfSale!!,
+                    realEstate.realEstateAgent!!,
+                    realEstate.lat!!,
+                    realEstate.lng!!,
+                    realEstate.hospitalsNear,
+                    realEstate.schoolsNear,
+                    realEstate.shopsNear,
+                    realEstate.parksNear,
+                    realEstate.listPhotoWithText,
+                )
+                realEstateDao.insertRealEstate(realEstateDatabase)
+            }
+        }
+
+        try {
+            emit(Response.Loading)
             emit(Response.Success(realEstateDao.realEstates()))
         }catch (e: Exception){
             emit(Response.Failure(e))

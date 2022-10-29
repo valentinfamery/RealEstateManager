@@ -48,16 +48,7 @@ fun ListScreen(
 
     if (windowSize == WindowSize.COMPACT) {
 
-        when(val realEstatesResponse = realEstateViewModel.realEstatesResponse){
-            is Response.Empty ->{Log.e("realEstatesResponse", "Empty")}
-            is Response.Loading ->{
-                Log.e("realEstatesResponse", "Loading")
-                Column(modifier = Modifier.fillMaxSize().padding(innerPadding), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    CircularProgressIndicator()
-                }
-            }
-            is Response.Success ->{
-                Log.e("realEstatesResponse", "Success")
+
                 Scaffold(
                     modifier = Modifier.padding(innerPadding),
                     topBar = {
@@ -92,42 +83,50 @@ fun ListScreen(
 
                     },
                     content = {
-                        SwipeRefresh(
-                            modifier = Modifier.padding(it),
-                            state = rememberSwipeRefreshState(refreshing),
-                            onRefresh = {
-
-                            },
-                        ) {
-                            LazyColumn {
-                                            realEstatesResponse.data.let { response ->
-                                                Log.e("items", "listScreen")
-                                                Log.e("items", response[0].city.toString())
-                                                items(response) { item ->
-                                                    RowList(
-                                                        item,
-                                                        realEstateViewModel,
-                                                        navControllerDrawer,
-                                                        windowSize,
-                                                        navControllerTwoPane
-                                                    )
-                                                }
-                                            }
+                        when(val realEstatesResponse = realEstateViewModel.realEstatesResponse){
+                            is Response.Empty ->{Log.e("realEstatesResponse", "Empty")}
+                            is Response.Loading ->{
+                                Log.e("realEstatesResponse", "Loading")
+                                Column(modifier = Modifier.fillMaxSize().padding(innerPadding), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                                    CircularProgressIndicator()
+                                }
                             }
+                            is Response.Success -> {
+                                Log.e("realEstatesResponse", "Success")
+
+                                SwipeRefresh(
+                                    modifier = Modifier.padding(it),
+                                    state = rememberSwipeRefreshState(refreshing),
+                                    onRefresh = {
+
+                                    },
+                                ) {
+                                    LazyColumn {
+                                        realEstatesResponse.data.let { response ->
+                                            Log.e("items", "listScreen")
+                                            Log.e("items", response[0].city.toString())
+                                            items(response) { item ->
+                                                RowList(
+                                                    item,
+                                                    realEstateViewModel,
+                                                    navControllerDrawer,
+                                                    windowSize,
+                                                    navControllerTwoPane
+                                                )
+                                            }
+                                        }
+                                    }
 
 
+                                }
+
+                            }is Response.Failure ->{
+                                    Log.e("realEstatesResponse", "Failure")
+                            }
                         }
                     }
                 )
-            }
-            is Response.Failure ->{
-                Log.e("realEstatesResponse", "Failure")
-            }
-        }
-
-
     }
-
 }
 
 

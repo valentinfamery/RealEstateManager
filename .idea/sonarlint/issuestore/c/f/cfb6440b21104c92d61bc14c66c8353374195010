@@ -1,0 +1,6 @@
+
+dkotlin:S107
+"HThis function has 20 parameters, which is greater than the 7 authorized.(ÎØô•úÿÿÿÿ
+]kotlin:S6309"@Functions returning "Flow" or "Channel" should not be suspending(ÃèŞéøÿÿÿÿ
+]kotlin:S6309
+"@Functions returning "Flow" or "Channel" should not be suspending(ÎØô•úÿÿÿÿ
