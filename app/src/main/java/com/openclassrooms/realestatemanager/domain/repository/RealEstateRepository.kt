@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface RealEstateRepository {
 
-    suspend fun getRealEstatesFromFirestore() : Flow<Response<List<RealEstateDatabase>>>
+    suspend fun getRealEstatesFromFirestore() : Response<List<RealEstateDatabase>>
 
     suspend fun createRealEstate(
         type: String,

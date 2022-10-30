@@ -1,8 +1,12 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.Snapshot.Companion.withMutableSnapshot
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.models.Response
@@ -13,8 +17,9 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(SavedStateHandleSaveableApi::class)
 @HiltViewModel
-class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
+class RealEstateViewModel @Inject constructor(private val useCases: UseCases,private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     var realEstatesResponse by mutableStateOf<Response<List<RealEstateDatabase>>>(Response.Empty)
 
@@ -25,9 +30,8 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : 
     }
 
       private fun getRealEstates() = viewModelScope.launch(Dispatchers.IO) {
-        useCases.getRealEstates().collect{ response ->
-            realEstatesResponse = response
-        }
+              realEstatesResponse = useCases.getRealEstates()
+
     }
 
     fun createRealEstate(
