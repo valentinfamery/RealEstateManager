@@ -1,8 +1,10 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,7 +45,11 @@ fun ListScreen(
 ) {
     val context = LocalContext.current
     val refreshing by remember { mutableStateOf(false) }
-    val launcherActivityResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult: ActivityResult -> }
+    val launcherActivityResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult: ActivityResult ->
+        if(activityResult.resultCode == RESULT_OK){
+            Toast.makeText(context,"Ajout Réussi",Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
     if (windowSize == WindowSize.COMPACT) {

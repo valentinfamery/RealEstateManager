@@ -741,6 +741,8 @@ fun NewRealEstateScreen(
                                         checkedStateParks.value
                                     )
 
+                                    activity.setResult(RESULT_OK)
+
                                     activity.finish()
 
 

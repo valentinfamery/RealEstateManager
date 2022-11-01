@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @OptIn(SavedStateHandleSaveableApi::class)
 @HiltViewModel
-class RealEstateViewModel @Inject constructor(private val useCases: UseCases,private val savedStateHandle: SavedStateHandle) : ViewModel() {
+class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
 
     var realEstatesResponse by mutableStateOf<Response<List<RealEstateDatabase>>>(Response.Empty)
 
@@ -29,9 +29,8 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases,pri
         getRealEstates()
     }
 
-      private fun getRealEstates() = viewModelScope.launch(Dispatchers.IO) {
+    fun getRealEstates() = viewModelScope.launch(Dispatchers.IO) {
               realEstatesResponse = useCases.getRealEstates()
-
     }
 
     fun createRealEstate(
