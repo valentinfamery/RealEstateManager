@@ -94,26 +94,25 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun userData() = flow {
-        try {
-            emit(Response.Loading)
+    override suspend fun userData() : Response<User?> {
+        return try {
+            Response.Loading
 
             val user = firebaseAuth.currentUser
             val uid = user?.uid
 
             val userData = firestore.collection("users").document(uid!!).get().await().toObject(User::class.java)
 
-            emit(Response.Success(userData))
+            Response.Success(userData)
         }catch (e: Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
     }
 
     // Remove the current element from the iterator and the list.
-    override fun getUsers() = flow {
-
-        try {
-            emit(Response.Loading)
+    override suspend fun getUsers()  : Response<List<User>> {
+        return try {
+            Response.Loading
 
             val list = firestore.collection("users").get().await().map {
                 it.toObject(User::class.java)
@@ -128,16 +127,14 @@ class UserRepositoryImpl @Inject constructor(
                 }
             }
 
-            emit(Response.Success(list))
+            Response.Success(list)
         }catch (e: Exception){
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
-
     }
 
     override suspend fun setUserEmail(email: String?) : Response<Boolean> {
         return try {
-
             firebaseAuth.currentUser!!.updateEmail(email!!)
             firestore.collection("users").document(firebaseAuth.uid!!).update("email", email)
 

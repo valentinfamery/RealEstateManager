@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,7 +47,8 @@ fun MapScreen(
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
     navControllerTwoPane: NavHostController,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    realEstates: List<RealEstateDatabase>?
 ) {
     val navController = rememberNavController()
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -57,7 +59,7 @@ fun MapScreen(
         mutableStateOf(LatLng(0.0, 0.0))
     }
 
-    val items = realEstateViewModel.realEstatesResponse
+    val items by realEstateViewModel.realEstates.observeAsState()
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
@@ -171,38 +173,44 @@ fun MapScreen(
                 properties = mapProperties,
                 uiSettings = uiSettings,
             ) {
-                when (items) {
-                    is Response.Loading -> {
-                    }
-                    is Response.Success -> {
-                        items.data.let { items->
-                            items.forEach {
 
-                                val realEstate: RealEstateDatabase = it
 
-                                if (it.lat != null && it.lng != null) {
+                //when (items) {
+                    //is Response.Loading -> {
+                    //}
+                    //is Response.Success -> {
+                        realEstates.let { items ->
 
-                                    val latLng = LatLng(
-                                        it.lat!!, it.lng!!
-                                    )
-                                    Marker(
-                                        state = MarkerState(position = latLng),
-                                        title = "title",
-                                        onInfoWindowClick = {
-                                            val item = Uri.encode(Gson().toJson(realEstate))
+                            if (!items?.isEmpty()!!) {
 
-                                            navControllerTwoPane.navigate("detailScreen/$item")
-                                        }
-                                    )
+                                items?.forEach {
+
+                                    val realEstate: RealEstateDatabase = it
+
+
+                                    if (it.lat != null && it.lng != null) {
+
+                                        val latLng = LatLng(
+                                            it.lat!!, it.lng!!
+                                        )
+                                        Marker(
+                                            state = MarkerState(position = latLng),
+                                            title = "title",
+                                            onInfoWindowClick = {
+                                                val item = Uri.encode(Gson().toJson(realEstate))
+
+                                                navControllerTwoPane.navigate("detailScreen/$item")
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-                    else ->{}
-                }
+                    //}
+                    //else ->{}
+                //}
 
             }
-
 
         } else {
             Text(text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ")

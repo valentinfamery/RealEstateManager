@@ -17,9 +17,9 @@ interface UserRepository {
 
     suspend fun deleteUser() : Response<Boolean>
 
-    fun userData(): Flow<Response<User?>>
+    suspend fun userData(): Response<User?>
 
-    fun getUsers(): Flow<Response<List<User>>>
+    suspend fun getUsers(): Response<List<User>>
 
     suspend fun setUserEmail(email: String?) : Response<Boolean>
 

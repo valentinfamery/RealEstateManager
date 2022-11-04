@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +29,6 @@ import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -54,6 +54,7 @@ fun MainScreen(
 
     val navControllerTwoPane = rememberNavController()
 
+    val realEstates by realEstateViewModel.realEstates.observeAsState()
 
 
     ModalNavigationDrawer(
@@ -87,7 +88,8 @@ fun MainScreen(
                                     innerPadding,
                                     navControllerDrawer,
                                     windowSize,
-                                    navControllerTwoPane
+                                    navControllerTwoPane,
+                                    realEstates
                                 )
                             }
                             composable(Screen.MapScreen.route) {
@@ -97,7 +99,8 @@ fun MainScreen(
                                     realEstateViewModel,
                                     navControllerDrawer,
                                     navControllerTwoPane,
-                                    windowSize
+                                    windowSize,
+                                    realEstates
                                 )
                             }
                         }
@@ -191,7 +194,8 @@ fun MainScreen(
                                         innerPadding,
                                         navControllerDrawer,
                                         windowSize,
-                                        navControllerTwoPane
+                                        navControllerTwoPane,
+                                        realEstates
                                     )
                                 }
                                 composable(Screen.MapScreen.route) {
@@ -201,7 +205,8 @@ fun MainScreen(
                                         realEstateViewModel,
                                         navControllerDrawer,
                                         navControllerTwoPane,
-                                        windowSize
+                                        windowSize,
+                                        realEstates
                                     )
                                 }
                             }

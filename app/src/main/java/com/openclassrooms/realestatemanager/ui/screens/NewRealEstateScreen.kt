@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,11 +46,9 @@ import androidx.core.content.ContextCompat
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
 import com.openclassrooms.realestatemanager.domain.models.Response
-import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
-import kotlinx.coroutines.InternalCoroutinesApi
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -710,9 +707,8 @@ fun NewRealEstateScreen(
                 onClick = {
 
                     try {
-                        when(userViewModel.userDataResponse){
-                            is Response.Success ->{
-                                (userViewModel.userDataResponse as Response.Success<User?>).data.let { response ->
+
+
 
                                     listPhotos.size >= 1
 
@@ -734,24 +730,20 @@ fun NewRealEstateScreen(
                                         listPhotos,
                                         textDateOfEntry,
                                         textDateOfSale,
-                                        response!!.username.toString(),
+                                        "",
                                         checkedStateHopital.value,
                                         checkedStateSchool.value,
                                         checkedStateShops.value,
                                         checkedStateParks.value
                                     )
 
-                                    activity.setResult(RESULT_OK)
-
-                                    activity.finish()
 
 
-                                }
 
 
-                            }
-                            else ->{}
-                        }
+
+
+
 
                     } catch (e: Exception) {
                         Toast.makeText(
@@ -773,6 +765,24 @@ fun NewRealEstateScreen(
 
         }
 
+    }
+
+    when(realEstateViewModel.createRealEstateResponse){
+        is Response.Success ->{
+            Toast.makeText(
+                context,
+                "Ajout reussi",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            activity.setResult(RESULT_OK)
+
+            activity.finish()
+
+            realEstateViewModel.refreshRealEstates()
+
+        }
+        else -> {}
     }
 
 }

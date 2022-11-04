@@ -64,10 +64,7 @@ fun EditScreenRealEstate(
     navController: NavHostController,
     userViewModel: UserViewModel = hiltViewModel()
 ) {
-
     val listPhotos2 = itemRealEstate?.listPhotoWithText
-
-
 
     val openDialog = remember { mutableStateOf(false) }
     var titlePhoto by remember { mutableStateOf("") }

@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.Flow
 interface RealEstateDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertRealEstate(realEstate: RealEstateDatabase)
+    suspend fun insertRealEstate(realEstate: RealEstateDatabase)
 
     @Query("SELECT * FROM RealEstateDatabase")
-    fun realEstates(): List<RealEstateDatabase>
+    fun realEstates(): Flow<List<RealEstateDatabase>>
 
     @Query("DELETE FROM RealEstateDatabase")
-    fun clear()
+    suspend fun clear()
 
     @Query("SELECT * FROM RealEstateDatabase")
     fun getRealEstatesWithCursor(): Cursor

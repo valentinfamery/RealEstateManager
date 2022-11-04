@@ -17,6 +17,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,14 +32,20 @@ class RealEstateRepositoryImpl @Inject constructor(
     private val context: Context,
     private val realEstateDao: RealEstateDao): RealEstateRepository {
 
-    override suspend fun getRealEstatesFromFirestore() : Response<List<RealEstateDatabase>> {
-        return try {
+
+    override fun realEstates() : Flow<List<RealEstateDatabase>> {
+        return realEstateDao.realEstates().flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun refreshRealEstatesFromFirestore() {
+
 
             Log.e("items", "repo1")
 
             val isNetWorkAvailable = Utils.isInternetAvailable(context)
 
             if(isNetWorkAvailable){
+
 
 
                 val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
@@ -81,11 +88,6 @@ class RealEstateRepositoryImpl @Inject constructor(
             }
 
 
-            Response.Loading
-            Response.Success(realEstateDao.realEstates())
-        }catch (e: Exception){
-            Response.Failure(e)
-        }
 
     }
 
@@ -110,10 +112,10 @@ class RealEstateRepositoryImpl @Inject constructor(
         checkedStateSchool : Boolean,
         checkedStateShops : Boolean,
         checkedStateParks : Boolean
-    ) = flow {
+    ) : Response<Boolean> {
 
-        try {
-            emit(Response.Loading)
+        return try {
+            Response.Loading
 
             val address3 = "$numberAndStreet,$city,$region"
             val id = UUID.randomUUID().toString()
@@ -196,8 +198,10 @@ class RealEstateRepositoryImpl @Inject constructor(
                 }
             })
 
+            Response.Success(true)
+
         } catch (e: Exception) {
-            emit(Response.Failure(e))
+            Response.Failure(e)
         }
 
     }

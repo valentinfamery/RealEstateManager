@@ -1,36 +1,45 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.Snapshot.Companion.withMutableSnapshot
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.models.Response
+import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(SavedStateHandleSaveableApi::class)
 @HiltViewModel
-class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
+class RealEstateViewModel @Inject constructor(private val useCases: UseCases,private val realEstateRepository: RealEstateRepository) : ViewModel() {
 
-    var realEstatesResponse by mutableStateOf<Response<List<RealEstateDatabase>>>(Response.Empty)
+    val realEstates = realEstateRepository.realEstates().asLiveData(Dispatchers.IO)
 
-    var createRealEstateResponse by mutableStateOf<Response<Void?>>(Response.Success(null))
+    var realEstatesResponse2 by mutableStateOf<Response<Boolean>>(Response.Loading)
+
+    var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
+
+    private val _isRefreshing = MutableStateFlow(false)
+
+    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
+
+
+
 
     init {
-        getRealEstates()
+        refreshRealEstates()
     }
 
-    fun getRealEstates() = viewModelScope.launch(Dispatchers.IO) {
-              realEstatesResponse = useCases.getRealEstates()
+    fun refreshRealEstates() = viewModelScope.launch() {
+        _isRefreshing.emit(true)
+        useCases.getRealEstates()
+        delay(2000)
+        _isRefreshing.emit(false)
     }
 
     fun createRealEstate(
@@ -54,8 +63,8 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : 
         checkedStateSchool : Boolean,
         checkedStateShops : Boolean,
         checkedStateParks : Boolean
-    ) = viewModelScope.launch {
-        useCases.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        createRealEstateResponse = useCases.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
             numberApartment,
             city,
             region,
@@ -63,9 +72,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases) : 
             country, status,listPhotosUri,dateEntry,dateSale,realEstateAgent,checkedStateHospital,
             checkedStateSchool,
             checkedStateShops,
-            checkedStateParks).collect{response ->
-            createRealEstateResponse = response
+            checkedStateParks)
 
-        }
     }
 }

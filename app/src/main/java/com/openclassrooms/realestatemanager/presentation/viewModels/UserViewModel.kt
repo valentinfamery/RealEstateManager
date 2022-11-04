@@ -64,15 +64,11 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
     }
 
     fun userData() = viewModelScope.launch {
-        useCases.userData().collect{ response ->
-            userDataResponse = response
-        }
+            userDataResponse = useCases.userData()
     }
 
     fun getUsers() = viewModelScope.launch {
-        useCases.getUsers().collect{ response ->
-            usersResponse = response
-        }
+        usersResponse = useCases.getUsers()
     }
 
     fun setUserName(userName: String?) = viewModelScope.launch {

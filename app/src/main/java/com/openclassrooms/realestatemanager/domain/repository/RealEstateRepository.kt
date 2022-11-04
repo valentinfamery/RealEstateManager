@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface RealEstateRepository {
 
-    suspend fun getRealEstatesFromFirestore() : Response<List<RealEstateDatabase>>
+    suspend fun refreshRealEstatesFromFirestore()
+
+    fun realEstates() : Flow<List<RealEstateDatabase>>
 
     suspend fun createRealEstate(
         type: String,
@@ -28,7 +30,7 @@ interface RealEstateRepository {
         checkedStateSchool : Boolean,
         checkedStateShops : Boolean,
         checkedStateParks : Boolean
-    ) : Flow<Response<Void?>>
+    ) : Response<Boolean>
 
 
 
