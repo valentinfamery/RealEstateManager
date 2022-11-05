@@ -54,7 +54,7 @@ fun MainScreen(
 
     val navControllerTwoPane = rememberNavController()
 
-    val realEstates by realEstateViewModel.realEstates.observeAsState()
+
 
 
     ModalNavigationDrawer(
@@ -88,8 +88,7 @@ fun MainScreen(
                                     innerPadding,
                                     navControllerDrawer,
                                     windowSize,
-                                    navControllerTwoPane,
-                                    realEstates
+                                    navControllerTwoPane
                                 )
                             }
                             composable(Screen.MapScreen.route) {
@@ -99,8 +98,7 @@ fun MainScreen(
                                     realEstateViewModel,
                                     navControllerDrawer,
                                     navControllerTwoPane,
-                                    windowSize,
-                                    realEstates
+                                    windowSize
                                 )
                             }
                         }
@@ -194,8 +192,7 @@ fun MainScreen(
                                         innerPadding,
                                         navControllerDrawer,
                                         windowSize,
-                                        navControllerTwoPane,
-                                        realEstates
+                                        navControllerTwoPane
                                     )
                                 }
                                 composable(Screen.MapScreen.route) {
@@ -205,8 +202,7 @@ fun MainScreen(
                                         realEstateViewModel,
                                         navControllerDrawer,
                                         navControllerTwoPane,
-                                        windowSize,
-                                        realEstates
+                                        windowSize
                                     )
                                 }
                             }

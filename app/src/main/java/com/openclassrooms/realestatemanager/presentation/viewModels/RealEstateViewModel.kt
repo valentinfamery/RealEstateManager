@@ -32,13 +32,14 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases,pri
 
 
     init {
-        refreshRealEstates()
+        viewModelScope.launch {
+            useCases.getRealEstates()
+        }
     }
 
     fun refreshRealEstates() = viewModelScope.launch() {
         _isRefreshing.emit(true)
         useCases.getRealEstates()
-        delay(2000)
         _isRefreshing.emit(false)
     }
 

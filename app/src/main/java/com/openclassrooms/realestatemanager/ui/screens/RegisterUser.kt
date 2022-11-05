@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.domain.models.Response
@@ -25,7 +26,14 @@ fun RegisterUser(navController: NavController,email : String,password : String,u
         }
         is Response.Success -> {
             Log.i("responseRegisterUser","Success")
-            userViewModel.loginUser(email,password)
+
+            Toast.makeText(context,"utilisateur ajouté avec succes", Toast.LENGTH_SHORT).show()
+
+            LaunchedEffect(responseRegisterUser){
+                if(responseRegisterUser is Response.Success){
+                    navController.popBackStack()
+                }
+            }
         }
         else ->{}
     }

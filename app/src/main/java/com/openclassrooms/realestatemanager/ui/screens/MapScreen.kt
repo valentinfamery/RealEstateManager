@@ -47,13 +47,14 @@ fun MapScreen(
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
     navControllerTwoPane: NavHostController,
-    windowSize: WindowSize,
-    realEstates: List<RealEstateDatabase>?
+    windowSize: WindowSize
 ) {
     val navController = rememberNavController()
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
+
+    val realEstates by realEstateViewModel.realEstates.observeAsState()
 
     var userPosition by remember {
         mutableStateOf(LatLng(0.0, 0.0))
@@ -173,7 +174,6 @@ fun MapScreen(
                 properties = mapProperties,
                 uiSettings = uiSettings,
             ) {
-
 
                 //when (items) {
                     //is Response.Loading -> {

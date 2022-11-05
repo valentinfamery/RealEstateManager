@@ -41,18 +41,13 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
         logoutResponse = useCases.logout()
     }
 
-    fun registerUser(
-        userName: String,
-        userEmailAddress: String,
-        userLoginPassword: String
-    ) = viewModelScope.launch {
+    fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
         registerUserResponse = useCases.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword)
     }
 
     fun loginUser(userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
         loginUserResponse = Response.Loading
         loginUserResponse = useCases.loginUser(userEmailAddress, userLoginPassword)
-
     }
 
     fun sendPasswordResetEmail(userEmailAddress: String) = viewModelScope.launch {
