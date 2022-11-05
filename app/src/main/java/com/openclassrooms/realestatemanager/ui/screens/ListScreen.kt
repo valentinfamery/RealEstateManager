@@ -108,8 +108,6 @@ fun ListScreen(
                                     LazyColumn {
                                         realEstates?.let { response ->
                                             if(!response.isEmpty()) {
-                                                Log.e("items", "listScreen")
-                                                Log.e("items", response[0].city.toString())
                                                 items(response) { item ->
                                                     RowList(
                                                         item,

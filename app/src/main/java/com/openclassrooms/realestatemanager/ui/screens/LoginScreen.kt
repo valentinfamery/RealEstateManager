@@ -56,7 +56,6 @@ fun SignInScreen(
                         navigateToMainScreen()
                     }
                 }
-
             }
 
     }

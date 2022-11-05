@@ -42,6 +42,7 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
     }
 
     fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
+        registerUserResponse = Response.Loading
         registerUserResponse = useCases.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword)
     }
 

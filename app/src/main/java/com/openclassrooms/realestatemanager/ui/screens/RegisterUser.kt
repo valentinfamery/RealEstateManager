@@ -2,9 +2,14 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.domain.models.Response
@@ -25,17 +30,34 @@ fun RegisterUser(navController: NavController,email : String,password : String,u
             CircularProgressIndicator(progress = 0.75f)
         }
         is Response.Success -> {
-            Log.i("responseRegisterUser","Success")
+            userViewModel.loginUser(email,password)
+        }
+        else ->{}
+    }
 
-            Toast.makeText(context,"utilisateur ajouté avec succes", Toast.LENGTH_SHORT).show()
-
-            LaunchedEffect(responseRegisterUser){
-                if(responseRegisterUser is Response.Success){
-                    navController.popBackStack()
+    when (val loginResponse = userViewModel.loginUserResponse) {
+        is Response.Empty -> {}
+        is Response.Failure -> {
+            Toast.makeText(context, loginResponse.e.toString(), Toast.LENGTH_SHORT).show()
+        }
+        is Response.Loading -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is Response.Success -> {
+            LaunchedEffect(userViewModel.loginUserResponse) {
+                if (userViewModel.loginUserResponse is Response.Success) {
+                    Toast.makeText(context, "Connexion Réussi", Toast.LENGTH_SHORT).show()
+                    navController.navigate("mainScreen")
                 }
             }
         }
-        else ->{}
+
     }
 
 

@@ -56,8 +56,6 @@ class RealEstateRepositoryImpl @Inject constructor(
 
                 for (realEstate in realEstates) {
 
-                    Log.e("items","repo2")
-
                     val realEstateDatabase = RealEstateDatabase(
                         realEstate.id!!,
                         realEstate.type!!,
