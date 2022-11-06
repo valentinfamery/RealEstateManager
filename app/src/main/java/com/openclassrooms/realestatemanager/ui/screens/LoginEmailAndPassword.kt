@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,10 +12,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,6 +28,7 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
                           ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().also {
         it.padding(250.dp, 250.dp, 250.dp, 250.dp)
@@ -103,5 +107,16 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
             Text("Login")
         }
 
+    }
+
+    when(val resetPasswordResponse = userViewModel.sendPasswordResetEmailResponse){
+        is Response.Failure ->{
+            Toast.makeText(context, resetPasswordResponse.e.toString(), Toast.LENGTH_SHORT).show()
+        }
+        is Response.Success -> {
+            Toast.makeText(context, "reussi , consulter vos email", Toast.LENGTH_SHORT).show()
+        }
+        Response.Empty -> {}
+        Response.Loading -> {}
     }
 }
