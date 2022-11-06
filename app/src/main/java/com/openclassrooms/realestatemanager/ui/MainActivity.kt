@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-                    if (isNetWorkAvailable) {
+
 
                         val currentUser = auth.currentUser
 
@@ -55,9 +55,6 @@ class MainActivity : ComponentActivity() {
                             "mainScreen"
                         }
 
-                    } else {
-                        startScreen = "mainScreen"
-                    }
 
 
                 val windowSize = rememberWindowSizeClass()
