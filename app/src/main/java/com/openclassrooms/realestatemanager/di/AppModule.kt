@@ -72,15 +72,10 @@ object AppModule {
         getRealEstates = GetRealEstates(realEstateRepository),
         createRealEstate = CreateRealEstate(realEstateRepository),
         registerUser = RegisterUser(userRepository),
-        logout = Logout(userRepository),
         loginUser = LoginUser(userRepository),
         sendPasswordResetEmail = SendPasswordResetEmail(userRepository),
         deleteUser = DeleteUser(userRepository),
-        userData = UserData(userRepository),
-        getUsers = GetUsers(userRepository),
-        setUserEmail = SetUserEmail(userRepository),
-        setUsername = SetUsername(userRepository),
-        setPhotoUrl = SetPhotoUrl(userRepository)
+        userData = UserData(userRepository)
     )
 
 }

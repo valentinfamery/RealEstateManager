@@ -19,12 +19,4 @@ interface UserRepository {
 
     suspend fun userData(): Response<User?>
 
-    suspend fun getUsers(): Response<List<User>>
-
-    suspend fun setUserEmail(email: String?) : Response<Boolean>
-
-    suspend fun setUsername(username: String?) : Response<Boolean>
-
-    suspend fun setPhotoUrl(photoUrl: String?) : Response<Boolean>
-
 }

@@ -17,33 +17,14 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
 
-    var logoutResponse by mutableStateOf<Response<Boolean>>(Response.Loading)
-
     var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Empty)
-
     var loginUserResponse by mutableStateOf<Response<AuthResult>>(Response.Empty)
-
     var sendPasswordResetEmailResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
-
     var deleteUserResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
-
     var userDataResponse by mutableStateOf<Response<User?>>(Response.Empty)
-
-    var usersResponse by mutableStateOf<Response<List<User>>>(Response.Loading)
-
-    var setUsernameResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
-
-    var setUserEmailResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
-
-    var setPhotoUrlResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
     init{
         userData()
-    }
-
-    fun logout() = viewModelScope.launch {
-        logoutResponse = useCases.logout()
-        userDataResponse = Response.Empty
     }
 
     fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
@@ -68,21 +49,5 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
 
     fun userData() = viewModelScope.launch {
             userDataResponse = useCases.userData()
-    }
-
-    fun getUsers() = viewModelScope.launch {
-        usersResponse = useCases.getUsers()
-    }
-
-    fun setUserName(userName: String?) = viewModelScope.launch {
-        setUsernameResponse = useCases.setUsername(userName)
-    }
-
-    fun setUserEmail(email: String?) = viewModelScope.launch {
-        setUserEmailResponse = useCases.setUserEmail(email)
-    }
-
-    fun setPhotoUrl(photoUrl: String?) = viewModelScope.launch {
-        setPhotoUrlResponse = useCases.setPhotoUrl(photoUrl)
     }
 }
