@@ -73,7 +73,7 @@ fun EditScreenRealEstate(
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
-    val userDataState  = userViewModel.userData()
+
 
     var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
 

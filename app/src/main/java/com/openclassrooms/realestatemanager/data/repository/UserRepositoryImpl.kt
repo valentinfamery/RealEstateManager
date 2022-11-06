@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.data.repository
 
 import android.content.Context
+import android.util.Log
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -98,7 +99,9 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             val user = firebaseAuth.currentUser
             val uid = user?.uid
+            Log.e("userData()","uid"+uid.toString())
             val userData = firestore.collection("users").document(uid!!).get().await().toObject(User::class.java)
+            Log.e("userData()","userData"+userData?.username.toString())
             Response.Success(userData)
         }catch (e: Exception){
             Response.Failure(e)

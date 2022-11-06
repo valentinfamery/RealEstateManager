@@ -37,18 +37,25 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
 
     var setPhotoUrlResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
+    init{
+        userData()
+    }
+
     fun logout() = viewModelScope.launch {
         logoutResponse = useCases.logout()
+        userDataResponse = Response.Empty
     }
 
     fun registerUser(userName: String, userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
         registerUserResponse = Response.Loading
         registerUserResponse = useCases.registerUser(userName = userName, userEmailAddress = userEmailAddress, userLoginPassword = userLoginPassword)
+        userData()
     }
 
     fun loginUser(userEmailAddress: String, userLoginPassword: String) = viewModelScope.launch {
         loginUserResponse = Response.Loading
         loginUserResponse = useCases.loginUser(userEmailAddress, userLoginPassword)
+        userData()
     }
 
     fun sendPasswordResetEmail(userEmailAddress: String) = viewModelScope.launch {

@@ -20,8 +20,6 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases,pri
 
     val realEstates = realEstateRepository.realEstates().asLiveData()
 
-    var realEstatesResponse2 by mutableStateOf<Response<Boolean>>(Response.Loading)
-
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
     private val _isRefreshing = MutableStateFlow(false)
@@ -60,7 +58,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases,pri
         checkedStateSchool : Boolean,
         checkedStateShops : Boolean,
         checkedStateParks : Boolean
-    ) = viewModelScope.launch(Dispatchers.IO) {
+    ) = viewModelScope.launch {
         createRealEstateResponse = useCases.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
             numberApartment,
             city,

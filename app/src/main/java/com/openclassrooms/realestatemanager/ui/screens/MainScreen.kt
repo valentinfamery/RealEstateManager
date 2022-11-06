@@ -42,9 +42,6 @@ fun MainScreen(
     windowSize: WindowSize
 ) {
 
-    userViewModel.userData()
-
-
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItem by remember { mutableStateOf(0) }

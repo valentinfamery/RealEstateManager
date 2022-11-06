@@ -69,8 +69,6 @@ fun NewRealEstateScreen(
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
-    val userDataState = userViewModel.userData()
-
     var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
 
     val someActivityResultLauncher = rememberLauncherForActivityResult(
@@ -776,11 +774,8 @@ fun NewRealEstateScreen(
             ).show()
 
             activity.setResult(RESULT_OK)
-
-            activity.finish()
-
             realEstateViewModel.refreshRealEstates()
-
+            activity.finish()
         }
         else -> {}
     }
