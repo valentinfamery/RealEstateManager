@@ -30,16 +30,6 @@ class UserViewModel @Inject constructor(private val useCases: UseCases,private v
     var deleteUserResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
     var userDataResponse by mutableStateOf<Response<User?>>(Response.Empty)
 
-    val isNetWorkAvailable = flow {
-        val isNetWorkAvailable = userRepository.isNetWorkAvailable()
-        val data = state.getStateFlow("Key",isNetWorkAvailable).value
-        state["Key"] = data
-        emit(isNetWorkAvailable)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = true
-    )
 
     init{
         userData()

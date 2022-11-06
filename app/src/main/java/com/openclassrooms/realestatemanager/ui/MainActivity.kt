@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 val realEstateViewModel: RealEstateViewModel = hiltViewModel()
 
 
-                val isNetWorkAvailable by userViewModel.isNetWorkAvailable.collectAsState()
+
 
 
 
@@ -70,8 +70,7 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 userViewModel,
                                 realEstateViewModel,
-                                windowSize,
-                                isNetWorkAvailable
+                                windowSize
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
@@ -118,8 +117,7 @@ class MainActivity : ComponentActivity() {
                             RealEstateDetailScreen(
                                 realEstateViewModel,
                                 item,
-                                navController,
-                                isNetWorkAvailable
+                                navController
                             )
                         }
 

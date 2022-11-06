@@ -109,10 +109,4 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun isNetWorkAvailable() : Boolean{
-        Log.e("isNetWorkAvailable()",Utils.isInternetAvailable(context).toString())
-        return Utils.isInternetAvailable(context)
-    }
-
-
 }

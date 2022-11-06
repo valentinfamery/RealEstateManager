@@ -29,9 +29,7 @@ fun DrawerScreen(
     scope: CoroutineScope,
     navController: NavController,
     auth: FirebaseAuth,
-    userViewModel: UserViewModel,
-    isNetWorkAvailable: Boolean
-
+    userViewModel: UserViewModel
 ) {
     val items = listOf(Icons.Default.Settings)
     val selectedItem = remember { mutableStateOf(items[0]) }
@@ -88,7 +86,7 @@ fun DrawerScreen(
 
 
 
-            if (isNetWorkAvailable) {
+
 
                 Button(
                     onClick = {
@@ -114,5 +112,5 @@ fun DrawerScreen(
             }
 
 
-    }
+
 }

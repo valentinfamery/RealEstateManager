@@ -40,8 +40,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,
     itemRealEstate: RealEstate?,
-    navController: NavController,
-    isNetWorkAvailable: Boolean,
+    navController: NavController
     ) {
 
     if (itemRealEstate != null) {
@@ -52,7 +51,6 @@ fun RealEstateDetailScreen(
 
         Scaffold(
             floatingActionButton = {
-                if (isNetWorkAvailable) {
                     ExtendedFloatingActionButton(
                         onClick = {
 
@@ -66,7 +64,6 @@ fun RealEstateDetailScreen(
                         text = { Text(text = "Edit") },
                         modifier = Modifier.clip(RoundedCornerShape(15.dp))
                     )
-                }
             },
             content = {
 

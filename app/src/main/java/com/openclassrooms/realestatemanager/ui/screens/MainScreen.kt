@@ -38,8 +38,7 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    windowSize: WindowSize,
-    isNetWorkAvailable: Boolean
+    windowSize: WindowSize
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -65,8 +64,7 @@ fun MainScreen(
                 scope,
                 navControllerDrawer,
                 auth,
-                userViewModel,
-                isNetWorkAvailable
+                userViewModel
             )
         },
         content = {
@@ -121,7 +119,7 @@ fun MainScreen(
                     },
                     floatingActionButton = {
 
-                            if (isNetWorkAvailable) {
+
                                 FloatingActionButton(
                                     onClick = { /* do something */
                                         context.startActivity(
@@ -133,7 +131,7 @@ fun MainScreen(
                                 ) {
                                     Icon(Icons.Filled.Add, "Localized description")
                                 }
-                            }
+
 
                     }
 
@@ -257,8 +255,7 @@ fun MainScreen(
                                     RealEstateDetailScreen(
                                         realEstateViewModel,
                                         item,
-                                        navControllerDrawer,
-                                        isNetWorkAvailable,
+                                        navControllerDrawer
                                     ) }
                                 composable("start"){ Start()}
                             }
