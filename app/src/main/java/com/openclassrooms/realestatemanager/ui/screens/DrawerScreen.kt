@@ -90,9 +90,7 @@ fun DrawerScreen(
 
                 Button(
                     onClick = {
-
                         auth.signOut()
-                        userViewModel.userDataResponse = Response.Empty
                         navController.navigate("signInScreen")
                     },
                     modifier = Modifier.constrainAs(buttonLogout) {
