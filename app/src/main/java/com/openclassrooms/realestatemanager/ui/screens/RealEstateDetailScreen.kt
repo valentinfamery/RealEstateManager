@@ -41,9 +41,10 @@ fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,
     itemRealEstate: RealEstate?,
     navController: NavController,
+    isNetWorkAvailable: Boolean,
     ) {
 
-    if(itemRealEstate != null) {
+    if (itemRealEstate != null) {
 
 
         val listPhotos = itemRealEstate.listPhotoWithText
@@ -51,19 +52,21 @@ fun RealEstateDetailScreen(
 
         Scaffold(
             floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    onClick = {
+                if (isNetWorkAvailable) {
+                    ExtendedFloatingActionButton(
+                        onClick = {
 
-                        val item = Uri.encode(Gson().toJson(itemRealEstate))
+                            val item = Uri.encode(Gson().toJson(itemRealEstate))
 
-                        navController.navigate("editScreen/$item")
+                            navController.navigate("editScreen/$item")
 
 
-                              },
-                    icon = { Icon(Icons.Filled.Edit, "Localized description") },
-                    text = { Text(text = "Edit") },
-                    modifier = Modifier.clip(RoundedCornerShape(15.dp))
-                )
+                        },
+                        icon = { Icon(Icons.Filled.Edit, "Localized description") },
+                        text = { Text(text = "Edit") },
+                        modifier = Modifier.clip(RoundedCornerShape(15.dp))
+                    )
+                }
             },
             content = {
 
@@ -102,9 +105,11 @@ fun RealEstateDetailScreen(
                         end.linkTo(parent.end, margin = 25.dp)
                     }) {
                         repeat(listPhotos?.size ?: 0) {
-                            Box(modifier = Modifier
-                                .size(184.dp)
-                                .clip(RoundedCornerShape(15.dp))) {
+                            Box(
+                                modifier = Modifier
+                                    .size(184.dp)
+                                    .clip(RoundedCornerShape(15.dp))
+                            ) {
 
                                 Column {
                                     ConstraintLayout(modifier = Modifier.fillMaxSize()) {

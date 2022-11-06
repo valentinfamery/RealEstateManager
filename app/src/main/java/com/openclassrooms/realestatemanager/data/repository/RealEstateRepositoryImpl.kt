@@ -39,13 +39,10 @@ class RealEstateRepositoryImpl @Inject constructor(
 
     override suspend fun refreshRealEstatesFromFirestore() {
 
-
-            Log.e("items", "repo1")
-
             val isNetWorkAvailable = Utils.isInternetAvailable(context)
 
             if(isNetWorkAvailable){
-
+                Log.e("items", "repo1")
 
 
                 val realEstates = firebaseFirestore.collection("real_estates").get().await().map {

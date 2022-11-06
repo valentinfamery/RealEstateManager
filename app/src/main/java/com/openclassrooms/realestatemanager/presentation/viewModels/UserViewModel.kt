@@ -4,24 +4,42 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.models.User
+import com.openclassrooms.realestatemanager.domain.repository.UserRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewModel() {
+class UserViewModel @Inject constructor(private val useCases: UseCases,private val state: SavedStateHandle,private val userRepository: UserRepository) : ViewModel() {
 
     var registerUserResponse by mutableStateOf<Response<AuthResult>>(Response.Empty)
     var loginUserResponse by mutableStateOf<Response<AuthResult>>(Response.Empty)
     var sendPasswordResetEmailResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
     var deleteUserResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
     var userDataResponse by mutableStateOf<Response<User?>>(Response.Empty)
+
+    val isNetWorkAvailable = flow {
+        val isNetWorkAvailable = userRepository.isNetWorkAvailable()
+        val data = state.getStateFlow("Key",isNetWorkAvailable).value
+        state["Key"] = data
+        emit(isNetWorkAvailable)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = true
+    )
 
     init{
         userData()

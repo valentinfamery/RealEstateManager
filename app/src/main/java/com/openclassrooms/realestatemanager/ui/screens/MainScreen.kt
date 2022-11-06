@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -39,7 +38,8 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    isNetWorkAvailable: Boolean
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -65,7 +65,8 @@ fun MainScreen(
                 scope,
                 navControllerDrawer,
                 auth,
-                userViewModel
+                userViewModel,
+                isNetWorkAvailable
             )
         },
         content = {
@@ -119,17 +120,21 @@ fun MainScreen(
                         }
                     },
                     floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = { /* do something */
-                                context.startActivity(
-                                    Intent(context, NewRealEstateActivity::class.java)
-                                )
-                            },
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(15.dp))
-                        ) {
-                            Icon(Icons.Filled.Add, "Localized description")
-                        }
+
+                            if (isNetWorkAvailable) {
+                                FloatingActionButton(
+                                    onClick = { /* do something */
+                                        context.startActivity(
+                                            Intent(context, NewRealEstateActivity::class.java)
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(15.dp))
+                                ) {
+                                    Icon(Icons.Filled.Add, "Localized description")
+                                }
+                            }
+
                     }
 
                 )
@@ -253,6 +258,7 @@ fun MainScreen(
                                         realEstateViewModel,
                                         item,
                                         navControllerDrawer,
+                                        isNetWorkAvailable,
                                     ) }
                                 composable("start"){ Start()}
                             }

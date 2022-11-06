@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.*
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -36,18 +36,33 @@ class MainActivity : ComponentActivity() {
         auth = Firebase.auth
         setContent {
             Projet_9_OC_RealEstateManagerTheme {
-                val currentUser = auth.currentUser
-
-                startScreen = if (currentUser == null) {
-                    "signInScreen"
-                } else {
-                    "mainScreen"
-                }
-
-                val windowSize = rememberWindowSizeClass()
 
                 val userViewModel: UserViewModel = hiltViewModel()
                 val realEstateViewModel: RealEstateViewModel = hiltViewModel()
+
+
+                val isNetWorkAvailable by userViewModel.isNetWorkAvailable.collectAsState()
+
+
+
+                    if (isNetWorkAvailable) {
+
+                        val currentUser = auth.currentUser
+
+                        startScreen = if (currentUser == null) {
+                            "signInScreen"
+                        } else {
+                            "mainScreen"
+                        }
+
+                    } else {
+                        startScreen = "mainScreen"
+                    }
+
+
+                val windowSize = rememberWindowSizeClass()
+
+
 
 
                     val navController = rememberNavController()
@@ -58,7 +73,8 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 userViewModel,
                                 realEstateViewModel,
-                                windowSize
+                                windowSize,
+                                isNetWorkAvailable
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
@@ -105,7 +121,8 @@ class MainActivity : ComponentActivity() {
                             RealEstateDetailScreen(
                                 realEstateViewModel,
                                 item,
-                                navController
+                                navController,
+                                isNetWorkAvailable
                             )
                         }
 

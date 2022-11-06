@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.domain.repository.UserRepository
 import com.openclassrooms.realestatemanager.domain.models.Response
+import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -21,7 +22,7 @@ class UserRepositoryImpl @Inject constructor(
     private val firebaseAuth : FirebaseAuth,
     private val authUI: AuthUI,
     private val firestore: FirebaseFirestore,
-    private val context: Context?
+    private val context: Context
 ): UserRepository{
 
     override suspend fun logout() : Response<Boolean> {
@@ -106,6 +107,11 @@ class UserRepositoryImpl @Inject constructor(
         }catch (e: Exception){
             Response.Failure(e)
         }
+    }
+
+    override suspend fun isNetWorkAvailable() : Boolean{
+        Log.e("isNetWorkAvailable()",Utils.isInternetAvailable(context).toString())
+        return Utils.isInternetAvailable(context)
     }
 
 

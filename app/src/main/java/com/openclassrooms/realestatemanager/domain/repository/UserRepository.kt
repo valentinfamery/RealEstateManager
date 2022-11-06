@@ -19,4 +19,6 @@ interface UserRepository {
 
     suspend fun userData(): Response<User?>
 
+    suspend fun isNetWorkAvailable() : Boolean
+
 }

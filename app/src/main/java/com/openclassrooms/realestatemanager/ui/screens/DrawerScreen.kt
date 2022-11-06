@@ -29,7 +29,8 @@ fun DrawerScreen(
     scope: CoroutineScope,
     navController: NavController,
     auth: FirebaseAuth,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    isNetWorkAvailable: Boolean
 
 ) {
     val items = listOf(Icons.Default.Settings)
@@ -38,28 +39,30 @@ fun DrawerScreen(
         val (username,userEmail,drawerItems,buttonLogout) = createRefs()
 
 
+            when (val response = userViewModel.userDataResponse) {
+                is Response.Success -> {
+                    val user = response.data
 
-        when(val response = userViewModel.userDataResponse){
-            is Response.Success ->{
-                val user = response.data
-
-                    Text(text = user?.email.toString(),modifier = Modifier.constrainAs(username) {
-                    top.linkTo(parent.top, margin = 15.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp) })
-
-                    Text(text = user?.username.toString(),modifier = Modifier.constrainAs(userEmail) {
-                        top.linkTo(username.bottom, margin = 5.dp)
+                    Text(text = user?.email.toString(), modifier = Modifier.constrainAs(username) {
+                        top.linkTo(parent.top, margin = 15.dp)
                         start.linkTo(parent.start, margin = 0.dp)
                         end.linkTo(parent.end, margin = 0.dp)
                     })
 
+                    Text(
+                        text = user?.username.toString(),
+                        modifier = Modifier.constrainAs(userEmail) {
+                            top.linkTo(username.bottom, margin = 5.dp)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
+                        })
 
 
-
+                }
+                else -> {}
             }
-            else ->{}
-        }
+
+
 
         items.forEach { item ->
             NavigationDrawerItem(
@@ -78,34 +81,38 @@ fun DrawerScreen(
 
                     )
                     .constrainAs(drawerItems) {
-                        bottom.linkTo(buttonLogout.top, margin = 100.dp)
+                        top.linkTo(parent.top, margin = 100.dp)
                     }
             )
         }
 
 
 
-        Button(
-            onClick = {
+            if (isNetWorkAvailable) {
 
-                auth.signOut()
-                userViewModel.userDataResponse = Response.Empty
-                navController.navigate("signInScreen")
-            },
-            modifier = Modifier.constrainAs(buttonLogout) {
-                bottom.linkTo(parent.bottom, margin = 20.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(parent.end, margin = 0.dp)
-            },
-        ) {
-            Icon(
-                Icons.Default.Close,
-                contentDescription = "Localized description",
-                modifier = Modifier.size(ButtonDefaults.IconSize)
-            )
-            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            Text("Logout")
-        }
+                Button(
+                    onClick = {
+
+                        auth.signOut()
+                        userViewModel.userDataResponse = Response.Empty
+                        navController.navigate("signInScreen")
+                    },
+                    modifier = Modifier.constrainAs(buttonLogout) {
+                        bottom.linkTo(parent.bottom, margin = 20.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    },
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Localized description",
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("Logout")
+                }
+            }
+
 
     }
 }
