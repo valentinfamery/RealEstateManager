@@ -96,13 +96,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun userData() : Response<User?> {
         return try {
-            Response.Loading
-
             val user = firebaseAuth.currentUser
             val uid = user?.uid
-
             val userData = firestore.collection("users").document(uid!!).get().await().toObject(User::class.java)
-
             Response.Success(userData)
         }catch (e: Exception){
             Response.Failure(e)

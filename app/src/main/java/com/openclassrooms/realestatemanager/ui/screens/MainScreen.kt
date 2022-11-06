@@ -42,6 +42,8 @@ fun MainScreen(
     windowSize: WindowSize
 ) {
 
+    userViewModel.userData()
+
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()

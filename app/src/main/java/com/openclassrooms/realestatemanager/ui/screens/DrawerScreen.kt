@@ -35,36 +35,26 @@ fun DrawerScreen(
     val items = listOf(Icons.Default.Settings)
     val selectedItem = remember { mutableStateOf(items[0]) }
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
-        val (userProfilePicture,username,userEmail,drawerItems,buttonLogout) = createRefs()
+        val (username,userEmail,drawerItems,buttonLogout) = createRefs()
 
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.tertiary)
-                .constrainAs(userProfilePicture) {
-                    top.linkTo(parent.top, margin = 15.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                }
-        )
 
-        when(userViewModel.userDataResponse){
+
+        when(val response = userViewModel.userDataResponse){
             is Response.Success ->{
-                (userViewModel.userDataResponse as Response.Success<User?>).data.let { response ->
+                val user = response.data
 
-                    Text(text = response!!.email ?:"",modifier = Modifier.constrainAs(username) {
-                    top.linkTo(userProfilePicture.bottom, margin = 15.dp)
+                    Text(text = user?.email.toString(),modifier = Modifier.constrainAs(username) {
+                    top.linkTo(parent.top, margin = 15.dp)
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp) })
 
-                    Text(text = response.username ?:"",modifier = Modifier.constrainAs(userEmail) {
+                    Text(text = user?.username.toString(),modifier = Modifier.constrainAs(userEmail) {
                         top.linkTo(username.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 0.dp)
                         end.linkTo(parent.end, margin = 0.dp)
                     })
 
-                }
+
 
 
             }
@@ -88,7 +78,7 @@ fun DrawerScreen(
 
                     )
                     .constrainAs(drawerItems) {
-                        top.linkTo(userEmail.bottom, margin = 15.dp)
+                        bottom.linkTo(buttonLogout.top, margin = 100.dp)
                     }
             )
         }

@@ -27,7 +27,7 @@ class UserViewModel @Inject constructor(private val useCases: UseCases) : ViewMo
 
     var deleteUserResponse by mutableStateOf<Response<Boolean>>(Response.Success(true))
 
-    var userDataResponse by mutableStateOf<Response<User?>>(Response.Loading)
+    var userDataResponse by mutableStateOf<Response<User?>>(Response.Empty)
 
     var usersResponse by mutableStateOf<Response<List<User>>>(Response.Loading)
 
