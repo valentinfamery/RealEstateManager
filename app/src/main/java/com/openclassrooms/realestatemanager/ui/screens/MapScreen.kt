@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -38,6 +40,7 @@ import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -125,12 +128,20 @@ fun MapScreen(
             composable("topBarMap") {
 
                 if (windowSize == WindowSize.COMPACT) {
-                    TopBar(
-                        scope,
-                        drawerState,
-                        "Map",
-                        navControllerDrawer
-                    )
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(text = "Map")
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                scope.launch { drawerState.open() }
+                            }) {
+                                Icon(Icons.Filled.Menu,"")
+                            }
+                        },
+
+
+                        )
                 } else {
                     CenterAlignedTopAppBar(
                         title = {
