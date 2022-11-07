@@ -115,6 +115,83 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
             Log.i("responseRegisterUser", "Failure")
             Toast.makeText(context, responseRegisterUser.e.toString(), Toast.LENGTH_SHORT).show()
             Log.i("responseRegisterUser", responseRegisterUser.e.toString())
+            ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+                val (centerAlignedTopAppBar, entryEmail, entryUsername, entryPassword, buttonRegister) = createRefs()
+
+
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(text = "Register")
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(Icons.Filled.ArrowBack, "")
+                        }
+                    },
+                    modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                        top.linkTo(parent.top, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }
+
+                )
+
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") },
+                    singleLine = true,
+                    modifier = Modifier.constrainAs(entryEmail) {
+                        top.linkTo(parent.top, margin = 250.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }
+
+                )
+
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text("Username") },
+                    singleLine = true,
+                    modifier = Modifier.constrainAs(entryUsername) {
+                        top.linkTo(entryEmail.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }
+
+                )
+
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    singleLine = true,
+                    modifier = Modifier.constrainAs(entryPassword) {
+                        top.linkTo(entryUsername.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }
+
+                )
+
+                Button(
+                    onClick = {
+                        userViewModel.registerUser(username, email, password)
+                    },
+                    modifier = Modifier
+                        .size(width = 275.dp, height = 50.dp)
+                        .constrainAs(buttonRegister) {
+                            top.linkTo(entryPassword.bottom, margin = 25.dp)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
+                        },
+                ) {
+                    Text("Register")
+                }
+            }
         }
         is Response.Loading -> {
             Column(
