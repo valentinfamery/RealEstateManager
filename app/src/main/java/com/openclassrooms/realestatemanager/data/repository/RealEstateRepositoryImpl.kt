@@ -187,6 +187,38 @@ class RealEstateRepositoryImpl @Inject constructor(
                         )
                         firebaseFirestore.collection("real_estates").document(id).set(realEstate)
 
+                        val realEstateDatabase  = RealEstateDatabase(
+                        id,
+                        type,
+                        price,
+                        area,
+                        numberRoom,
+                        description,
+                        numberAndStreet,
+                        numberApartment,
+                        city,
+                        region,
+                        postalCode,
+                        country,
+                        status,
+                        dateEntry,
+                        dateSale,
+                        realEstateAgent,
+                        latLng.latitude,
+                        latLng.longitude,
+                        checkedStateHospital,
+                        checkedStateSchool,
+                        checkedStateShops,
+                        checkedStateParks,
+                        listPhotoWithTextFirebaseFinal
+                        )
+
+
+                        runBlocking {
+                            launch {
+                                realEstateDao.insertRealEstate(realEstateDatabase)
+                            }
+                        }
 
                     }
                 }
