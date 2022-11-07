@@ -30,16 +30,8 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
 
-
-
-
-
-
-
     init {
-        viewModelScope.launch {
-            useCases.refreshRealEstates()
-        }
+        refreshRealEstates()
         viewModelScope.launch{
             realEstateRepository.realEstates().collect{
                 _realEstates.value = it

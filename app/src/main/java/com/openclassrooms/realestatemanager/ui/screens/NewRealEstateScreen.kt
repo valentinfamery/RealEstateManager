@@ -773,8 +773,6 @@ fun NewRealEstateScreen(
                 Toast.LENGTH_SHORT
             ).show()
 
-            activity.setResult(RESULT_OK)
-            realEstateViewModel.refreshRealEstates()
             activity.finish()
         }
         else -> {}
