@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,12 +14,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.openclassrooms.realestatemanager.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +33,10 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
+
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+
 
     ConstraintLayout(modifier = Modifier.fillMaxSize().also {
         it.padding(250.dp, 250.dp, 250.dp, 250.dp)
@@ -46,6 +54,12 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
             }
         )
 
+        val icon = if(passwordVisible)
+            painterResource(id = R.drawable.ic_baseline_visibility_24 )
+        else
+            painterResource(id = R.drawable.ic_baseline_visibility_off_24)
+
+
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -56,8 +70,13 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
             },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = { IconButton(onClick = {
+                passwordVisible = !passwordVisible
+            }) {
+                Icon(painter = icon, contentDescription ="" )
+            }}
 
         )
 
