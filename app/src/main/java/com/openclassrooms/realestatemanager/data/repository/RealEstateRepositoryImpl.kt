@@ -37,7 +37,7 @@ class RealEstateRepositoryImpl @Inject constructor(
 
 
     override fun realEstates() : Flow<List<RealEstateDatabase>> {
-        return realEstateDao.realEstates().flowOn(Dispatchers.IO)
+        return realEstateDao.realEstates()
     }
 
     override suspend fun refreshRealEstatesFromFirestore() {

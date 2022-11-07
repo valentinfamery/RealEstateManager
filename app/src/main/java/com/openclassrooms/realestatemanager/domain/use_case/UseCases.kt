@@ -1,7 +1,7 @@
 package com.openclassrooms.realestatemanager.domain.use_case
 
 data class UseCases(
-    val getRealEstates: GetRealEstates,
+    val refreshRealEstates: RefreshRealEstates,
     val createRealEstate: CreateRealEstate,
     val registerUser: RegisterUser,
     val loginUser: LoginUser,

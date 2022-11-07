@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
@@ -10,10 +8,7 @@ import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
-import com.openclassrooms.realestatemanager.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,7 +38,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
 
     init {
         viewModelScope.launch {
-            useCases.getRealEstates()
+            useCases.refreshRealEstates()
         }
         viewModelScope.launch{
             realEstateRepository.realEstates().collect{
@@ -59,7 +54,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
     }
 
     fun refreshRealEstates() = viewModelScope.launch() {
-        useCases.getRealEstates()
+        useCases.refreshRealEstates()
     }
 
 

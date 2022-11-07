@@ -18,7 +18,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Singleton
 
 @Module
@@ -69,7 +68,7 @@ object AppModule {
 
     @Provides
     fun provideUseCases(userRepository: UserRepository,realEstateRepository: RealEstateRepository) = UseCases(
-        getRealEstates = GetRealEstates(realEstateRepository),
+        refreshRealEstates = RefreshRealEstates(realEstateRepository),
         createRealEstate = CreateRealEstate(realEstateRepository),
         registerUser = RegisterUser(userRepository),
         loginUser = LoginUser(userRepository),
