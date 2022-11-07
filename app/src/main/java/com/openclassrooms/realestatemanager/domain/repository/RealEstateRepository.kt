@@ -33,6 +33,9 @@ interface RealEstateRepository {
     ) : Response<Boolean>
 
 
+    fun NetworkChangeAlert() : Flow<Boolean>
+
+
 
 }
 

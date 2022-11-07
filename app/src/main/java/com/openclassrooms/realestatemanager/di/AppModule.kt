@@ -64,7 +64,7 @@ object AppModule {
         firebaseAuth: FirebaseAuth,
         authUI: AuthUI,
         fireStore: FirebaseFirestore,
-        @ApplicationContext context: Context?
+        @ApplicationContext context: Context
     ): UserRepository = UserRepositoryImpl(firebaseAuth,authUI,fireStore,context)
 
     @Provides

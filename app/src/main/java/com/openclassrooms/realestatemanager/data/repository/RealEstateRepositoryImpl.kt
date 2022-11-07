@@ -2,6 +2,9 @@ package com.openclassrooms.realestatemanager.data.repository
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -197,6 +200,27 @@ class RealEstateRepositoryImpl @Inject constructor(
 
         } catch (e: Exception) {
             Response.Failure(e)
+        }
+
+    }
+
+    override fun NetworkChangeAlert() = flow {
+
+        var offlineMode by mutableStateOf(false)
+        var isDeviceConnected : Boolean
+        while(true){
+            isDeviceConnected = Utils.isInternetAvailable(context)
+            if(!isDeviceConnected && !offlineMode){
+                offlineMode = true
+                Log.e("passage","vers-hors-ligne")
+            }
+            else if(isDeviceConnected && offlineMode){
+                offlineMode = false
+                Log.e("passage","vers-en-ligne")
+                refreshRealEstatesFromFirestore()
+            }
+            emit(offlineMode)
+            delay(1000)
         }
 
     }

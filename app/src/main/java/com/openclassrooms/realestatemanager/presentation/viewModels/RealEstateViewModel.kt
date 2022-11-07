@@ -1,11 +1,15 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
+import com.openclassrooms.realestatemanager.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RealEstateViewModel @Inject constructor(private val useCases: UseCases,private val realEstateRepository: RealEstateRepository) : ViewModel() {
+class RealEstateViewModel @Inject constructor(private val useCases: UseCases, private val realEstateRepository: RealEstateRepository) : ViewModel() {
 
     val realEstates = realEstateRepository.realEstates().asLiveData()
 
@@ -27,15 +31,27 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases,pri
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
 
+
+
+
+
+
+
     init {
         viewModelScope.launch {
             useCases.getRealEstates()
+        }
+        viewModelScope.launch {
+            realEstateRepository.NetworkChangeAlert().collect{
+                Log.e("offlineMode",it.toString())
+            }
         }
     }
 
     fun refreshRealEstates() = viewModelScope.launch() {
         useCases.getRealEstates()
     }
+
 
     fun createRealEstate(
         type: String,
@@ -70,4 +86,6 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases,pri
             checkedStateParks)
 
     }
+
+
 }
