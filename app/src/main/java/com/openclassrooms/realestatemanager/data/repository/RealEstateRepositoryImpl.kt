@@ -236,25 +236,6 @@ class RealEstateRepositoryImpl @Inject constructor(
 
     }
 
-    override fun NetworkChangeAlert() = flow {
 
-        var offlineMode by mutableStateOf(false)
-        var isDeviceConnected : Boolean
-        while(true){
-            isDeviceConnected = Utils.isInternetAvailable(context)
-            if(!isDeviceConnected && !offlineMode){
-                offlineMode = true
-                Log.e("passage","vers-hors-ligne")
-            }
-            else if(isDeviceConnected && offlineMode){
-                offlineMode = false
-                Log.e("passage","vers-en-ligne")
-                refreshRealEstatesFromFirestore()
-            }
-            emit(offlineMode)
-            delay(1000)
-        }
-
-    }
 
 }

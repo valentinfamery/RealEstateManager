@@ -13,6 +13,7 @@ import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.repository.UserRepository
 import com.openclassrooms.realestatemanager.domain.use_case.*
+import com.openclassrooms.realestatemanager.utils.ConnectionReceiver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

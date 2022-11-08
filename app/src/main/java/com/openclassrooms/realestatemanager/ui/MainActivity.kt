@@ -1,14 +1,10 @@
 package com.openclassrooms.realestatemanager.ui
 
+import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.*
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -19,18 +15,24 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.openclassrooms.realestatemanager.domain.models.RealEstate
-import com.openclassrooms.realestatemanager.ui.screens.*
-import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
-import com.openclassrooms.realestatemanager.utils.rememberWindowSizeClass
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.openclassrooms.realestatemanager.ui.screens.*
+import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import com.openclassrooms.realestatemanager.utils.ConnectionReceiver
+import com.openclassrooms.realestatemanager.utils.rememberWindowSizeClass
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var startScreen : String
+    var receiver: ConnectionReceiver? = null
+    val filter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
+
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,10 +41,11 @@ class MainActivity : ComponentActivity() {
         auth = Firebase.auth
         setContent {
             Projet_9_OC_RealEstateManagerTheme {
-
                 val userViewModel: UserViewModel = hiltViewModel()
                 val realEstateViewModel: RealEstateViewModel = hiltViewModel()
 
+                receiver = ConnectionReceiver(realEstateViewModel)
+                registerReceiver(receiver,filter)
 
 
 
@@ -134,6 +137,15 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(receiver,filter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 }
 

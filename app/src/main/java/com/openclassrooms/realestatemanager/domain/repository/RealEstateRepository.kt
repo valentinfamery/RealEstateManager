@@ -32,11 +32,6 @@ interface RealEstateRepository {
         checkedStateParks : Boolean
     ) : Response<Boolean>
 
-
-    fun NetworkChangeAlert() : Flow<Boolean>
-
-
-
 }
 
 

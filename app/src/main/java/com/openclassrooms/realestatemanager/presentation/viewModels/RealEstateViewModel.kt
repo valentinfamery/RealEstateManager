@@ -37,12 +37,6 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
                 _realEstates.value = it
             }
         }
-
-        viewModelScope.launch {
-            realEstateRepository.NetworkChangeAlert().collect{
-                Log.e("offlineMode",it.toString())
-            }
-        }
     }
 
     fun refreshRealEstates() = viewModelScope.launch() {
