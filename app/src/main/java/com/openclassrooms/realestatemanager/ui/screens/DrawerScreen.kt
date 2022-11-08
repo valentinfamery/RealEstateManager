@@ -7,11 +7,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -35,28 +32,30 @@ fun DrawerScreen(
 ) {
     val items = listOf(Icons.Default.Settings)
     val selectedItem = remember { mutableStateOf(items[0]) }
-    val user by userViewModel.userData.observeAsState()
+    val user by userViewModel.userData.collectAsState()
 
 
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
         val (username,userEmail,drawerItems,buttonLogout) = createRefs()
 
 
+                Text(text = user?.email.toString(), modifier = Modifier.constrainAs(username) {
+                    top.linkTo(parent.top, margin = 15.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                })
 
-
-                    Text(text = user?.email.toString(), modifier = Modifier.constrainAs(username) {
-                        top.linkTo(parent.top, margin = 15.dp)
+                Text(
+                    text = user?.username.toString(),
+                    modifier = Modifier.constrainAs(userEmail) {
+                        top.linkTo(username.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 0.dp)
                         end.linkTo(parent.end, margin = 0.dp)
                     })
 
-                    Text(
-                        text = user?.username.toString(),
-                        modifier = Modifier.constrainAs(userEmail) {
-                            top.linkTo(username.bottom, margin = 5.dp)
-                            start.linkTo(parent.start, margin = 0.dp)
-                            end.linkTo(parent.end, margin = 0.dp)
-                        })
+
+
+
 
 
 
