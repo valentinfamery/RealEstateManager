@@ -4,6 +4,7 @@ import com.google.firebase.auth.AuthResult
 import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.domain.models.Response
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface UserRepository {
 
@@ -17,6 +18,6 @@ interface UserRepository {
 
     suspend fun deleteUser() : Response<Boolean>
 
-    suspend fun userData(): Response<User?>
+    suspend fun userData(): User?
 
 }

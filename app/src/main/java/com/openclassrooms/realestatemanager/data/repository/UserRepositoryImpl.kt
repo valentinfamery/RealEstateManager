@@ -12,6 +12,7 @@ import com.openclassrooms.realestatemanager.domain.repository.UserRepository
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -27,7 +28,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun logout() : Response<Boolean> {
         return try {
-            authUI.signOut(context!!)
+            authUI.signOut(context)
             Response.Success(true)
         }catch (e: Exception){
             Response.Failure(e)
@@ -88,7 +89,7 @@ class UserRepositoryImpl @Inject constructor(
             if (uid != null) {
                 firestore.collection("users").document(uid).delete()
             }
-            authUI.delete(context!!)
+            authUI.delete(context)
 
             Response.Success(true)
         }catch (e: Exception){
@@ -96,17 +97,13 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun userData() : Response<User?> {
-        return try {
+    override suspend fun userData() : User? {
             val user = firebaseAuth.currentUser
             val uid = user?.uid
             Log.e("userData()","uid"+uid.toString())
             val userData = firestore.collection("users").document(uid!!).get().await().toObject(User::class.java)
             Log.e("userData()","userData"+userData?.username.toString())
-            Response.Success(userData)
-        }catch (e: Exception){
-            Response.Failure(e)
-        }
+        return userData
     }
 
 }

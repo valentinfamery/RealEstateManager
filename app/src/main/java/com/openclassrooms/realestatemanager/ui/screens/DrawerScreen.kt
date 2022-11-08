@@ -8,6 +8,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,13 +35,14 @@ fun DrawerScreen(
 ) {
     val items = listOf(Icons.Default.Settings)
     val selectedItem = remember { mutableStateOf(items[0]) }
+    val user by userViewModel.userData.observeAsState()
+
+
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
         val (username,userEmail,drawerItems,buttonLogout) = createRefs()
 
 
-            when (val response = userViewModel.userDataResponse) {
-                is Response.Success -> {
-                    val user = response.data
+
 
                     Text(text = user?.email.toString(), modifier = Modifier.constrainAs(username) {
                         top.linkTo(parent.top, margin = 15.dp)
@@ -56,9 +59,6 @@ fun DrawerScreen(
                         })
 
 
-                }
-                else -> {}
-            }
 
 
 

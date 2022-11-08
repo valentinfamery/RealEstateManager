@@ -194,7 +194,7 @@ fun MapScreen(
 
                             if (!items?.isEmpty()!!) {
 
-                                items?.forEach {
+                                items.forEach {
 
                                     val realEstate: RealEstateDatabase = it
 

@@ -19,7 +19,6 @@ class RealEstatesContentProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         return true
-        TODO("Not yet implemented")
     }
 
     override fun query(

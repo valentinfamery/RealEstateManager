@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -266,6 +267,7 @@ fun EditScreenRealEstate(
 
             val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
             val listStatus = listOf("For Sale", "Sold")
+            val user by userViewModel.userData.observeAsState()
 
             ConstraintLayout(
                 modifier = Modifier
@@ -717,19 +719,15 @@ fun EditScreenRealEstate(
 
                         try {
 
-                            when(userViewModel.userDataResponse){
-                                is Response.Success ->{
-                                    (userViewModel.userDataResponse as Response.Success<User?>).data.let { response ->
+                            listPhotos.size >= 1
 
-                                        listPhotos.size >= 1
-
-                                        realEstateViewModel.createRealEstate(
-                                            entryType,
-                                            entryPrice,
-                                            entryArea,
-                                            entryNumberRoom,
-                                            entryDescription,
-                                            entryNumberAndStreet,
+                            realEstateViewModel.createRealEstate(
+                                entryType,
+                                entryPrice,
+                                entryArea,
+                                entryNumberRoom,
+                                entryDescription,
+                                entryNumberAndStreet,
                                             entryNumberApartement,
                                             entryCity,
                                             entryRegion,
@@ -739,22 +737,14 @@ fun EditScreenRealEstate(
                                             listPhotos,
                                             textDateOfEntry,
                                             textDateOfSale,
-                                            response!!.username.toString(),
+                                            user!!.username.toString(),
                                             checkedStateHopital.value,
                                             checkedStateSchool.value,
                                             checkedStateShops.value,
                                             checkedStateParks.value
-                                        )
+                            )
 
-                                        activity.finish()
-
-
-                                    }
-
-
-                                }
-                                else ->{}
-                            }
+                            activity.finish()
 
                         } catch (e: Exception) {
                             Toast.makeText(
