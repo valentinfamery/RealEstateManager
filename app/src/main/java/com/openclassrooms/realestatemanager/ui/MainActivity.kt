@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,24 +34,21 @@ class MainActivity : ComponentActivity() {
     var receiver: ConnectionReceiver? = null
     val filter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
 
-
+    private val realEstateViewModel: RealEstateViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
+        Log.e("AAAAA","3AA")
+        receiver = ConnectionReceiver(realEstateViewModel)
+        registerReceiver(receiver,filter)
+
+
         setContent {
             Projet_9_OC_RealEstateManagerTheme {
                 val userViewModel: UserViewModel = hiltViewModel()
-                val realEstateViewModel: RealEstateViewModel = hiltViewModel()
-
-                Log.e("AAAAA","3AA")
-                receiver = ConnectionReceiver(realEstateViewModel)
-                registerReceiver(receiver,filter)
-
-
-
 
 
 
