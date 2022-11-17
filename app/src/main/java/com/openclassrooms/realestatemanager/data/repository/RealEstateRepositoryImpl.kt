@@ -53,8 +53,8 @@ class RealEstateRepositoryImpl @Inject constructor(
                     val realEstateDatabase = RealEstateDatabase(
                         realEstate.id!!,
                         realEstate.type!!,
-                        realEstate.price!!,
-                        realEstate.area!!,
+                        realEstate.price!!.toInt(),
+                        realEstate.area!!.toInt(),
                         realEstate.numberRoom!!,
                         realEstate.description!!,
                         realEstate.numberAndStreet!!,
@@ -74,6 +74,7 @@ class RealEstateRepositoryImpl @Inject constructor(
                         realEstate.shopsNear,
                         realEstate.parksNear,
                         realEstate.listPhotoWithText,
+                        realEstate.listPhotoWithText?.size
                     )
                     realEstateDao.insertRealEstate(realEstateDatabase)
                 }
@@ -157,8 +158,8 @@ class RealEstateRepositoryImpl @Inject constructor(
                         val realEstate = RealEstate(
                             id,
                             type,
-                            price,
-                            area,
+                            price.toInt(),
+                            area.toInt(),
                             numberRoom,
                             description,
                             numberAndStreet,
@@ -184,8 +185,8 @@ class RealEstateRepositoryImpl @Inject constructor(
                         val realEstateDatabase  = RealEstateDatabase(
                         id,
                         type,
-                        price,
-                        area,
+                        price.toInt(),
+                        area.toInt(),
                         numberRoom,
                         description,
                         numberAndStreet,

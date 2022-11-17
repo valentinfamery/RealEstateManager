@@ -27,10 +27,10 @@ fun FilterScreen() {
 
     var entryType : String by rememberSaveable { mutableStateOf("") }
     var entryCity : String by rememberSaveable { mutableStateOf("") }
-    var entryMinSurface by rememberSaveable { mutableStateOf("") }
-    var entryMaxSurface by rememberSaveable { mutableStateOf("") }
-    var entryMinPrice by rememberSaveable { mutableStateOf("") }
-    var entryMaxPrice by rememberSaveable { mutableStateOf("") }
+    var entryMinSurface by rememberSaveable { mutableStateOf("0") }
+    var entryMaxSurface by rememberSaveable { mutableStateOf("0") }
+    var entryMinPrice by rememberSaveable { mutableStateOf("0") }
+    var entryMaxPrice by rememberSaveable { mutableStateOf("0") }
     var onTheMarketLessALastWeek by rememberSaveable{ mutableStateOf(false)}
     var soldOn3LastMonth by rememberSaveable{ mutableStateOf(false)}
     var min3photos by rememberSaveable{ mutableStateOf(false)}
@@ -174,9 +174,21 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             filterState = true
 
         val intent = Intent()
-        intent.putExtra("filterState",filterState)
+
             intent.putExtra("type",entryType)
             intent.putExtra("city",entryCity)
+            intent.putExtra("minSurface", entryMinSurface.toInt())
+            intent.putExtra("maxSurface",entryMaxSurface.toInt())
+            intent.putExtra("minPrice",entryMinPrice.toInt())
+            intent.putExtra("maxPrice",entryMaxPrice.toInt())
+            intent.putExtra("onTheMarketLessALastWeek",onTheMarketLessALastWeek)
+            intent.putExtra("soldOn3LastMonth",soldOn3LastMonth)
+            intent.putExtra("min3photos",min3photos)
+            intent.putExtra("schools",schools)
+            intent.putExtra("shops",shops)
+
+            intent.putExtra("filterState",filterState)
+
         activity.setResult(1,intent)
             activity.finish()
     },

@@ -27,6 +27,7 @@ import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,17 +42,9 @@ fun ListScreen(
     navControllerTwoPane: NavHostController,
 ) {
     val context = LocalContext.current
-
-
     val realEstates by realEstateViewModel.realEstates.collectAsState()
-    var filterState by remember {
-        mutableStateOf(false)
-    }
-
-
-    var realEstatesFilter by remember {
-        mutableStateOf(listOf<RealEstateDatabase>())
-    }
+    var filterState by remember {mutableStateOf(false)}
+    var realEstatesFilter by remember { mutableStateOf(listOf<RealEstateDatabase>())}
 
     val launcherActivityResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {activityResult->
         if(activityResult.resultCode == 0){
@@ -61,10 +54,21 @@ fun ListScreen(
             filterState = activityResult.data?.getBooleanExtra("filterState",true)!!
             val type = activityResult.data?.getStringExtra("type")!!
             val city = activityResult.data?.getStringExtra("city")!!
+            val minSurface = activityResult.data?.getIntExtra("minSurface",0)!!
+            val maxSurface = activityResult.data?.getIntExtra("maxSurface",0)!!
+            val minPrice = activityResult.data?.getIntExtra("minPrice",0)!!
+            val maxPrice = activityResult.data?.getIntExtra("maxPrice",0)!!
+            val onTheMarketLessALastWeek = activityResult.data?.getBooleanExtra("onTheMarketLessALastWeek",false)!!
+            val soldOn3LastMonth     = activityResult.data?.getBooleanExtra("soldOn3LastMonth",false)!!
+            val min3photos     = activityResult.data?.getBooleanExtra("min3photos",false)!!
+            val schools     = activityResult.data?.getBooleanExtra("schools",false)!!
+            val shops     = activityResult.data?.getBooleanExtra("shops",false)!!
 
 
 
-            val query ="SELECT * FROM RealEstateDatabase WHERE('$type' ='' OR typeSQL = '$type')"
+            val query ="SELECT * FROM RealEstateDatabase WHERE ('$type' ='' OR type = '$type') AND ('$city' ='' OR city = '$city') AND ($schools = false OR schoolsNear = true) AND ($shops = false OR shopsNear = true) AND ($min3photos = false OR count_photo >= 3) AND ($minSurface =0 AND $maxSurface =0 OR (area BETWEEN $minSurface AND $maxSurface))"
+
+            Log.e("query",query)
 
 
 
