@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.domain.repository
 
+import androidx.lifecycle.LiveData
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.domain.models.*
 import kotlinx.coroutines.flow.Flow
 
@@ -31,6 +33,10 @@ interface RealEstateRepository {
         checkedStateShops : Boolean,
         checkedStateParks : Boolean
     ) : Response<Boolean>
+
+    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>>
+
+
 
 }
 

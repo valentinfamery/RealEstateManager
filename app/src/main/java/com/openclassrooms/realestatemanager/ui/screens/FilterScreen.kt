@@ -25,8 +25,8 @@ fun FilterScreen() {
     val activity = LocalContext.current as Activity
     var expanded by remember { mutableStateOf(false) }
 
-    var entryType by rememberSaveable { mutableStateOf("") }
-    var entryCity by rememberSaveable { mutableStateOf("") }
+    var entryType : String by rememberSaveable { mutableStateOf("") }
+    var entryCity : String by rememberSaveable { mutableStateOf("") }
     var entryMinSurface by rememberSaveable { mutableStateOf("") }
     var entryMaxSurface by rememberSaveable { mutableStateOf("") }
     var entryMinPrice by rememberSaveable { mutableStateOf("") }
@@ -36,6 +36,8 @@ fun FilterScreen() {
     var min3photos by rememberSaveable{ mutableStateOf(false)}
     var schools by rememberSaveable{ mutableStateOf(false)}
     var shops by rememberSaveable{ mutableStateOf(false)}
+
+    var filterState by remember { mutableStateOf(false) }
 
     val icon = if (expanded)
         Icons.Filled.KeyboardArrowUp
@@ -48,6 +50,11 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
     Button(
         onClick = {
+            filterState = false
+
+            val intent = Intent()
+            intent.putExtra("filterState",filterState)
+            activity.setResult(0,intent)
             activity.finish()
                   },
         modifier = Modifier.constrainAs(buttonReset) {
@@ -65,7 +72,7 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
     }) {
 
         TextField(
-            value = entryType,
+            value = entryType.toString(),
             onValueChange = { entryType = it },
             label = { Text("Type") },
             trailingIcon = {
@@ -91,7 +98,7 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             }
 
         TextField(
-            value = entryCity,
+            value = entryCity.toString(),
             onValueChange = { entryCity = it },
             label = { Text("City") },
             singleLine = true
@@ -147,6 +154,7 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
     IconButton(
         onClick = {
+            activity.setResult(2)
                   activity.finish()
         },
         modifier = Modifier.constrainAs(buttonClose) {
@@ -162,22 +170,14 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
     Button(
         onClick = {
-        var resultFilter = FilterResult(
-            entryType,
-            entryCity,
-            entryMinSurface,
-            entryMaxSurface,
-            entryMinPrice,
-            entryMaxPrice,
-            onTheMarketLessALastWeek,
-            soldOn3LastMonth,
-            min3photos,
-            schools,
-            shops
-        )
+
+            filterState = true
+
         val intent = Intent()
-        intent.putExtra("resultFilter",resultFilter)
-        activity.setResult(0,intent)
+        intent.putExtra("filterState",filterState)
+            intent.putExtra("type",entryType)
+            intent.putExtra("city",entryCity)
+        activity.setResult(1,intent)
             activity.finish()
     },
         modifier = Modifier.constrainAs(buttonFilter){
@@ -185,7 +185,7 @@ ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         }
 
     ) {
-
+        Text("Filter")
     }
 
 }

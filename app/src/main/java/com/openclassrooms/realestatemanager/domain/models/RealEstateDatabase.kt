@@ -14,6 +14,7 @@ import kotlinx.parcelize.Parcelize
 data class RealEstateDatabase(
     @PrimaryKey
     var id: String,
+    @ColumnInfo(name = "typeSQL")
     var type: String? = null,
     var price: String? = null,
     var area: String? = null,
@@ -35,7 +36,8 @@ data class RealEstateDatabase(
     var schoolsNear : Boolean = false,
     var shopsNear : Boolean = false,
     var parksNear : Boolean = false,
-    @ColumnInfo(name = "listPhotoWithText") var listPhotoWithText : List<PhotoWithTextFirebase> ?=null,
+    @ColumnInfo(name = "listPhotoWithText")
+    var listPhotoWithText : List<PhotoWithTextFirebase> ?=null,
 ): Parcelable {
     companion object NavigationType : NavType<RealEstate>(isNullableAllowed = false) {
         override fun get(bundle: Bundle, key: String): RealEstate? {

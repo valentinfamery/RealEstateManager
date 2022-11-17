@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui
 
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +45,7 @@ class MainActivity : ComponentActivity() {
                 val userViewModel: UserViewModel = hiltViewModel()
                 val realEstateViewModel: RealEstateViewModel = hiltViewModel()
 
+                Log.e("AAAAA","3AA")
                 receiver = ConnectionReceiver(realEstateViewModel)
                 registerReceiver(receiver,filter)
 
@@ -138,10 +140,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(receiver,filter)
-    }
+
+
 
     override fun onDestroy() {
         super.onDestroy()

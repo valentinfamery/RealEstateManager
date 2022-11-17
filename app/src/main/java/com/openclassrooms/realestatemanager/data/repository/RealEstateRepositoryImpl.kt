@@ -2,11 +2,9 @@ package com.openclassrooms.realestatemanager.data.repository
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
@@ -16,11 +14,7 @@ import com.openclassrooms.realestatemanager.domain.repository.RealEstateReposito
 import com.openclassrooms.realestatemanager.service.ApiService
 import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import retrofit2.Call
 import retrofit2.Callback
@@ -210,7 +204,7 @@ class RealEstateRepositoryImpl @Inject constructor(
                         checkedStateSchool,
                         checkedStateShops,
                         checkedStateParks,
-                        listPhotoWithTextFirebaseFinal
+                        listPhotoWithTextFirebaseFinal,
                         )
 
 
@@ -234,6 +228,10 @@ class RealEstateRepositoryImpl @Inject constructor(
             Response.Failure(e)
         }
 
+    }
+
+    override fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>> {
+        return realEstateDao.getPropertyBySearch(supportSQLiteQuery)
     }
 
 

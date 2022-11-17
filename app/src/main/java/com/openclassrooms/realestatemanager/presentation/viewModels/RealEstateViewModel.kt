@@ -1,17 +1,15 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,23 +18,18 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
 
 
 
-    private val _realEstates = MutableLiveData<List<RealEstateDatabase>>()
-    val realEstates: LiveData<List<RealEstateDatabase>> = _realEstates
-
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
+    var list by mutableStateOf<Response<Boolean>>(Response.Empty)
     private val _isRefreshing = MutableStateFlow(false)
 
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
 
+    val realEstates: StateFlow<List<RealEstateDatabase>> = realEstateRepository.realEstates().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), mutableListOf())
+
     init {
         refreshRealEstates()
-        viewModelScope.launch{
-            realEstateRepository.realEstates().collect{
-                _realEstates.value = it
-            }
-        }
     }
 
     fun refreshRealEstates() = viewModelScope.launch() {
@@ -76,6 +69,10 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
             checkedStateShops,
             checkedStateParks)
 
+    }
+    
+    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>> {
+          return  realEstateRepository.getPropertyBySearch(supportSQLiteQuery)
     }
 
 

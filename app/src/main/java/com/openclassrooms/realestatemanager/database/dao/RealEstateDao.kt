@@ -1,10 +1,9 @@
 package com.openclassrooms.realestatemanager.database.dao
 
 import android.database.Cursor
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import kotlinx.coroutines.flow.Flow
 
@@ -22,5 +21,8 @@ interface RealEstateDao {
 
     @Query("SELECT * FROM RealEstateDatabase")
     fun getRealEstatesWithCursor(): Cursor
+
+    @RawQuery(observedEntities = [RealEstateDatabase::class])
+    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>>
 
 }

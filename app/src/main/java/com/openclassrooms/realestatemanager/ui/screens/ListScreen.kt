@@ -12,12 +12,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.openclassrooms.realestatemanager.R
@@ -41,9 +41,54 @@ fun ListScreen(
     navControllerTwoPane: NavHostController,
 ) {
     val context = LocalContext.current
-    val launcherActivityResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
-    val realEstates by realEstateViewModel.realEstates.observeAsState()
+
+    val realEstates by realEstateViewModel.realEstates.collectAsState()
+    var filterState by remember {
+        mutableStateOf(false)
+    }
+
+
+    var realEstatesFilter by remember {
+        mutableStateOf(listOf<RealEstateDatabase>())
+    }
+
+    val launcherActivityResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {activityResult->
+        if(activityResult.resultCode == 0){
+           filterState = activityResult.data?.getBooleanExtra("filterState",false)!!
+        }
+        if(activityResult.resultCode == 1){
+            filterState = activityResult.data?.getBooleanExtra("filterState",true)!!
+            val type = activityResult.data?.getStringExtra("type")!!
+            val city = activityResult.data?.getStringExtra("city")!!
+
+
+
+            val query ="SELECT * FROM RealEstateDatabase WHERE('$type' ='' OR typeSQL = '$type')"
+
+
+
+            realEstateViewModel.getPropertyBySearch(SimpleSQLiteQuery(query)).observeForever{ list->
+                realEstatesFilter = list
+            }
+
+
+
+
+
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
     if (windowSize == WindowSize.COMPACT) {
 
@@ -81,22 +126,13 @@ fun ListScreen(
                         )
 
                     },
-                    content = {
+                    content = { it ->
 
-                        //when(realEstatesResponse){
-                            //is Response.Empty ->{Log.e("realEstatesResponse", "Empty")}
-                            //is Response.Loading ->{
-                                //Log.e("realEstatesResponse", "Loading")
-                                //Column(modifier = Modifier
-                                    //.fillMaxSize()
-                                    //.padding(innerPadding), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                                    //CircularProgressIndicator()
-                                //}
-                            //}
-                            //is Response.Success -> {
                                 Log.e("realEstatesResponse", "Success")
 
                         val isRefreshing by realEstateViewModel.isRefreshing.collectAsState()
+
+
 
                                 SwipeRefresh(
                                     modifier = Modifier.padding(it),
@@ -105,29 +141,46 @@ fun ListScreen(
                                                 realEstateViewModel.refreshRealEstates()
                                     },
                                 ) {
-                                    LazyColumn {
-                                        realEstates?.let { response ->
-                                            if(!response.isEmpty()) {
-                                                items(response) { item ->
-                                                    RowList(
-                                                        item,
-                                                        realEstateViewModel,
-                                                        navControllerDrawer,
-                                                        windowSize,
-                                                        navControllerTwoPane
-                                                    )
-                                                }
+
+
+
+                                        LazyColumn {
+                                            if(!filterState) {
+
+                                                        items(realEstates) { item ->
+                                                            RowList(
+                                                                item,
+                                                                realEstateViewModel,
+                                                                navControllerDrawer,
+                                                                windowSize,
+                                                                navControllerTwoPane
+                                                            )
+                                                        }
+
+
+                                            }else{
+
+
+
+
+
+
+
+                                                        items(realEstatesFilter) { item ->
+                                                            RowList(
+                                                                item,
+                                                                realEstateViewModel,
+                                                                navControllerDrawer,
+                                                                windowSize,
+                                                                navControllerTwoPane
+                                                            )
+                                                        }
+
                                             }
+
                                         }
-                                    }
-
-
                                 }
 
-                            //}is Response.Failure ->{
-                                    //Log.e("realEstatesResponse", "Failure")
-                            //}
-                        //}
                     }
                 )
     }

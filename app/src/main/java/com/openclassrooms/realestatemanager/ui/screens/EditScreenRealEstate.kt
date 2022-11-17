@@ -267,7 +267,7 @@ fun EditScreenRealEstate(
 
             val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
             val listStatus = listOf("For Sale", "Sold")
-            val user by userViewModel.userData.observeAsState()
+            val user by userViewModel.userData.collectAsState()
 
             ConstraintLayout(
                 modifier = Modifier

@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,14 +31,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.utils.WindowSize
 
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,13 +53,13 @@ fun MapScreen(
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
-    val realEstates by realEstateViewModel.realEstates.observeAsState()
+    val realEstates by realEstateViewModel.realEstates.collectAsState()
 
     var userPosition by remember {
         mutableStateOf(LatLng(0.0, 0.0))
     }
 
-    val items by realEstateViewModel.realEstates.observeAsState()
+
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
@@ -192,7 +188,7 @@ fun MapScreen(
                     //is Response.Success -> {
                         realEstates.let { items ->
 
-                            if (!items?.isEmpty()!!) {
+
 
                                 items.forEach {
 
@@ -215,7 +211,7 @@ fun MapScreen(
                                         )
                                     }
                                 }
-                            }
+
                         }
                     //}
                     //else ->{}
