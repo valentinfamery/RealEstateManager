@@ -22,12 +22,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.ui.FilterActivity
 import com.openclassrooms.realestatemanager.utils.WindowSize
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.min
+import java.text.SimpleDateFormat
+import java.util.*
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,23 +65,20 @@ fun ListScreen(
             val schools     = activityResult.data?.getBooleanExtra("schools",false)!!
             val shops     = activityResult.data?.getBooleanExtra("shops",false)!!
 
-
-
-            val query ="SELECT * FROM RealEstateDatabase WHERE ('$type' ='' OR type = '$type') AND ('$city' ='' OR city = '$city') AND ($schools = false OR schoolsNear = true) AND ($shops = false OR shopsNear = true) AND ($min3photos = false OR count_photo >= 3) AND ($minSurface =0 AND $maxSurface =0 OR (area BETWEEN $minSurface AND $maxSurface))"
+            val query ="SELECT * FROM RealEstateDatabase WHERE " +
+                    "('$type' ='' OR type = '$type') AND " +
+                    "('$city' ='' OR city = '$city') AND " +
+                    "($schools = false OR schoolsNear = true) AND " +
+                    "($shops = false OR shopsNear = true) AND " +
+                    "($min3photos = false OR count_photo >= 3) AND " +
+                    "($minSurface =0 AND $maxSurface =0 OR (area BETWEEN $minSurface AND $maxSurface)) AND " +
+                    "($minPrice =0 AND $maxPrice =0 OR (price BETWEEN $minPrice AND $maxPrice)) "
 
             Log.e("query",query)
-
-
 
             realEstateViewModel.getPropertyBySearch(SimpleSQLiteQuery(query)).observeForever{ list->
                 realEstatesFilter = list
             }
-
-
-
-
-
-
         }
     }
 
