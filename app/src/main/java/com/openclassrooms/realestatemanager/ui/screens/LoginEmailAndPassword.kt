@@ -2,9 +2,12 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -38,9 +41,7 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
 
 
 
-    ConstraintLayout(modifier = Modifier.fillMaxSize().also {
-        it.padding(250.dp, 250.dp, 250.dp, 250.dp)
-    }) {
+    ConstraintLayout(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         val (entryEmail, entryPassword, buttonLogin, buttonRegister, textButtonRegister, buttonResetPassword) = createRefs()
         TextField(
             value = email,
@@ -51,7 +52,7 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
                 top.linkTo(parent.top, margin = 250.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
-            }
+            }.fillMaxWidth(0.8f)
         )
 
         val icon = if(passwordVisible)
@@ -69,7 +70,7 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
                 top.linkTo(entryEmail.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
-            },
+            }.fillMaxWidth(0.8f),
             visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = { IconButton(onClick = {

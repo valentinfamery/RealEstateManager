@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,8 +13,10 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -20,17 +24,20 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.google.accompanist.adaptive.FoldAwareConfiguration
+import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
+import com.google.accompanist.adaptive.TwoPane
+import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.firebase.auth.FirebaseAuth
-import com.openclassrooms.realestatemanager.domain.models.RealEstate
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterial3Api
 fun MainScreen(
@@ -50,9 +57,8 @@ fun MainScreen(
     val context = LocalContext.current
 
 
-    val navControllerTwoPane = rememberNavController()
 
-
+    val realEstate = remember { mutableStateOf("") }
 
 
     ModalNavigationDrawer(
@@ -69,7 +75,7 @@ fun MainScreen(
         },
         content = {
 
-            if (windowSize == WindowSize.COMPACT) {
+            if (windowSize.width == WindowType.Compact) {
 
                 Scaffold(
                     content = { innerPadding ->
@@ -86,7 +92,7 @@ fun MainScreen(
                                     innerPadding,
                                     navControllerDrawer,
                                     windowSize,
-                                    navControllerTwoPane
+                                    realEstate
                                 )
                             }
                             composable(Screen.MapScreen.route) {
@@ -95,7 +101,6 @@ fun MainScreen(
                                     scope,
                                     realEstateViewModel,
                                     navControllerDrawer,
-                                    navControllerTwoPane,
                                     windowSize
                                 )
                             }
@@ -137,18 +142,21 @@ fun MainScreen(
 
                 )
 
-            } else {
+            } else if (windowSize.width == WindowType.Expanded){
 
 
 
                 ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-                    val (navigationRail, box,box2) = createRefs()
+                    val (navigationRail,box) = createRefs()
 
-                    NavigationRail(modifier = Modifier.constrainAs(navigationRail) {
-                        top.linkTo(parent.top, margin = 0.dp)
-                        start.linkTo(parent.start, margin = 0.dp)
-                        bottom.linkTo(parent.bottom, margin = 0.dp)
-                    }) {
+                    NavigationRail(modifier = Modifier
+                        .constrainAs(navigationRail) {
+                            top.linkTo(parent.top, margin = 0.dp)
+                            start.linkTo(parent.start, margin = 0.dp)
+                            bottom.linkTo(parent.bottom, margin = 0.dp)
+                        }
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.05f)) {
                         NavigationRailItem(
                             icon = { Icon(Icons.Default.Menu, contentDescription = null) },
                             selected = selectedItem == 3,
@@ -170,100 +178,91 @@ fun MainScreen(
                         }
                     }
 
-                    Scaffold(
-                        modifier = Modifier
-                            .constrainAs(box) {
-                                top.linkTo(parent.top, margin = 10.dp)
-                                start.linkTo(navigationRail.end, margin = 10.dp)
-                                bottom.linkTo(parent.bottom, margin = 10.dp)
-                            }
-                            .fillMaxWidth(0.35f)
-                            .fillMaxHeight(0.95f)
-                            .clip(RoundedCornerShape(15.dp)),
-                        content = { innerPadding ->
 
-                            NavHost(
-                                navController = navController,
-                                startDestination = "listScreen"
-                            ) {
-                                composable(Screen.ListScreen.route) {
-                                    ListScreen(
-                                        drawerState,
-                                        scope,
-                                        realEstateViewModel,
-                                        innerPadding,
-                                        navControllerDrawer,
-                                        windowSize,
-                                        navControllerTwoPane
-                                    )
-                                }
-                                composable(Screen.MapScreen.route) {
-                                    MapScreen(
-                                        drawerState,
-                                        scope,
-                                        realEstateViewModel,
-                                        navControllerDrawer,
-                                        navControllerTwoPane,
-                                        windowSize
-                                    )
-                                }
-                            }
-
-                        },
-                        floatingActionButton = {
-                            FloatingActionButton(
-                                onClick = { /* do something */
-                                    context.startActivity(
-                                        Intent(context, NewRealEstateActivity::class.java)
-                                    )
-                                },
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(15.dp))
-                            ) {
-                                Icon(Icons.Filled.Add, "Localized description")
-                            }
+                    Box(modifier = Modifier
+                        .constrainAs(box) {
+                            top.linkTo(parent.top, margin = 0.dp)
+                            start.linkTo(navigationRail.end, margin = 0.dp)
+                            bottom.linkTo(parent.bottom, margin = 0.dp)
+                            end.linkTo(parent.end, margin = 0.dp)
                         }
-
-                    )
-
-
-
-                        Box( modifier = Modifier
-                            .constrainAs(box2) {
-                                top.linkTo(parent.top, margin = 0.dp)
-                                start.linkTo(box.end, margin = 0.dp)
-                                bottom.linkTo(parent.bottom, margin = 0.dp)
-                                end.linkTo(parent.end, margin = 0.dp)
-                            }
-                            .fillMaxWidth(0.55f)
-                            .fillMaxHeight(0.95f)
-                            .clip(RoundedCornerShape(15.dp))) {
-
-                            NavHost(navController = navControllerTwoPane, startDestination = "start") {
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.95f)
+                    ) {
+                        TwoPane(
+                            first = {
+                                Scaffold(
+                                    modifier = Modifier.background(color = Color.Red),
+                                    content = {innerPadding->
 
 
+                                        NavHost(
+                                            navController = navController,
+                                            startDestination = "listScreen"
+                                        ) {
+                                            composable(Screen.ListScreen.route) {
+                                                ListScreen(
+                                                    drawerState,
+                                                    scope,
+                                                    realEstateViewModel,
+                                                    innerPadding,
+                                                    navControllerDrawer,
+                                                    windowSize,
+                                                    realEstate
+                                                )
+                                            }
+                                            composable(Screen.MapScreen.route) {
+                                                MapScreen(
+                                                    drawerState,
+                                                    scope,
+                                                    realEstateViewModel,
+                                                    navControllerDrawer,
+                                                    windowSize
+                                                )
+                                            }
+                                        }
 
-                                composable("detailScreen/{item}",arguments = listOf(
-                                    navArgument("item") {
-                                        type = RealEstate.NavigationType
+                                    },
+                                    floatingActionButton = {
+                                        FloatingActionButton(
+                                            onClick = { /* do something */
+                                                context.startActivity(
+                                                    Intent(context, NewRealEstateActivity::class.java)
+                                                )
+                                            },
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(15.dp))
+                                        ) {
+                                            Icon(Icons.Filled.Add, "Localized description")
+                                        }
                                     }
+
                                 )
-                                ) { backStackEntry ->
-
-                                    val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
-
-                                    RealEstateDetailScreen(
-                                        realEstateViewModel,
-                                        item,
-                                        navControllerDrawer
-                                    ) }
-                                composable("start"){ Start()}
-                            }
-
-
-
-                        }
+                            },
+                            second = {
+                                RealEstateDetailScreen(
+                                    realEstateViewModel = realEstateViewModel,
+                                    itemRealEstateId = realEstate ,
+                                    navController = navController,
+                                )
+                            },
+                            strategy = HorizontalTwoPaneStrategy(splitFraction = 0.475f),
+                            displayFeatures =  calculateDisplayFeatures(activity = context as Activity),
+                            foldAwareConfiguration = FoldAwareConfiguration.AllFolds,
+                        )
                     }
+
+
+
+
+
+
+                }
+
+
+
+
+
             }
 
         },
@@ -276,7 +275,4 @@ fun MainScreen(
 
 }
 
-@Composable
-fun Start(){
-    Text(text = "")
-}
+

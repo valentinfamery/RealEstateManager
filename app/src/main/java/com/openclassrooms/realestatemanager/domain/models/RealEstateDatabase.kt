@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.domain.models
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavType
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -39,7 +40,7 @@ data class RealEstateDatabase(
     var listPhotoWithText : List<PhotoWithTextFirebase> ?=null,
     var count_photo : Int? = listPhotoWithText?.size,
 ): Parcelable {
-    companion object NavigationType : NavType<RealEstate>(isNullableAllowed = false) {
+    companion object NavigationType : NavType<RealEstate>(isNullableAllowed = false){
         override fun get(bundle: Bundle, key: String): RealEstate? {
             return bundle.getParcelable(key)
         }
@@ -51,5 +52,7 @@ data class RealEstateDatabase(
         override fun put(bundle: Bundle, key: String, value: RealEstate) {
             bundle.putParcelable(key, value)
         }
+
+
     }
 }

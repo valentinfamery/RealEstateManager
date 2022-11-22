@@ -36,6 +36,8 @@ interface RealEstateRepository {
 
     fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>>
 
+    fun realEstateById(realEstateId: String): Flow<RealEstateDatabase>
+
 
 
 }

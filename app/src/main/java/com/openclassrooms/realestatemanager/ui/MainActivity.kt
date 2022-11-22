@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui
 
+import android.annotation.SuppressLint
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
@@ -7,8 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +25,7 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewMode
 import com.openclassrooms.realestatemanager.ui.screens.*
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 import com.openclassrooms.realestatemanager.utils.ConnectionReceiver
-import com.openclassrooms.realestatemanager.utils.rememberWindowSizeClass
+import com.openclassrooms.realestatemanager.utils.rememberWindowSizeComposable
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -36,6 +39,7 @@ class MainActivity : ComponentActivity() {
 
     private val realEstateViewModel: RealEstateViewModel by viewModels()
 
+    @SuppressLint("UnrememberedMutableState")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -63,7 +67,8 @@ class MainActivity : ComponentActivity() {
 
 
 
-                val windowSize = rememberWindowSizeClass()
+                val windowSize = rememberWindowSizeComposable()
+
 
 
 
@@ -114,17 +119,28 @@ class MainActivity : ComponentActivity() {
                             route = "detailScreen/{item}",
                             arguments = listOf(
                                 navArgument("item") {
-                                    type = RealEstate.NavigationType
+                                    type = NavType.StringType
                                 }
                             )
                         ) { backStackEntry ->
-                            val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
+                            val item = mutableStateOf(backStackEntry.arguments?.getString("item").toString())
 
-                            RealEstateDetailScreen(
-                                realEstateViewModel,
-                                item,
-                                navController
-                            )
+
+                                RealEstateDetailScreen(
+                                    realEstateViewModel,
+                                    item,
+                                    navController
+                                )
+
+
+                        }
+
+                        composable(
+                            route = "PictureDetail/{photo_url}",
+                            arguments = listOf(navArgument("photo_url") { type = NavType.StringType })
+                        ) {backStackEntry ->
+                            val photo_url = backStackEntry.arguments?.getString("photo_url")
+                            PictureDetail(photo_url,navController)
                         }
 
 

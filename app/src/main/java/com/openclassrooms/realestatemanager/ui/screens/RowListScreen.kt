@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,9 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
+import com.openclassrooms.realestatemanager.domain.models.RealEstate
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.utils.WindowType
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -32,10 +35,11 @@ fun RowList(
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
     windowSize: WindowSize,
-    navControllerTwoPane: NavHostController
+    realEstate: MutableState<String>
 ) {
 
-    if(windowSize == WindowSize.COMPACT){
+
+    if(windowSize.width == WindowType.Compact){
         val items2  = item.listPhotoWithText
 
         Card(
@@ -45,7 +49,7 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                val item = Uri.encode(Gson().toJson(item))
+                val item = Uri.encode(Gson().toJson(item.id))
 
                 navControllerDrawer.navigate("detailScreen/$item")
 
@@ -85,7 +89,7 @@ fun RowList(
                 }
             }
         }
-    }else{
+    }else if(windowSize.width == WindowType.Expanded){
         val items2  = item.listPhotoWithText
 
         Card(
@@ -96,9 +100,12 @@ fun RowList(
         ) {
             Row(Modifier.clickable {
 
-                val item = Uri.encode(Gson().toJson(item))
 
-                navControllerTwoPane.navigate("detailScreen/$item")
+
+                realEstate.value = item.id
+
+
+
             }) {
 
                 Box(

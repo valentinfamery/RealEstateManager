@@ -3,9 +3,7 @@ package com.openclassrooms.realestatemanager.presentation.viewModels
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.domain.models.Response
+import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,6 +33,10 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
     fun refreshRealEstates() = viewModelScope.launch() {
         useCases.refreshRealEstates()
     }
+
+    fun realEstateById(realEstateId : String): StateFlow<RealEstateDatabase?> =
+        realEstateRepository.realEstateById(realEstateId)
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000),null)
 
 
     fun createRealEstate(

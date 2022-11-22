@@ -19,6 +19,9 @@ interface RealEstateDao {
     @Query("DELETE FROM RealEstateDatabase")
     suspend fun clear()
 
+    @Query("SELECT * FROM RealEstateDatabase WHERE id = :realEstateId")
+    fun realEstateById(realEstateId : String):Flow<RealEstateDatabase>
+
     @Query("SELECT * FROM RealEstateDatabase")
     fun getRealEstatesWithCursor(): Cursor
 

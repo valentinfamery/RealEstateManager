@@ -35,6 +35,7 @@ import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.utils.WindowSize
 
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -45,7 +46,6 @@ fun MapScreen(
     scope: CoroutineScope,
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
-    navControllerTwoPane: NavHostController,
     windowSize: WindowSize
 ) {
     val navController = rememberNavController()
@@ -123,7 +123,7 @@ fun MapScreen(
         ) {
             composable("topBarMap") {
 
-                if (windowSize == WindowSize.COMPACT) {
+                if (windowSize.width == WindowType.Compact) {
                     CenterAlignedTopAppBar(
                         title = {
                             Text(text = "Map")
@@ -206,7 +206,7 @@ fun MapScreen(
                                             onInfoWindowClick = {
                                                 val item = Uri.encode(Gson().toJson(realEstate))
 
-                                                navControllerTwoPane.navigate("detailScreen/$item")
+
                                             }
                                         )
                                     }

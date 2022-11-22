@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -25,6 +24,7 @@ import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.ui.FilterActivity
 import com.openclassrooms.realestatemanager.utils.WindowSize
+import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
@@ -43,7 +43,7 @@ fun ListScreen(
     innerPadding: PaddingValues,
     navControllerDrawer: NavController,
     windowSize: WindowSize,
-    navControllerTwoPane: NavHostController,
+    realEstate: MutableState<String>
 ) {
     val context = LocalContext.current
     val realEstates by realEstateViewModel.realEstates.collectAsState()
@@ -114,7 +114,7 @@ fun ListScreen(
 
 
 
-    if (windowSize == WindowSize.COMPACT) {
+    if (windowSize.width == WindowType.Compact) {
 
 
         Scaffold(
@@ -176,7 +176,7 @@ fun ListScreen(
                                     realEstateViewModel,
                                     navControllerDrawer,
                                     windowSize,
-                                    navControllerTwoPane
+                                    realEstate
                                 )
                             }
 
@@ -190,7 +190,85 @@ fun ListScreen(
                                     realEstateViewModel,
                                     navControllerDrawer,
                                     windowSize,
-                                    navControllerTwoPane
+                                    realEstate
+                                )
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+        )
+    }else if (windowSize.width == WindowType.Expanded){
+        Scaffold(
+            modifier = Modifier.padding(innerPadding),
+            topBar = {
+
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(text = "RealEstateManager")
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            launcherActivityResult.launch(
+                                Intent(
+                                    context,
+                                    FilterActivity::class.java
+                                )
+                            )
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
+                                contentDescription = ""
+                            )
+                        }
+                    },
+                )
+
+            },
+            content = { it ->
+
+                Log.e("realEstatesResponse", "Success")
+
+                val isRefreshing by realEstateViewModel.isRefreshing.collectAsState()
+
+
+
+                SwipeRefresh(
+                    modifier = Modifier.padding(it),
+                    state = rememberSwipeRefreshState(isRefreshing),
+                    onRefresh = {
+                        realEstateViewModel.refreshRealEstates()
+                    },
+                ) {
+
+
+                    LazyColumn {
+                        if (!filterState) {
+
+                            items(realEstates) { item ->
+                                RowList(
+                                    item,
+                                    realEstateViewModel,
+                                    navControllerDrawer,
+                                    windowSize,
+                                    realEstate
+                                )
+                            }
+
+
+                        } else {
+
+
+                            items(realEstatesFilter) { item ->
+                                RowList(
+                                    item,
+                                    realEstateViewModel,
+                                    navControllerDrawer,
+                                    windowSize,
+                                    realEstate
                                 )
                             }
 
