@@ -35,6 +35,8 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.utils.WindowSize
+import com.openclassrooms.realestatemanager.utils.WindowType
 import com.skydoves.landscapist.glide.GlideImage
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -42,15 +44,16 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,
-    itemRealEstateId: MutableState<String>,
-    navController: NavController
-    ) {
+    navController: NavController,
+    windowSize: WindowSize
+) {
+    val realEstateid by realEstateViewModel.realEstateId.collectAsState()
 
-    Log.e("itemRealEstateId", itemRealEstateId.value)
+    Log.e("itemRealEstateId", realEstateid)
 
-    if (itemRealEstateId.value != "") {
+    if (realEstateid != "") {
 
-        val itemRealEstate by realEstateViewModel.realEstateById(itemRealEstateId.value).collectAsState()
+        val itemRealEstate by realEstateViewModel.realEstateById(realEstateid).collectAsState()
 
 
 
@@ -87,24 +90,38 @@ fun RealEstateDetailScreen(
 
                         val (rowHospital, rowSchool, rowShops, rowParks) = createRefs()
 
-                        CenterAlignedTopAppBar(
-                            title = {
-                                Text(text = "Estate Manager")
-                            },
-                            navigationIcon = {
-                                IconButton(onClick = {
-                                    navController.popBackStack()
-                                }) {
-                                    Icon(Icons.Filled.ArrowBack, "")
+                        if(windowSize.width == WindowType.Compact || windowSize.width == WindowType.Medium ){
+                            CenterAlignedTopAppBar(
+                                title = {
+                                    Text(text = "Estate Manager")
+                                },
+                                navigationIcon = {
+                                    IconButton(onClick = {
+                                        navController.popBackStack()
+                                    }) {
+                                        Icon(Icons.Filled.ArrowBack, "")
+                                    }
+                                },
+                                modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                                    top.linkTo(parent.top, margin = 0.dp)
+                                    start.linkTo(parent.start, margin = 0.dp)
+                                    end.linkTo(parent.end, margin = 0.dp)
                                 }
-                            },
-                            modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
-                                top.linkTo(parent.top, margin = 0.dp)
-                                start.linkTo(parent.start, margin = 0.dp)
-                                end.linkTo(parent.end, margin = 0.dp)
-                            }
 
-                        )
+                            )
+                        }else if (windowSize.width == WindowType.Expanded){
+                            CenterAlignedTopAppBar(
+                                title = {
+                                    Text(text = "Estate Manager")
+                                },
+                                modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                                    top.linkTo(parent.top, margin = 0.dp)
+                                    start.linkTo(parent.start, margin = 0.dp)
+                                    end.linkTo(parent.end, margin = 0.dp)
+                                }
+
+                            )
+                        }
 
                         FlowRow(modifier = Modifier
                             .constrainAs(lazyColumnPhoto) {

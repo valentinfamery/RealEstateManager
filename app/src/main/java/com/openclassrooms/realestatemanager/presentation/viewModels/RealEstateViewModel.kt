@@ -38,6 +38,11 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         realEstateRepository.realEstateById(realEstateId)
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000),null)
 
+    var _realEstateId = MutableStateFlow("")
+    val realEstateId : StateFlow<String> = _realEstateId
+
+
+
 
     fun createRealEstate(
         type: String,

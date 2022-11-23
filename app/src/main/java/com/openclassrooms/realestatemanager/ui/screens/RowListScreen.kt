@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,8 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.domain.models.RealEstate
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.WindowType
@@ -34,13 +35,12 @@ fun RowList(
     item: RealEstateDatabase,
     realEstateViewModel: RealEstateViewModel,
     navController: NavController,
-    windowSize: WindowSize,
-    realEstate: MutableState<String>
+    windowSize: WindowSize
 ) {
 
 
-    if(windowSize.width == WindowType.Compact){
-        val items2  = item.listPhotoWithText
+    if (windowSize.width == WindowType.Compact) {
+        val items2 = item.listPhotoWithText
 
         Card(
             modifier = Modifier
@@ -49,8 +49,8 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                realEstate.value = item.id
-                navController.navigate("detailScreen")
+                realEstateViewModel._realEstateId.value = item.id
+
 
             }) {
 
@@ -61,12 +61,12 @@ fun RowList(
                         .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
-                        if(items2?.get(0)?.photoUrl != null) {
-                            GlideImage(
-                                imageModel = items2[0].photoUrl,
-                                contentScale = ContentScale.Crop,
-                            )
-                        }
+                    if (items2?.get(0)?.photoUrl != null) {
+                        GlideImage(
+                            imageModel = items2[0].photoUrl,
+                            contentScale = ContentScale.Crop,
+                        )
+                    }
                 }
 
 
@@ -88,8 +88,17 @@ fun RowList(
                 }
             }
         }
-    }else if(windowSize.width == WindowType.Expanded){
-        val items2  = item.listPhotoWithText
+        val realId by realEstateViewModel.realEstateId.collectAsState()
+
+        LaunchedEffect(realId) {
+            if (realId != "") {
+                navController.navigate("detailScreen")
+            }
+        }
+
+
+    } else if (windowSize.width == WindowType.Expanded) {
+        val items2 = item.listPhotoWithText
 
         Card(
             modifier = Modifier
@@ -100,9 +109,7 @@ fun RowList(
             Row(Modifier.clickable {
 
 
-
-                realEstate.value = item.id
-
+                realEstateViewModel._realEstateId.value = item.id
 
 
             }) {
@@ -133,7 +140,7 @@ fun RowList(
                         style = MaterialTheme.typography.headlineLarge
                     )
                     Text(
-                        text = "$"+item.price.toString(),
+                        text = "$" + item.price.toString(),
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }

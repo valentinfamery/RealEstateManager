@@ -42,8 +42,7 @@ fun ListScreen(
     realEstateViewModel: RealEstateViewModel,
     innerPadding: PaddingValues,
     navController: NavController,
-    windowSize: WindowSize,
-    realEstate: MutableState<String>
+    windowSize: WindowSize
 ) {
     val context = LocalContext.current
     val realEstates by realEstateViewModel.realEstates.collectAsState()
@@ -175,8 +174,7 @@ fun ListScreen(
                                     item,
                                     realEstateViewModel,
                                     navController,
-                                    windowSize,
-                                    realEstate
+                                    windowSize
                                 )
                             }
 
@@ -189,8 +187,7 @@ fun ListScreen(
                                     item,
                                     realEstateViewModel,
                                     navController,
-                                    windowSize,
-                                    realEstate
+                                    windowSize
                                 )
                             }
 
@@ -253,8 +250,7 @@ fun ListScreen(
                                     item,
                                     realEstateViewModel,
                                     navController,
-                                    windowSize,
-                                    realEstate
+                                    windowSize
                                 )
                             }
 
@@ -267,8 +263,7 @@ fun ListScreen(
                                     item,
                                     realEstateViewModel,
                                     navController,
-                                    windowSize,
-                                    realEstate
+                                    windowSize
                                 )
                             }
 

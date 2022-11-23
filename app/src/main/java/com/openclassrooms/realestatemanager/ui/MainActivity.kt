@@ -8,9 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -27,6 +24,7 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewMode
 import com.openclassrooms.realestatemanager.ui.screens.*
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 import com.openclassrooms.realestatemanager.utils.ConnectionReceiver
+import com.openclassrooms.realestatemanager.utils.WindowType
 import com.openclassrooms.realestatemanager.utils.rememberWindowSizeComposable
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -56,9 +54,8 @@ class MainActivity : ComponentActivity() {
             Projet_9_OC_RealEstateManagerTheme {
                 val userViewModel: UserViewModel = hiltViewModel()
 
-                val realEstate = remember {
-                    mutableStateOf("")
-                }
+
+
 
 
 
@@ -86,8 +83,7 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 userViewModel,
                                 realEstateViewModel,
-                                windowSize,
-                                realEstate
+                                windowSize
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
@@ -121,23 +117,27 @@ class MainActivity : ComponentActivity() {
                         }
 
 
-                        composable(
-                            route = "detailScreen"
-                        ) {
+                        if(windowSize.width != WindowType.Expanded) {
+                            composable(
+                                route = "detailScreen"
+                            ) {
 
                                 RealEstateDetailScreen(
                                     realEstateViewModel,
-                                    realEstate,
-                                    navController
+                                    navController,
+                                    windowSize
                                 )
-                        }
+                            }
 
-                        composable(
-                            route = "PictureDetail/{photo_url}",
-                            arguments = listOf(navArgument("photo_url") { type = NavType.StringType })
-                        ) {backStackEntry ->
-                            val photo_url = backStackEntry.arguments?.getString("photo_url")
-                            PictureDetail(photo_url,navController)
+                            composable(
+                                route = "PictureDetail/{photo_url}",
+                                arguments = listOf(navArgument("photo_url") {
+                                    type = NavType.StringType
+                                })
+                            ) { backStackEntry ->
+                                val photo_url = backStackEntry.arguments?.getString("photo_url")
+                                PictureDetail(photo_url, navController)
+                            }
                         }
 
 
