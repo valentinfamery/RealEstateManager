@@ -33,7 +33,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 fun RowList(
     item: RealEstateDatabase,
     realEstateViewModel: RealEstateViewModel,
-    navControllerDrawer: NavController,
+    navController: NavController,
     windowSize: WindowSize,
     realEstate: MutableState<String>
 ) {
@@ -49,9 +49,8 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                val item = Uri.encode(Gson().toJson(item.id))
-
-                navControllerDrawer.navigate("detailScreen/$item")
+                realEstate.value = item.id
+                navController.navigate("detailScreen")
 
             }) {
 

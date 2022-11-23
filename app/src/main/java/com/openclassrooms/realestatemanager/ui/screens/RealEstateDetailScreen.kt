@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -45,9 +46,13 @@ fun RealEstateDetailScreen(
     navController: NavController
     ) {
 
+    Log.e("itemRealEstateId", itemRealEstateId.value)
+
     if (itemRealEstateId.value != "") {
 
-        val itemRealEstate by realEstateViewModel.realEstateById(itemRealEstateId.toString()).collectAsState()
+        val itemRealEstate by realEstateViewModel.realEstateById(itemRealEstateId.value).collectAsState()
+
+
 
         itemRealEstate?.let {itemRealEstate->
 

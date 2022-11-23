@@ -41,7 +41,7 @@ fun ListScreen(
     scope: CoroutineScope,
     realEstateViewModel: RealEstateViewModel,
     innerPadding: PaddingValues,
-    navControllerDrawer: NavController,
+    navController: NavController,
     windowSize: WindowSize,
     realEstate: MutableState<String>
 ) {
@@ -174,7 +174,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     realEstateViewModel,
-                                    navControllerDrawer,
+                                    navController,
                                     windowSize,
                                     realEstate
                                 )
@@ -188,7 +188,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     realEstateViewModel,
-                                    navControllerDrawer,
+                                    navController,
                                     windowSize,
                                     realEstate
                                 )
@@ -252,7 +252,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     realEstateViewModel,
-                                    navControllerDrawer,
+                                    navController,
                                     windowSize,
                                     realEstate
                                 )
@@ -266,7 +266,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     realEstateViewModel,
-                                    navControllerDrawer,
+                                    navController,
                                     windowSize,
                                     realEstate
                                 )

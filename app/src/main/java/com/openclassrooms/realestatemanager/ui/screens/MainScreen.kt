@@ -45,7 +45,8 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    realEstate: MutableState<String>
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -58,7 +59,7 @@ fun MainScreen(
 
 
 
-    val realEstate = remember { mutableStateOf("") }
+
 
 
     ModalNavigationDrawer(

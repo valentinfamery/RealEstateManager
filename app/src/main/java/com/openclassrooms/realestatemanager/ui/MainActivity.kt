@@ -8,7 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -54,6 +56,9 @@ class MainActivity : ComponentActivity() {
             Projet_9_OC_RealEstateManagerTheme {
                 val userViewModel: UserViewModel = hiltViewModel()
 
+                val realEstate = remember {
+                    mutableStateOf("")
+                }
 
 
 
@@ -81,7 +86,8 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 userViewModel,
                                 realEstateViewModel,
-                                windowSize
+                                windowSize,
+                                realEstate
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
@@ -116,23 +122,14 @@ class MainActivity : ComponentActivity() {
 
 
                         composable(
-                            route = "detailScreen/{item}",
-                            arguments = listOf(
-                                navArgument("item") {
-                                    type = NavType.StringType
-                                }
-                            )
-                        ) { backStackEntry ->
-                            val item = mutableStateOf(backStackEntry.arguments?.getString("item").toString())
-
+                            route = "detailScreen"
+                        ) {
 
                                 RealEstateDetailScreen(
                                     realEstateViewModel,
-                                    item,
+                                    realEstate,
                                     navController
                                 )
-
-
                         }
 
                         composable(
