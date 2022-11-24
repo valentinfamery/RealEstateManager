@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -44,7 +45,9 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    realEstateId: String,
+    realEstateIdSet : (realEstateId : String) ->Unit
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -90,7 +93,11 @@ fun MainScreen(
                                     realEstateViewModel,
                                     innerPadding,
                                     navControllerDrawer,
-                                    windowSize
+                                    windowSize,
+                                    realEstateId,
+                                    realEstateIdSet = {
+                                        realEstateIdSet(it)
+                                    }
                                 )
                             }
                             composable(Screen.MapScreen.route) {
@@ -205,7 +212,11 @@ fun MainScreen(
                                                     realEstateViewModel,
                                                     innerPadding,
                                                     navControllerDrawer,
-                                                    windowSize
+                                                    windowSize,
+                                                    realEstateId,
+                                                    realEstateIdSet = {
+                                                        realEstateIdSet(it)
+                                                    }
                                                 )
                                             }
                                             composable(Screen.MapScreen.route) {
@@ -237,11 +248,19 @@ fun MainScreen(
                                 )
                             },
                             second = {
-                                RealEstateDetailScreen(
-                                    realEstateViewModel = realEstateViewModel,
-                                    navController = navController,
-                                    windowSize = windowSize,
-                                )
+                                if (realEstateId != "") {
+
+                                    val itemRealEstate by realEstateViewModel.realEstateById(realEstateId).observeAsState()
+
+                                    RealEstateDetailScreen(
+                                        realEstateViewModel = realEstateViewModel,
+                                        navController = navController,
+                                        windowSize = windowSize,
+                                        itemRealEstate
+                                    )
+
+                                }
+
                             },
                             strategy = HorizontalTwoPaneStrategy(splitFraction = 0.475f),
                             displayFeatures =  calculateDisplayFeatures(activity = context as Activity),

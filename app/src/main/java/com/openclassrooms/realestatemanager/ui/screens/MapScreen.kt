@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -108,7 +109,7 @@ fun MapScreen(
 
 
     ConstraintLayout {
-        val (centerAlignedTopAppBar, map) = createRefs()
+        val (centerAlignedTopAppBar, map,textError) = createRefs()
 
 
         NavHost(
@@ -220,7 +221,14 @@ fun MapScreen(
             }
 
         } else {
-            Text(text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ")
+
+                Text(text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ", modifier = Modifier.constrainAs(textError){
+                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
+                    start.linkTo(parent.start, margin = 0.dp)
+                    end.linkTo(parent.end , margin = 0.dp)
+                    bottom.linkTo(parent.bottom , margin = 0.dp)
+                })
+
         }
     }
 

@@ -235,7 +235,8 @@ class RealEstateRepositoryImpl @Inject constructor(
         return realEstateDao.getPropertyBySearch(supportSQLiteQuery)
     }
 
-    override fun realEstateById(realEstateId: String): Flow<RealEstateDatabase> {
+    override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {
+        Log.e("realEstateById()","repo")
         return realEstateDao.realEstateById(realEstateId)
     }
 

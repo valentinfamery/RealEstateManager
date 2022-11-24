@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,6 +33,7 @@ import com.google.gson.Gson
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.utils.WindowType
@@ -45,18 +45,9 @@ import com.skydoves.landscapist.glide.GlideImage
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,
     navController: NavController,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    itemRealEstate: RealEstateDatabase?
 ) {
-    val realEstateid by realEstateViewModel.realEstateId.collectAsState()
-
-    Log.e("itemRealEstateId", realEstateid)
-
-    if (realEstateid != "") {
-
-        val itemRealEstate by realEstateViewModel.realEstateById(realEstateid).collectAsState()
-
-
-
         itemRealEstate?.let {itemRealEstate->
 
             val listPhotos = itemRealEstate.listPhotoWithText
@@ -340,7 +331,7 @@ fun RealEstateDetailScreen(
             )
         }
 
-    }
+
 
 
 

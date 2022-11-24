@@ -14,8 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class RealEstateViewModel @Inject constructor(private val useCases: UseCases, private val realEstateRepository: RealEstateRepository) : ViewModel() {
 
-
-
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
     var list by mutableStateOf<Response<Boolean>>(Response.Empty)
@@ -30,18 +28,11 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         refreshRealEstates()
     }
 
-    fun refreshRealEstates() = viewModelScope.launch() {
+    fun refreshRealEstates() = viewModelScope.launch {
         useCases.refreshRealEstates()
     }
 
-    fun realEstateById(realEstateId : String): StateFlow<RealEstateDatabase?> =
-        realEstateRepository.realEstateById(realEstateId)
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000),null)
-
-    var _realEstateId = MutableStateFlow("")
-    val realEstateId : StateFlow<String> = _realEstateId
-
-
+    fun realEstateById(realEstateId : String): LiveData<RealEstateDatabase?> {return realEstateRepository.realEstateById(realEstateId)}
 
 
     fun createRealEstate(

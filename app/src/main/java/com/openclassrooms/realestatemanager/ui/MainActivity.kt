@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -71,6 +73,9 @@ class MainActivity : ComponentActivity() {
 
                 val windowSize = rememberWindowSizeComposable()
 
+                var realEstateId by remember { mutableStateOf("")}
+
+
 
 
 
@@ -83,7 +88,11 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 userViewModel,
                                 realEstateViewModel,
-                                windowSize
+                                windowSize,
+                                realEstateId,
+                                realEstateIdSet = {
+                                    realEstateId = it
+                                }
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navController = navController) }
@@ -118,15 +127,24 @@ class MainActivity : ComponentActivity() {
 
 
                         if(windowSize.width != WindowType.Expanded) {
+
                             composable(
                                 route = "detailScreen"
                             ) {
+                                if (realEstateId != "") {
 
-                                RealEstateDetailScreen(
-                                    realEstateViewModel,
-                                    navController,
-                                    windowSize
-                                )
+                                    val itemRealEstate by realEstateViewModel.realEstateById(realEstateId).observeAsState()
+
+                                    RealEstateDetailScreen(
+                                        realEstateViewModel,
+                                        navController,
+                                        windowSize,
+                                        itemRealEstate
+                                    )
+
+                                }
+
+
                             }
 
                             composable(

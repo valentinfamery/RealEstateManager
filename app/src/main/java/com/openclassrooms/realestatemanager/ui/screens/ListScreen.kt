@@ -42,7 +42,9 @@ fun ListScreen(
     realEstateViewModel: RealEstateViewModel,
     innerPadding: PaddingValues,
     navController: NavController,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    realEstateId: String,
+    realEstateIdSet : (realEstateId : String) ->Unit
 ) {
     val context = LocalContext.current
     val realEstates by realEstateViewModel.realEstates.collectAsState()
@@ -172,9 +174,12 @@ fun ListScreen(
                             items(realEstates) { item ->
                                 RowList(
                                     item,
-                                    realEstateViewModel,
                                     navController,
-                                    windowSize
+                                    windowSize,
+                                    realEstateId,
+                                    realEstateIdSet = {
+                                        realEstateIdSet(it)
+                                    }
                                 )
                             }
 
@@ -185,9 +190,12 @@ fun ListScreen(
                             items(realEstatesFilter) { item ->
                                 RowList(
                                     item,
-                                    realEstateViewModel,
                                     navController,
-                                    windowSize
+                                    windowSize,
+                                    realEstateId,
+                                    realEstateIdSet = {
+                                        realEstateIdSet(it)
+                                    }
                                 )
                             }
 
@@ -248,9 +256,12 @@ fun ListScreen(
                             items(realEstates) { item ->
                                 RowList(
                                     item,
-                                    realEstateViewModel,
                                     navController,
-                                    windowSize
+                                    windowSize,
+                                    realEstateId,
+                                    realEstateIdSet = {
+                                        realEstateIdSet(it)
+                                    }
                                 )
                             }
 
@@ -261,9 +272,12 @@ fun ListScreen(
                             items(realEstatesFilter) { item ->
                                 RowList(
                                     item,
-                                    realEstateViewModel,
                                     navController,
-                                    windowSize
+                                    windowSize,
+                                    realEstateId,
+                                    realEstateIdSet = {
+                                        realEstateIdSet(it)
+                                    }
                                 )
                             }
 

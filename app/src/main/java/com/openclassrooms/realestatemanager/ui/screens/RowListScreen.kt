@@ -1,14 +1,11 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -18,24 +15,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.google.gson.Gson
-import com.openclassrooms.realestatemanager.domain.models.RealEstate
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.utils.WindowSize
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.WindowType
 import com.skydoves.landscapist.glide.GlideImage
-import kotlinx.coroutines.InternalCoroutinesApi
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RowList(
     item: RealEstateDatabase,
-    realEstateViewModel: RealEstateViewModel,
     navController: NavController,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    realEstateId: String,
+    realEstateIdSet : (realEstateId : String) ->Unit
 ) {
 
 
@@ -49,8 +40,8 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                realEstateViewModel._realEstateId.value = item.id
-
+                realEstateIdSet(item.id)
+                navController.navigate("detailScreen")
 
             }) {
 
@@ -88,13 +79,9 @@ fun RowList(
                 }
             }
         }
-        val realId by realEstateViewModel.realEstateId.collectAsState()
 
-        LaunchedEffect(realId) {
-            if (realId != "") {
-                navController.navigate("detailScreen")
-            }
-        }
+
+
 
 
     } else if (windowSize.width == WindowType.Expanded) {
@@ -107,11 +94,7 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-
-
-                realEstateViewModel._realEstateId.value = item.id
-
-
+                realEstateIdSet(item.id)
             }) {
 
                 Box(
