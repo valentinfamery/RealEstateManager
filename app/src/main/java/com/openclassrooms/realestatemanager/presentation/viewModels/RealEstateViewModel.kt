@@ -14,6 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class RealEstateViewModel @Inject constructor(private val useCases: UseCases, private val realEstateRepository: RealEstateRepository) : ViewModel() {
 
+
+
+
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
     var list by mutableStateOf<Response<Boolean>>(Response.Empty)

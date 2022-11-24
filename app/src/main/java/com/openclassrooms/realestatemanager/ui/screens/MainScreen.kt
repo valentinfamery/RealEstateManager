@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,6 +35,7 @@ import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.launch
 
@@ -131,10 +133,18 @@ fun MainScreen(
 
 
                                 FloatingActionButton(
-                                    onClick = { /* do something */
-                                        context.startActivity(
-                                            Intent(context, NewRealEstateActivity::class.java)
-                                        )
+                                    onClick = {
+                                        val isInternetAvailable = Utils.isInternetAvailable(context)
+
+                                        if(isInternetAvailable){
+                                            context.startActivity(
+                                                Intent(context, NewRealEstateActivity::class.java)
+                                            )
+                                        }else{
+                                            Toast.makeText(context,"Impossible il n'y a pas de connexion Internet",Toast.LENGTH_LONG).show()
+                                        }
+
+
                                     },
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(15.dp))

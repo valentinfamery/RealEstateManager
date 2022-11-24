@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
@@ -38,7 +39,9 @@ class RealEstateRepositoryImpl @Inject constructor(
 
             val isNetWorkAvailable = Utils.isInternetAvailable(context)
 
-            if(isNetWorkAvailable){
+        val firebaseAuth = FirebaseAuth.getInstance()
+
+            if(isNetWorkAvailable && firebaseAuth.currentUser != null){
                 Log.e("items", "repo1")
 
 

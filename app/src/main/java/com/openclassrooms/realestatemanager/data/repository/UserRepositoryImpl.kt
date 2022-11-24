@@ -98,13 +98,18 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun userData() : User? {
-        val user = firebaseAuth.currentUser
-        val uid = user?.uid
-        Log.e("userData()", "uid" + uid.toString())
-        val userData =
-            firestore.collection("users").document(uid!!).get().await().toObject(User::class.java)
-        Log.e("userData()", "userData" + userData?.username.toString())
-        return userData
+        if(firebaseAuth.currentUser != null) {
+            val user = firebaseAuth.currentUser
+            val uid = user?.uid
+            Log.e("userData()", "uid" + uid.toString())
+            val userData =
+                firestore.collection("users").document(uid!!).get().await()
+                    .toObject(User::class.java)
+            Log.e("userData()", "userData" + userData?.username.toString())
+            return userData
+        }else {
+            return null
+        }
 
     }
 }

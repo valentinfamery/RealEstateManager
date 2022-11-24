@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -35,6 +37,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.utils.WindowType
 import com.skydoves.landscapist.glide.GlideImage
@@ -48,6 +51,8 @@ fun RealEstateDetailScreen(
     windowSize: WindowSize,
     itemRealEstate: RealEstateDatabase?
 ) {
+
+    val context = LocalContext.current
         itemRealEstate?.let {itemRealEstate->
 
             val listPhotos = itemRealEstate.listPhotoWithText
@@ -57,10 +62,17 @@ fun RealEstateDetailScreen(
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
+                            val isInternetAvailable = Utils.isInternetAvailable(context)
 
-                            val item = Uri.encode(Gson().toJson(itemRealEstate))
+                            if(isInternetAvailable) {
 
-                            navController.navigate("editScreen/$item")
+                                val item = Uri.encode(Gson().toJson(itemRealEstate))
+                                navController.navigate("editScreen/$item")
+
+                            }else{
+                                Toast.makeText(context,"Impossible il n'y a pas de connexion Internet",
+                                    Toast.LENGTH_LONG).show()
+                            }
 
 
                         },
