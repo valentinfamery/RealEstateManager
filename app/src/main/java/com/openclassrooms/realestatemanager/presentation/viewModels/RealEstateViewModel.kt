@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.presentation.viewModels
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
@@ -72,8 +71,20 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
 
     }
     
-    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>> {
-          return  realEstateRepository.getPropertyBySearch(supportSQLiteQuery)
+    fun getPropertyBySearch(
+        type: String,
+        city: String,
+        minSurface: Int,
+        maxSurface: Int,
+        minPrice: Int,
+        maxPrice: Int,
+        onTheMarketLessALastWeek: Boolean,
+        soldOn3LastMonth: Boolean,
+        min3photos: Boolean,
+        schools: Boolean,
+        shops: Boolean
+    ): LiveData<List<RealEstateDatabase>> {
+          return  realEstateRepository.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops)
     }
 
 

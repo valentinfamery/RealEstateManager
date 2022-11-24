@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.data.repository
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +18,9 @@ import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import retrofit2.Call
 import retrofit2.Callback
 import java.util.*
@@ -234,8 +238,43 @@ class RealEstateRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>> {
-        return realEstateDao.getPropertyBySearch(supportSQLiteQuery)
+    override fun getPropertyBySearch(
+        type: String,
+        city: String,
+        minSurface: Int,
+        maxSurface: Int,
+        minPrice: Int,
+        maxPrice: Int,
+        onTheMarketLessALastWeek: Boolean,
+        soldOn3LastMonth: Boolean,
+        min3photos: Boolean,
+        schools: Boolean,
+        shops: Boolean
+    ): LiveData<List<RealEstateDatabase>> {
+        val c = Calendar.getInstance()
+        val fmt: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
+
+        val dateToday = DateTime(c.time)
+        val dateTodayFinal = dateToday.toString(fmt)
+
+        val dateMinusThreeMonth = dateToday.minusMonths(3).toString(fmt)
+        val dateMinus1Week = dateToday.minusDays(7).toString(fmt)
+
+        val query = """SELECT * FROM RealEstateDatabase WHERE 
+                        ('$type' ='' OR type LIKE '%$type%' ) AND 
+                        ('$city' ='' OR city LIKE '%$city%' ) AND
+                        ($schools = false OR schoolsNear = $schools ) AND 
+                        ($shops = false OR shopsNear = $shops ) AND 
+                        ($min3photos = false OR count_photo >= 3 ) AND
+                        ($minSurface =0 AND $maxSurface = 0  OR  area BETWEEN $minSurface AND $maxSurface  ) AND 
+                        ($minPrice =0 AND $maxPrice = 0  OR  price BETWEEN $minPrice AND $maxPrice ) AND 
+                        ($onTheMarketLessALastWeek = false  OR  dateOfEntry BETWEEN '$dateMinus1Week' AND '$dateTodayFinal' ) AND 
+                        ($soldOn3LastMonth = false  OR  dateOfSale <> '00/00/0000' OR  dateOfSale BETWEEN '$dateMinusThreeMonth' AND '$dateTodayFinal' ) """
+
+
+
+
+        return realEstateDao.getPropertyBySearch(SimpleSQLiteQuery(query))
     }
 
     override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {

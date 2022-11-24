@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.openclassrooms.realestatemanager.R
@@ -27,10 +26,6 @@ import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
-import java.util.*
 
 
 @SuppressLint("UnrememberedMutableState", "SimpleDateFormat")
@@ -72,33 +67,15 @@ fun ListScreen(
                 val schools = activityResult.data?.getBooleanExtra("schools", false)!!
                 val shops = activityResult.data?.getBooleanExtra("shops", false)!!
 
-                val c = Calendar.getInstance()
-                val fmt: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
-
-                val dateToday = DateTime(c.time)
-                val dateTodayFinal = dateToday.toString(fmt)
-
-                val dateMinusThreeMonth = dateToday.minusMonths(3).toString(fmt)
-                val dateMinus1Week = dateToday.minusDays(7).toString(fmt)
-
-                val query = """SELECT * FROM RealEstateDatabase WHERE 
-                        ('$type' ='' OR type LIKE '%$type%' ) AND 
-                        ('$city' ='' OR city LIKE '%$city%' ) AND
-                        ($schools = false OR schoolsNear = $schools ) AND 
-                        ($shops = false OR shopsNear = $shops ) AND 
-                        ($min3photos = false OR count_photo >= 3 ) AND
-                        ($minSurface =0 AND $maxSurface = 0  OR  area BETWEEN $minSurface AND $maxSurface  ) AND 
-                        ($minPrice =0 AND $maxPrice = 0  OR  price BETWEEN $minPrice AND $maxPrice ) AND 
-                        ($onTheMarketLessALastWeek = false  OR  dateOfEntry BETWEEN '$dateMinus1Week' AND '$dateTodayFinal' ) AND 
-                        ($soldOn3LastMonth = false  OR  dateOfSale <> '00/00/0000' OR  dateOfSale BETWEEN '$dateMinusThreeMonth' AND '$dateTodayFinal' ) """
 
 
 
 
 
-                Log.e("query", query)
 
-                realEstateViewModel.getPropertyBySearch(SimpleSQLiteQuery(query))
+
+
+                realEstateViewModel.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops)
                     .observeForever { list ->
                         realEstatesFilter = list
                     }

@@ -34,7 +34,19 @@ interface RealEstateRepository {
         checkedStateParks : Boolean
     ) : Response<Boolean>
 
-    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>>
+    fun getPropertyBySearch(
+        type: String,
+        city: String,
+        minSurface: Int,
+        maxSurface: Int,
+        minPrice: Int,
+        maxPrice: Int,
+        onTheMarketLessALastWeek: Boolean,
+        soldOn3LastMonth: Boolean,
+        min3photos: Boolean,
+        schools: Boolean,
+        shops: Boolean
+    ): LiveData<List<RealEstateDatabase>>
 
     fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?>
 
