@@ -73,7 +73,7 @@ fun RowList(
                         style = MaterialTheme.typography.headlineLarge
                     )
                     Text(
-                        text = "$",
+                        text = "$"+ item.price.toString(),
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }

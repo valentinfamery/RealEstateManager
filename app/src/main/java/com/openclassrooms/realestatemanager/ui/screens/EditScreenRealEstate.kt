@@ -45,10 +45,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
-import com.openclassrooms.realestatemanager.domain.models.RealEstate
-import com.openclassrooms.realestatemanager.domain.models.Response
-import com.openclassrooms.realestatemanager.domain.models.User
+import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
@@ -70,7 +67,8 @@ fun EditScreenRealEstate(
     val openDialog = remember { mutableStateOf(false) }
     var titlePhoto by remember { mutableStateOf("") }
 
-    val listPhotos = remember { mutableStateListOf<PhotoWithText>() }
+    val listPhotos by remember { mutableStateOf(listPhotos2?.toMutableList()  ) }
+
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
@@ -222,9 +220,9 @@ fun EditScreenRealEstate(
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = PhotoWithText(photoSelect, titlePhoto)
+                            val photoWithText = PhotoWithTextFirebase(photoSelect.toString(), titlePhoto)
 
-                            listPhotos.add(photoWithText)
+                            listPhotos?.add(photoWithText)
                             openDialog.value = false
                             /*TODO*/
                         }
@@ -327,7 +325,7 @@ fun EditScreenRealEstate(
                             // This value is used to assign to
                             // the DropDown the same width
                             mTextFieldSize = coordinates.size.toSize()
-                        },
+                        }.fillMaxWidth(0.8f),
                     trailingIcon = {
                         Icon(icon, "contentDescription",
                             Modifier.clickable { expanded = !expanded })
@@ -372,7 +370,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldType.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
@@ -385,7 +383,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldPrice.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
@@ -398,19 +396,19 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldArea.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
                     value = entryDescription,
                     onValueChange = { entryDescription = it },
                     label = { Text("Description") },
-                    singleLine = true,
+                    singleLine = false,
                     modifier = Modifier.constrainAs(fieldDescription) {
                         top.linkTo(fieldNumberRoom.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
 
@@ -424,7 +422,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldDescription.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
@@ -436,7 +434,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
@@ -448,7 +446,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldNumberApartement.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
@@ -460,7 +458,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldCity.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
@@ -472,7 +470,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldRegion.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
                 TextField(
@@ -484,7 +482,7 @@ fun EditScreenRealEstate(
                         top.linkTo(fieldPostalCode.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    }
+                    }.fillMaxWidth(0.8f)
                 )
 
 
@@ -580,7 +578,7 @@ fun EditScreenRealEstate(
                             // This value is used to assign to
                             // the DropDown the same width
                             mTextFieldSizeStatus = coordinates.size.toSize()
-                        },
+                        }.fillMaxWidth(0.8f),
                     trailingIcon = {
                         Icon(iconStatus, "contentDescription",
                             Modifier.clickable { expandedStatus = !expandedStatus })
@@ -667,7 +665,7 @@ fun EditScreenRealEstate(
                     start.linkTo(parent.start, margin = 25.dp)
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
-                    repeat(listPhotos.size) {
+                    repeat(listPhotos!!.size) {
                         Box(modifier = Modifier.size(184.dp)) {
 
                             Column {
@@ -676,7 +674,7 @@ fun EditScreenRealEstate(
                                     val (image, text) = createRefs()
 
                                     GlideImage(
-                                        imageModel = listPhotos[it].photoUri,
+                                        imageModel = listPhotos?.get(it)?.photoUrl,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.constrainAs(image) {
                                             top.linkTo(parent.top, margin = 0.dp)
@@ -685,7 +683,7 @@ fun EditScreenRealEstate(
                                         }
                                     )
                                     Text(
-                                        text = listPhotos[it].text,
+                                        text = listPhotos?.get(it)?.text.toString(),
                                         modifier = Modifier.constrainAs(text) {
                                             top.linkTo(image.bottom, margin = 0.dp)
                                             start.linkTo(parent.start, margin = 0.dp)
@@ -719,30 +717,9 @@ fun EditScreenRealEstate(
 
                         try {
 
-                            listPhotos.size >= 1
+                            listPhotos!!.size >= 1
 
-                            realEstateViewModel.createRealEstate(
-                                entryType,
-                                entryPrice,
-                                entryArea,
-                                entryNumberRoom,
-                                entryDescription,
-                                entryNumberAndStreet,
-                                            entryNumberApartement,
-                                            entryCity,
-                                            entryRegion,
-                                            entryPostalCode,
-                                            entryCountry,
-                                            entryStatus,
-                                            listPhotos,
-                                            textDateOfEntry,
-                                            textDateOfSale,
-                                            user!!.username.toString(),
-                                            checkedStateHopital.value,
-                                            checkedStateSchool.value,
-                                            checkedStateShops.value,
-                                            checkedStateParks.value
-                            )
+
 
                             activity.finish()
 
