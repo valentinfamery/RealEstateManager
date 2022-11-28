@@ -26,9 +26,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
 
     val realEstates: StateFlow<List<RealEstateDatabase>> = realEstateRepository.realEstates().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), mutableListOf())
 
-    init {
-        refreshRealEstates()
-    }
+
 
     fun refreshRealEstates() = viewModelScope.launch {
         useCases.refreshRealEstates()
