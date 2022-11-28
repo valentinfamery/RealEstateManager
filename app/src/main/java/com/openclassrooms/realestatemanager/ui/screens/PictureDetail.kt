@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun PictureDetail(photoUrl: String?, navController: NavHostController) {
+fun PictureDetail(photoUrl: String, navController: NavHostController) {
     Column(modifier = Modifier.fillMaxSize()) {
         GlideImage(
             imageModel = photoUrl,

@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,14 +59,19 @@ fun EditScreenRealEstate(
     realEstateViewModel: RealEstateViewModel,
     itemRealEstate: RealEstate?,
     navController: NavHostController,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel = hiltViewModel(),
+    setPhotoUrl : (photoUrl : String) -> Unit
 ) {
     val listPhotos2 = itemRealEstate?.listPhotoWithText
 
-    val openDialog = remember { mutableStateOf(false) }
+    val openDialogAddPhoto = remember { mutableStateOf(false) }
+    val openDialogUpdatePhoto = remember { mutableStateOf(false) }
+
     var titlePhoto by remember { mutableStateOf("") }
 
     val listPhotos by remember { mutableStateOf(listPhotos2?.toMutableList()  ) }
+
+    var photoIt by remember { mutableStateOf(0) }
 
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
@@ -111,7 +115,7 @@ fun EditScreenRealEstate(
         },
     )
 
-    if (openDialog.value) {
+    if (openDialogAddPhoto.value) {
         Dialog(
             onDismissRequest = { },
         ) {
@@ -122,6 +126,7 @@ fun EditScreenRealEstate(
 
                 ConstraintLayout {
                     val (titleEntry, imageSelect, buttonCancel, buttonConfirm, buttonAddPhoto) = createRefs()
+
                     TextField(
                         value = titlePhoto,
                         onValueChange = { titlePhoto = it },
@@ -207,7 +212,7 @@ fun EditScreenRealEstate(
                             start.linkTo(parent.start, margin = 50.dp)
                         },
                         onClick = {
-                            openDialog.value = false
+                            openDialogAddPhoto.value = false
                             photoSelect = Uri.EMPTY
                             /*TODO*/
                         }
@@ -220,10 +225,13 @@ fun EditScreenRealEstate(
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = PhotoWithTextFirebase(photoSelect.toString(), titlePhoto)
 
-                            listPhotos?.add(photoWithText)
-                            openDialog.value = false
+                                val photoWithText =
+                                    PhotoWithTextFirebase(photoSelect.toString(), titlePhoto)
+
+                                listPhotos?.add(photoWithText)
+                                openDialogAddPhoto.value = false
+
                             /*TODO*/
                         }
                     ) {
@@ -235,6 +243,133 @@ fun EditScreenRealEstate(
             }
 
 
+        }
+    }
+    if (openDialogUpdatePhoto.value) {
+        Dialog(
+            onDismissRequest = { },
+        ) {
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.defaultMinSize(100.dp, 150.dp),
+            ) {
+
+                ConstraintLayout {
+                    val (titleEntry, imageSelect, buttonCancel, buttonConfirm, buttonAddPhoto) = createRefs()
+
+
+                        titlePhoto = listPhotos?.get(photoIt)?.text.toString()
+                    photoSelect = Uri.parse(listPhotos?.get(photoIt)?.photoUrl)
+
+
+                    TextField(
+                        value = titlePhoto,
+                        onValueChange = { titlePhoto = it },
+                        label = { Text("Enter Title Photo") },
+                        maxLines = 2,
+                        modifier = Modifier.constrainAs(titleEntry) {
+                            top.linkTo(parent.top, margin = 15.dp)
+                            start.linkTo(parent.start, margin = 25.dp)
+                            end.linkTo(parent.end, margin = 25.dp)
+                        }
+                    )
+
+
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                            .wrapContentSize()
+                            .constrainAs(imageSelect) {
+                                top.linkTo(titleEntry.bottom, margin = 15.dp)
+                                start.linkTo(parent.start, margin = 30.dp)
+                                end.linkTo(parent.end, margin = 30.dp)
+                            }
+
+                    ) {
+                        if (photoSelect != Uri.EMPTY) {
+                            GlideImage(
+                                imageModel = photoSelect,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(150.dp)
+                            )
+                        } else {
+                            GlideImage(
+                                imageModel = "",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(150.dp)
+                            )
+                        }
+
+                    }
+
+
+                    Button(
+                        modifier = Modifier.constrainAs(buttonAddPhoto) {
+                            top.linkTo(imageSelect.bottom, margin = 15.dp)
+                            start.linkTo(parent.start, margin = 25.dp)
+                            end.linkTo(parent.end, margin = 25.dp)
+                        },
+                        onClick = {
+                            when {
+                                ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE
+                                ) == PackageManager.PERMISSION_GRANTED -> {
+
+                                    val i = Intent(
+                                        Intent.ACTION_PICK,
+                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                    )
+                                    someActivityResultLauncher.launch(i)
+
+                                    // You can use the API that requires the permission.
+                                }
+                                ActivityCompat.shouldShowRequestPermissionRationale(activity, "") -> {}
+                                else -> {
+                                    // You can directly ask for the permission.
+                                    // The registered ActivityResultCallback gets the result of this request.
+                                    requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+
+                                }
+                            }
+                        }
+
+
+                    ) {
+                        Text(text = "Add Photo")
+                    }
+
+
+                    TextButton(
+                        modifier = Modifier.constrainAs(buttonCancel) {
+                            top.linkTo(buttonAddPhoto.bottom, margin = 15.dp)
+                            start.linkTo(parent.start, margin = 50.dp)
+                        },
+                        onClick = {
+                            openDialogUpdatePhoto.value = false
+                            photoSelect = Uri.EMPTY
+                            /*TODO*/
+                        }
+                    ) {
+                        Text(text = "Cancel")
+                    }
+                    TextButton(
+                        modifier = Modifier.constrainAs(buttonConfirm) {
+                            top.linkTo(buttonAddPhoto.bottom, margin = 15.dp)
+                            end.linkTo(parent.end, margin = 50.dp)
+                        },
+                        onClick = {
+
+                            /*TODO*/
+                        }
+                    ) {
+                        Text(text = "Confirm")
+                    }
+
+
+                }
+            }
         }
     }
 
@@ -666,7 +801,10 @@ fun EditScreenRealEstate(
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
                     repeat(listPhotos!!.size) {
-                        Box(modifier = Modifier.size(184.dp)) {
+                        Box(modifier = Modifier.size(184.dp).clickable {
+                            photoIt = it
+                            openDialogUpdatePhoto.value = true
+                        }) {
 
                             Column {
                                 ConstraintLayout(modifier = Modifier.fillMaxSize()) {
@@ -701,7 +839,7 @@ fun EditScreenRealEstate(
                 Button(
                     onClick = {
 
-                        openDialog.value = true
+                        openDialogAddPhoto.value = true
                     },
                     modifier = Modifier.constrainAs(buttonAddPhoto) {
                         top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)

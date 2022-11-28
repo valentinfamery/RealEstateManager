@@ -74,6 +74,7 @@ class MainActivity : ComponentActivity() {
                 val windowSize = rememberWindowSizeComposable()
 
                 var realEstateId by remember { mutableStateOf("")}
+                var photoUrl by remember { mutableStateOf("") }
 
 
 
@@ -121,8 +122,18 @@ class MainActivity : ComponentActivity() {
                             EditScreenRealEstate(
                                 realEstateViewModel,
                                 item,
-                                navController
+                                navController,
+                                setPhotoUrl = {
+                                    photoUrl = it
+                                }
                             )
+                        }
+
+                        composable(
+                            route = "picdetail"
+
+                        ) { backStackEntry ->
+                            PictureDetail(photoUrl, navController)
                         }
 
 
@@ -147,15 +158,7 @@ class MainActivity : ComponentActivity() {
 
                             }
 
-                            composable(
-                                route = "PictureDetail/{photo_url}",
-                                arguments = listOf(navArgument("photo_url") {
-                                    type = NavType.StringType
-                                })
-                            ) { backStackEntry ->
-                                val photo_url = backStackEntry.arguments?.getString("photo_url")
-                                PictureDetail(photo_url, navController)
-                            }
+
                         }
 
 
