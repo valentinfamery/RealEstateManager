@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.domain.models.FilterResult
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

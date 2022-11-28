@@ -57,7 +57,7 @@ import java.util.*
 @Composable
 fun EditScreenRealEstate(
     realEstateViewModel: RealEstateViewModel,
-    itemRealEstate: RealEstate?,
+    itemRealEstate: RealEstateDatabase?,
     navController: NavHostController,
     userViewModel: UserViewModel = hiltViewModel(),
     setPhotoUrl : (photoUrl : String) -> Unit
@@ -227,7 +227,7 @@ fun EditScreenRealEstate(
                         onClick = {
 
                                 val photoWithText =
-                                    PhotoWithTextFirebase(photoSelect.toString(), titlePhoto)
+                                    PhotoWithTextFirebase(photoSelect.toString(),"", titlePhoto)
 
                                 listPhotos?.add(photoWithText)
                                 openDialogAddPhoto.value = false

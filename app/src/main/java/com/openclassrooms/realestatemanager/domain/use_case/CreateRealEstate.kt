@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.domain.use_case
 
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
+import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 
 class CreateRealEstate(private val repo: RealEstateRepository) {
@@ -17,7 +17,7 @@ class CreateRealEstate(private val repo: RealEstateRepository) {
         postalCode: String,
         country: String,
         status: String,
-        listPhotos: MutableList<PhotoWithText>?,
+        listPhotos: MutableList<PhotoWithTextFirebase>?,
         dateEntry: String,
         dateSale: String,
         realEstateAgent: String,

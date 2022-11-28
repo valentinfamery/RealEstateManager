@@ -1,10 +1,10 @@
 package com.openclassrooms.realestatemanager.data.repository
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -50,40 +50,13 @@ class RealEstateRepositoryImpl @Inject constructor(
 
 
                 val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
-                    it.toObject(RealEstate::class.java)
+                    it.toObject(RealEstateDatabase::class.java)
                 }
 
                 realEstateDao.clear()
 
                 for (realEstate in realEstates) {
-
-                    val realEstateDatabase = RealEstateDatabase(
-                        realEstate.id!!,
-                        realEstate.type!!,
-                        realEstate.price!!.toInt(),
-                        realEstate.area!!.toInt(),
-                        realEstate.numberRoom!!,
-                        realEstate.description!!,
-                        realEstate.numberAndStreet!!,
-                        realEstate.numberApartment!!,
-                        realEstate.city!!,
-                        realEstate.region!!,
-                        realEstate.postalCode!!,
-                        realEstate.country!!,
-                        realEstate.status!!,
-                        realEstate.dateOfEntry!!,
-                        realEstate.dateOfSale!!,
-                        realEstate.realEstateAgent!!,
-                        realEstate.lat!!,
-                        realEstate.lng!!,
-                        realEstate.hospitalsNear,
-                        realEstate.schoolsNear,
-                        realEstate.shopsNear,
-                        realEstate.parksNear,
-                        realEstate.listPhotoWithText,
-                        realEstate.listPhotoWithText?.size
-                    )
-                    realEstateDao.insertRealEstate(realEstateDatabase)
+                    realEstateDao.insertRealEstate(realEstate)
                 }
             }
 
@@ -104,7 +77,7 @@ class RealEstateRepositoryImpl @Inject constructor(
         postalCode: String,
         country: String,
         status: String,
-        listPhotos: MutableList<PhotoWithText>?,
+        listPhotos: MutableList<PhotoWithTextFirebase>?,
         dateEntry: String,
         dateSale: String,
         realEstateAgent: String,
@@ -150,19 +123,18 @@ class RealEstateRepositoryImpl @Inject constructor(
                                         )
 
                                         val urlFinal = withContext(Dispatchers.IO) {
-                                            realEstateImage.putFile(photoWithText.photoUri!!)
+                                            realEstateImage.putFile(Uri.parse(photoWithText.photoUri))
                                                 .await().storage.downloadUrl.await()
                                         }.toString()
                                         Log.e("urlFinal", urlFinal)
-                                        val photoWithTextFirebase =
-                                            PhotoWithTextFirebase(urlFinal, photoWithText.text)
-                                        listPhotoWithTextFirebaseFinal.add(photoWithTextFirebase)
+                                        photoWithText.photoUrl = urlFinal
+                                        listPhotoWithTextFirebaseFinal.add(photoWithText)
                                     }
                                 }
                             }
                         }
 
-                        val realEstate = RealEstate(
+                        val realEstateDatabase  = RealEstateDatabase(
                             id,
                             type,
                             price.toInt(),
@@ -185,36 +157,10 @@ class RealEstateRepositoryImpl @Inject constructor(
                             checkedStateSchool,
                             checkedStateShops,
                             checkedStateParks,
-                            listPhotoWithTextFirebaseFinal
-                        )
-                        firebaseFirestore.collection("real_estates").document(id).set(realEstate)
-
-                        val realEstateDatabase  = RealEstateDatabase(
-                        id,
-                        type,
-                        price.toInt(),
-                        area.toInt(),
-                        numberRoom,
-                        description,
-                        numberAndStreet,
-                        numberApartment,
-                        city,
-                        region,
-                        postalCode,
-                        country,
-                        status,
-                        dateEntry,
-                        dateSale,
-                        realEstateAgent,
-                        latLng.latitude,
-                        latLng.longitude,
-                        checkedStateHospital,
-                        checkedStateSchool,
-                        checkedStateShops,
-                        checkedStateParks,
-                        listPhotoWithTextFirebaseFinal,
+                            listPhotoWithTextFirebaseFinal,
                         )
 
+                        firebaseFirestore.collection("real_estates").document(id).set(realEstateDatabase)
 
                         runBlocking {
                             launch {

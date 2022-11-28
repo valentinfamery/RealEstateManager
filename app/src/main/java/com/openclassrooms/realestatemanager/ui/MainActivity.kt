@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,7 +19,7 @@ import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.openclassrooms.realestatemanager.domain.models.RealEstate
+import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.screens.*
@@ -112,12 +111,12 @@ class MainActivity : ComponentActivity() {
                         composable("editScreen/{item}",
                             arguments = listOf(
                                 navArgument("item") {
-                                    type = RealEstate.NavigationType
+                                    type = RealEstateDatabase.NavigationType
                                 }
                             )
                         ) { backStackEntry ->
 
-                            val item = backStackEntry.arguments?.getParcelable<RealEstate>("item")
+                            val item = backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
 
                             EditScreenRealEstate(
                                 realEstateViewModel,

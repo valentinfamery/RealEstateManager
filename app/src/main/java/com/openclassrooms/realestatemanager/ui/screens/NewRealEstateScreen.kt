@@ -44,7 +44,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import com.google.accompanist.flowlayout.FlowRow
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithText
+import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
@@ -65,7 +65,7 @@ fun NewRealEstateScreen(
     val openDialog = remember { mutableStateOf(false) }
     var titlePhoto by remember { mutableStateOf("") }
 
-    val listPhotos = remember { mutableStateListOf<PhotoWithText>() }
+    val listPhotos = remember { mutableStateListOf<PhotoWithTextFirebase>() }
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
@@ -216,7 +216,7 @@ fun NewRealEstateScreen(
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = PhotoWithText(photoSelect, titlePhoto)
+                            val photoWithText = PhotoWithTextFirebase(photoSelect.toString(),"", titlePhoto)
 
                             listPhotos.add(photoWithText)
                             openDialog.value = false
@@ -710,7 +710,7 @@ fun NewRealEstateScreen(
 
                                     listPhotos.size >= 1
 
-                                    Log.e("listphotosItem1Uri", listPhotos[0].photoUri.toString())
+                                    Log.e("listphotosItem1Uri", listPhotos[0].photoUri)
 
                                     realEstateViewModel.createRealEstate(
                                         entryType,

@@ -8,19 +8,20 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PhotoWithTextFirebase(
-    var photoUrl : String? = null,
-    var text: String? =null
+    var photoUri : String = "",
+    var photoUrl : String = "",
+    var text: String =""
 ): Parcelable {
-    companion object NavigationType : NavType<RealEstate>(isNullableAllowed = false) {
-        override fun get(bundle: Bundle, key: String): RealEstate? {
+    companion object NavigationType : NavType<RealEstateDatabase>(isNullableAllowed = false) {
+        override fun get(bundle: Bundle, key: String): RealEstateDatabase? {
             return bundle.getParcelable(key)
         }
 
-        override fun parseValue(value: String): RealEstate {
-            return Gson().fromJson(value, RealEstate::class.java)
+        override fun parseValue(value: String): RealEstateDatabase {
+            return Gson().fromJson(value, RealEstateDatabase::class.java)
         }
 
-        override fun put(bundle: Bundle, key: String, value: RealEstate) {
+        override fun put(bundle: Bundle, key: String, value: RealEstateDatabase) {
             bundle.putParcelable(key, value)
         }
     }

@@ -48,7 +48,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         postalCode: String,
         country: String,
         status: String,
-        listPhotosUri: MutableList<PhotoWithText>,
+        listPhotosUri: MutableList<PhotoWithTextFirebase>,
         dateEntry: String,
         dateSale: String,
         realEstateAgent:String,
