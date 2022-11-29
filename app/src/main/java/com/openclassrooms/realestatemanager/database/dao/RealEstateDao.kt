@@ -30,13 +30,34 @@ interface RealEstateDao {
     @Query("UPDATE  RealEstateDatabase SET " +
             "type = (CASE WHEN type NOT LIKE :entryType THEN (:entryType) ELSE type END)," +
             "price = (CASE WHEN price NOT LIKE :entryPrice THEN (:entryPrice) ELSE price END)," +
-            "area = (CASE WHEN area NOT LIKE :entryArea THEN (:entryArea) ELSE area END)" +
-            "WHERE id = :id AND (type NOT LIKE :entryType OR price NOT LIKE :entryPrice OR area NOT LIKE :entryArea)")
+            "area = (CASE WHEN area NOT LIKE :entryArea THEN (:entryArea) ELSE area END)," +
+            "numberRoom =(CASE WHEN numberRoom NOT LIKE :entryNumberRoom THEN(:entryNumberRoom)ELSE numberRoom END)," +
+            "description =(CASE WHEN description NOT LIKE :entryDescription THEN(:entryDescription)ELSE description END)," +
+            "hospitalsNear =(CASE WHEN hospitalsNear NOT LIKE :hospitalsNear THEN(:hospitalsNear)ELSE hospitalsNear END)," +
+            "schoolsNear = (CASE WHEN schoolsNear NOT LIKE :schoolsNear THEN (:schoolsNear)ELSE schoolsNear END)," +
+            "shopsNear = (CASE WHEN shopsNear NOT LIKE :shopsNear THEN (:shopsNear)ELSE shopsNear END)," +
+            "parksNear = (CASE WHEN parksNear NOT LIKE :parksNear THEn (:parksNear)ELSE parksNear END)" +
+            "WHERE id = :id AND ("+
+            "type NOT LIKE :entryType OR "+
+            "price NOT LIKE :entryPrice OR "+
+            "area NOT LIKE :entryArea OR "+
+            "numberRoom NOT LIKE :entryNumberRoom OR "+
+            "description NOT LIKE :entryDescription OR "+
+            "hospitalsNear NOT LIKE :hospitalsNear OR "+
+            "schoolsNear NOT LIKE :schoolsNear OR "+
+            "shopsNear NOT LIKE :shopsNear OR "+
+            "parksNear NOT LIKE :parksNear )")
     suspend fun updateRealEstate(
         entryType: String,
         id: String,
         entryPrice: Int,
-        entryArea: Int
+        entryArea: Int,
+        entryNumberRoom: String,
+        entryDescription: String,
+        hospitalsNear: Boolean,
+        schoolsNear: Boolean,
+        shopsNear: Boolean,
+        parksNear: Boolean
     )
 
     //"UPDATE  RealEstateDatabase SET type = :entryType WHERE id = :id AND type NOT LIKE :entryType "

@@ -272,7 +272,28 @@ class RealEstateRepositoryImpl @Inject constructor(
                 rEcollection.document(id).update("area",entryArea.toInt())
             }
 
-            realEstateDao.updateRealEstate(entryType,id,entryPrice.toInt(),entryArea.toInt())
+            if(entryNumberRoom != itemRealEstate.numberRoom){
+                rEcollection.document(id).update("numberRoom",entryNumberRoom)
+            }
+
+            if(entryDescription != itemRealEstate.description){
+                rEcollection.document(id).update("description",entryDescription)
+            }
+
+            if(checkedStateHopital.value !=itemRealEstate.hospitalsNear){
+                rEcollection.document(id).update("hospitalsNear",checkedStateHopital.value)
+            }
+            if(checkedStateSchool.value != itemRealEstate.schoolsNear){
+                rEcollection.document(id).update("schoolsNear",checkedStateSchool.value)
+            }
+            if(checkedStateShops.value != itemRealEstate.shopsNear){
+                rEcollection.document(id).update("shopsNear",checkedStateShops.value)
+            }
+            if(checkedStateParks.value != itemRealEstate.parksNear){
+                rEcollection.document(id).update("parksNear",checkedStateParks.value)
+            }
+
+            realEstateDao.updateRealEstate(entryType,id,entryPrice.toInt(),entryArea.toInt(),entryNumberRoom,entryDescription,checkedStateHopital.value,checkedStateSchool.value,checkedStateShops.value,checkedStateParks.value)
 
             Response.Success(true)
         }catch (e: Exception) {
