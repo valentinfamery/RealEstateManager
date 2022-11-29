@@ -272,13 +272,19 @@ class RealEstateRepositoryImpl @Inject constructor(
                 rEcollection.document(id).update("area",entryArea.toInt())
             }
 
+            Log.e(itemRealEstate.numberRoom,entryNumberRoom)
+
             if(entryNumberRoom != itemRealEstate.numberRoom){
                 rEcollection.document(id).update("numberRoom",entryNumberRoom)
             }
 
+            Log.e(itemRealEstate.description,entryDescription)
+
             if(entryDescription != itemRealEstate.description){
                 rEcollection.document(id).update("description",entryDescription)
             }
+
+
 
             if(checkedStateHopital.value !=itemRealEstate.hospitalsNear){
                 rEcollection.document(id).update("hospitalsNear",checkedStateHopital.value)
