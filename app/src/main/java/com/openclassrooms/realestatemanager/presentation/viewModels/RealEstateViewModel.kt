@@ -17,6 +17,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
 
 
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
+    var updateRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
     var list by mutableStateOf<Response<Boolean>>(Response.Empty)
     private val _isRefreshing = MutableStateFlow(false)
@@ -83,6 +84,58 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         shops: Boolean
     ): LiveData<List<RealEstateDatabase>> {
           return  realEstateRepository.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops)
+    }
+
+    fun updateRealEstate(
+        id: String,
+        entryType: String,
+        entryPrice: String,
+        entryArea: String,
+        entryNumberRoom: String,
+        entryDescription: String,
+        entryNumberAndStreet: String,
+        entryNumberApartement: String,
+        entryCity: String,
+        entryRegion: String,
+        entryPostalCode: String,
+        entryCountry: String,
+        entryStatus: String,
+        textDateOfEntry: String,
+        textDateOfSale: String,
+        realEstateAgent: String?,
+        lat: Double?,
+        lng: Double?,
+        checkedStateHopital: MutableState<Boolean>,
+        checkedStateSchool: MutableState<Boolean>,
+        checkedStateShops: MutableState<Boolean>,
+        checkedStateParks: MutableState<Boolean>,
+        listPhotoWithText: List<PhotoWithTextFirebase>?,
+        itemRealEstate: RealEstateDatabase
+    ) = viewModelScope.launch {
+        updateRealEstateResponse = realEstateRepository.updateRealEstate(id,
+            entryType,
+            entryPrice,
+            entryArea,
+            entryNumberRoom,
+            entryDescription,
+            entryNumberAndStreet,
+            entryNumberApartement,
+            entryCity,
+            entryRegion,
+            entryPostalCode,
+            entryCountry,
+            entryStatus,
+            textDateOfEntry,
+            textDateOfSale,
+            realEstateAgent,
+        lat,
+        lng,
+        checkedStateHopital,
+        checkedStateSchool,
+        checkedStateShops,
+        checkedStateParks,
+        listPhotoWithText,
+        itemRealEstate)
     }
 
 

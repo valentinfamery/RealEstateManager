@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.domain.repository
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.domain.models.*
@@ -49,6 +50,33 @@ interface RealEstateRepository {
     ): LiveData<List<RealEstateDatabase>>
 
     fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?>
+
+    suspend fun updateRealEstate(
+        id: String,
+        entryType: String,
+        entryPrice: String,
+        entryArea: String,
+        entryNumberRoom: String,
+        entryDescription: String,
+        entryNumberAndStreet: String,
+        entryNumberApartement: String,
+        entryCity: String,
+        entryRegion: String,
+        entryPostalCode: String,
+        entryCountry: String,
+        entryStatus: String,
+        textDateOfEntry: String,
+        textDateOfSale: String,
+        realEstateAgent: String?,
+        lat: Double?,
+        lng: Double?,
+        checkedStateHopital: MutableState<Boolean>,
+        checkedStateSchool: MutableState<Boolean>,
+        checkedStateShops: MutableState<Boolean>,
+        checkedStateParks: MutableState<Boolean>,
+        listPhotoWithText: List<PhotoWithTextFirebase>?,
+        itemRealEstate: RealEstateDatabase
+    ): Response<Boolean>
 
 
 

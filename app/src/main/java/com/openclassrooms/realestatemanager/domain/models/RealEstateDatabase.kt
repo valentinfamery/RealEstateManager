@@ -40,6 +40,10 @@ data class RealEstateDatabase(
     var listPhotoWithText : List<PhotoWithTextFirebase> ?=null,
     var count_photo : Int? = listPhotoWithText?.size,
 ): Parcelable {
+    constructor() : this("",
+        null,null,null,
+    null,null,null,
+        null,null,null,null,null,null,null,null,null,null,null,false,false,false,false)
     companion object NavigationType : NavType<RealEstateDatabase>(isNullableAllowed = false){
         override fun get(bundle: Bundle, key: String): RealEstateDatabase? {
             return bundle.getParcelable(key)

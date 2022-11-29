@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.data.repository
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
@@ -226,6 +227,57 @@ class RealEstateRepositoryImpl @Inject constructor(
     override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {
         Log.e("realEstateById()","repo")
         return realEstateDao.realEstateById(realEstateId)
+    }
+
+    override suspend fun updateRealEstate(
+        id: String,
+        entryType: String,
+        entryPrice: String,
+        entryArea: String,
+        entryNumberRoom: String,
+        entryDescription: String,
+        entryNumberAndStreet: String,
+        entryNumberApartement: String,
+        entryCity: String,
+        entryRegion: String,
+        entryPostalCode: String,
+        entryCountry: String,
+        entryStatus: String,
+        textDateOfEntry: String,
+        textDateOfSale: String,
+        realEstateAgent: String?,
+        lat: Double?,
+        lng: Double?,
+        checkedStateHopital: MutableState<Boolean>,
+        checkedStateSchool: MutableState<Boolean>,
+        checkedStateShops: MutableState<Boolean>,
+        checkedStateParks: MutableState<Boolean>,
+        listPhotoWithText: List<PhotoWithTextFirebase>?,
+        itemRealEstate: RealEstateDatabase
+    ): Response<Boolean> {
+        return try {
+            Response.Loading
+
+            val rEcollection = firebaseFirestore.collection("real_estates")
+
+            if(entryType != itemRealEstate.type ){
+                rEcollection.document(id).update("type",entryType)
+            }
+
+            if(entryPrice.toInt() != itemRealEstate.price){
+                rEcollection.document(id).update("price",entryPrice.toInt())
+            }
+
+            if(entryArea.toInt() != itemRealEstate.area){
+                rEcollection.document(id).update("area",entryArea.toInt())
+            }
+
+            realEstateDao.updateRealEstate(entryType,id,entryPrice.toInt(),entryArea.toInt())
+
+            Response.Success(true)
+        }catch (e: Exception) {
+            Response.Failure(e)
+        }
     }
 
 

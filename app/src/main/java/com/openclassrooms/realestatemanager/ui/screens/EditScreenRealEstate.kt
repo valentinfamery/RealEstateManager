@@ -400,7 +400,7 @@ fun EditScreenRealEstate(
 
             val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
             val listStatus = listOf("For Sale", "Sold")
-            val user by userViewModel.userData.collectAsState()
+
 
             ConstraintLayout(
                 modifier = Modifier
@@ -857,9 +857,34 @@ fun EditScreenRealEstate(
 
                             listPhotos!!.size >= 1
 
+                            realEstateViewModel.updateRealEstate(
+                                itemRealEstate.id,
+                                entryType ,
+                                entryPrice,
+                                entryArea,
+                            entryNumberRoom ,
+                            entryDescription ,
+                            entryNumberAndStreet,
+                            entryNumberApartement ,
+                            entryCity ,
+                            entryRegion ,
+                            entryPostalCode ,
+                            entryCountry ,
+                            entryStatus ,
+                            textDateOfEntry ,
+                            textDateOfSale ,
+                                itemRealEstate.realEstateAgent,
+                                itemRealEstate.lat,
+                                itemRealEstate.lng,
+                            checkedStateHopital ,
+                            checkedStateSchool ,
+                            checkedStateShops ,
+                            checkedStateParks,
+                                itemRealEstate.listPhotoWithText,
+                            itemRealEstate)
 
 
-                            activity.finish()
+                            navController.popBackStack()
 
                         } catch (e: Exception) {
                             Toast.makeText(
