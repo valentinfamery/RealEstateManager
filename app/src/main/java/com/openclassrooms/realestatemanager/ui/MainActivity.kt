@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.ui
 import android.annotation.SuppressLint
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -24,6 +23,7 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateVi
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.screens.*
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
+
 import com.openclassrooms.realestatemanager.utils.ConnectionReceiver
 import com.openclassrooms.realestatemanager.utils.WindowType
 import com.openclassrooms.realestatemanager.utils.rememberWindowSizeComposable
@@ -35,8 +35,8 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var startScreen : String
-    var receiver: ConnectionReceiver? = null
-    val filter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
+    private var receiver: ConnectionReceiver? = null
+    private val filter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
 
     private val realEstateViewModel: RealEstateViewModel by viewModels()
 
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
-        Log.e("AAAAA","3AA")
+
         receiver = ConnectionReceiver(realEstateViewModel)
         registerReceiver(receiver,filter)
 
@@ -131,7 +131,7 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = "picdetail"
 
-                        ) { backStackEntry ->
+                        ) {
                             PictureDetail(photoUrl, navController)
                         }
 

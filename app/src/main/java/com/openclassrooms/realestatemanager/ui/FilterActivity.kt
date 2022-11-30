@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.openclassrooms.realestatemanager.ui.screens.FilterScreen
-import com.openclassrooms.realestatemanager.ui.ui.theme.ui.theme.Projet_9_OC_RealEstateManagerTheme
+import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 
 class FilterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
