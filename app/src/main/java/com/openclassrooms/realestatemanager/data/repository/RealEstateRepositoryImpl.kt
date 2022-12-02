@@ -20,10 +20,15 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import org.joda.time.DateTime
+import org.joda.time.DateTime.now
+import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime.now
+import org.joda.time.chrono.ISOChronology
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import retrofit2.Call
 import retrofit2.Callback
+import java.time.LocalDate.now
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -198,14 +203,17 @@ class RealEstateRepositoryImpl @Inject constructor(
         schools: Boolean,
         shops: Boolean
     ): LiveData<List<RealEstateDatabase>> {
-        val c = Calendar.getInstance()
-        val fmt: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
 
-        val dateToday = DateTime(c.time)
-        val dateTodayFinal = dateToday.toString(fmt)
+        val iso = ISOChronology.getInstance()
+        val today = LocalDate(iso)
 
-        val dateMinusThreeMonth = dateToday.minusMonths(3).toString(fmt)
-        val dateMinus1Week = dateToday.minusDays(7).toString(fmt)
+        Log.e("today",today.toString())
+
+        val dateMinusThreeMonth = today.minusMonths(3)
+        val dateMinus1Week = today.minusDays(7)
+
+        Log.e("dateMinusThreeMonth",dateMinusThreeMonth.toString())
+        Log.e("dateMinus1Week",dateMinus1Week.toString())
 
         val query = """SELECT * FROM RealEstateDatabase WHERE 
                         ('$type' ='' OR type LIKE '%$type%' ) AND 
@@ -215,10 +223,10 @@ class RealEstateRepositoryImpl @Inject constructor(
                         ($min3photos = false OR count_photo >= 3 ) AND
                         ($minSurface =0 AND $maxSurface = 0  OR  area BETWEEN $minSurface AND $maxSurface  ) AND 
                         ($minPrice =0 AND $maxPrice = 0  OR  price BETWEEN $minPrice AND $maxPrice ) AND 
-                        ($onTheMarketLessALastWeek = false  OR  dateOfEntry BETWEEN '$dateMinus1Week' AND '$dateTodayFinal' ) AND 
-                        ($soldOn3LastMonth = false  OR  dateOfSale <> '00/00/0000' OR  dateOfSale BETWEEN '$dateMinusThreeMonth' AND '$dateTodayFinal' ) """
+                        ($onTheMarketLessALastWeek = false  OR  dateOfEntry BETWEEN '$dateMinus1Week' AND '$today' ) AND 
+                        ($soldOn3LastMonth = false  OR dateOfSale BETWEEN '$dateMinusThreeMonth' AND '$today') """
 
-
+        Log.e("query", query)
 
 
         return realEstateDao.getPropertyBySearch(SimpleSQLiteQuery(query))
