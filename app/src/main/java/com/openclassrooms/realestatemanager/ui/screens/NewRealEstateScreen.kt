@@ -49,6 +49,8 @@ import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.skydoves.landscapist.glide.GlideImage
+import org.joda.time.LocalDate
+import org.joda.time.chrono.ISOChronology
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -248,8 +250,8 @@ fun NewRealEstateScreen(
         var entryCountry by rememberSaveable { mutableStateOf("") }
         var entryStatus by rememberSaveable { mutableStateOf("") }
 
-        var textDateOfEntry by rememberSaveable { mutableStateOf("00/00/0000") }
-        var textDateOfSale by rememberSaveable { mutableStateOf("00/00/0000") }
+        var textDateOfEntry by rememberSaveable { mutableStateOf("") }
+        var textDateOfSale by rememberSaveable { mutableStateOf("") }
 
         val checkedStateHopital = remember { mutableStateOf(false) }
         val checkedStateSchool = remember { mutableStateOf(false) }
@@ -600,50 +602,48 @@ fun NewRealEstateScreen(
             }
 
 
-            val year: Int
-            val month: Int
-            val day: Int
 
-            val calendar = Calendar.getInstance()
-            year = calendar.get(Calendar.YEAR)
-            month = calendar.get(Calendar.MONTH)
-            day = calendar.get(Calendar.DAY_OF_MONTH)
-            calendar.time = Date()
 
-            val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
-            textDateOfEntry = dateFormat.format(calendar.time)
 
+
+
+            val iso = ISOChronology.getInstance()
+            val today = LocalDate(iso)
+            textDateOfEntry = today.toString()
 
 
             val dateOfSalePickerDialog = DatePickerDialog(
                 context,
                 { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
 
-                    textDateOfSale = "$dayOfMonth/$month/$year"
+                    textDateOfSale = today.toString()
 
 
-                }, year, month, day
+                }, today.year, today.monthOfYear-1, today.dayOfMonth
             )
 
-            if (entryStatus == "Sold") {
 
-                Row(modifier = Modifier.constrainAs(rowDateSaleButtonAndText) {
+
+                Column(modifier = Modifier.constrainAs(rowDateSaleButtonAndText) {
                     top.linkTo(fieldStatus.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 50.dp)
                     end.linkTo(parent.end, margin = 50.dp)
                 }) {
-                    Text(textDateOfSale)
-                    Button(
-                        onClick = {
-                            dateOfSalePickerDialog.show()
-                        },
-                    )
-                    {
-                        Text("Set Date Of Sale")
+                    Text(textDateOfEntry)
+                    if (entryStatus == "Sold") {
+                        Text(textDateOfSale)
+                        Button(
+                            onClick = {
+                                dateOfSalePickerDialog.show()
+                            },
+                        )
+                        {
+                            Text("Set Date Of Sale")
+                        }
                     }
                 }
 
-            }
+
 
 
 
