@@ -8,14 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.navigation.NavHostController
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun PictureDetail(photoUrl: String, navController: NavHostController) {
     Column(modifier = Modifier.fillMaxSize()) {
         GlideImage(
-            imageModel = photoUrl,
-            contentScale = ContentScale.Crop,
+            imageModel = {photoUrl},
+            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
             modifier = Modifier.fillMaxHeight(0.9f).fillMaxWidth(1f)
         )
     }

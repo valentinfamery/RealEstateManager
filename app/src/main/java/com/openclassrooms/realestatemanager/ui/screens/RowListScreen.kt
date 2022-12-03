@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.utils.WindowType
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
@@ -54,8 +55,8 @@ fun RowList(
                 ) {
                     if (items2?.get(0)?.photoUrl != null) {
                         GlideImage(
-                            imageModel = items2[0].photoUrl,
-                            contentScale = ContentScale.Crop,
+                            imageModel = {items2[0].photoUrl},
+                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                         )
                     }
                 }
@@ -105,8 +106,8 @@ fun RowList(
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
                     GlideImage(
-                        imageModel = items2?.get(0)?.photoUrl,
-                        contentScale = ContentScale.Crop,
+                        imageModel = {items2?.get(0)?.photoUrl},
+                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                     )
                 }
 

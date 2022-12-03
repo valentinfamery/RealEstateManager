@@ -40,6 +40,7 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateVi
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.utils.WindowType
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -138,8 +139,8 @@ fun RealEstateDetailScreen(
                             repeat(listPhotos?.size ?: 0) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     GlideImage(
-                                        imageModel = listPhotos?.get(it)?.photoUrl,
-                                        contentScale = ContentScale.Crop,
+                                        imageModel = {listPhotos?.get(it)?.photoUrl},
+                                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                                         modifier = Modifier
                                             .clickable {
                                                 val photoUrl =

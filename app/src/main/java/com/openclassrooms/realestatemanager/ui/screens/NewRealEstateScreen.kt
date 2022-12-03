@@ -1,24 +1,14 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -39,21 +29,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
-import androidx.core.content.ContextCompat
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import org.joda.time.LocalDate
 import org.joda.time.chrono.ISOChronology
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 @SuppressLint("LongLogTag", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,177 +49,19 @@ fun NewRealEstateScreen(
     userViewModel: UserViewModel
 ) {
 
-    val openDialog = remember { mutableStateOf(false) }
-    var titlePhoto by remember { mutableStateOf("") }
+    var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
+
 
     val listPhotos = remember { mutableStateListOf<PhotoWithTextFirebase>() }
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
-    var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
-
-    val someActivityResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = {
-            if (it.resultCode == RESULT_OK) {
-                val data: Intent? = it.data
-                val uriImageSelected: Uri? = data?.data
-                if (uriImageSelected != null) {
-
-
-                    photoSelect = uriImageSelected
-                    Log.e("photoSelectResultLauncher",photoSelect.toString())
-                }
-
-            }
-        }
-    )
-
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {
-            if (it) {
-                val i = Intent(
-                    Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                )
-                someActivityResultLauncher.launch(i)
-            } else {
-                Toast.makeText(
-                    context,
-                    "Impossible d'ajouter un biens , veuillez autorisé l'accees au stockage interne",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        },
-    )
-
-    if (openDialog.value) {
-        Dialog(
-            onDismissRequest = { },
-        ) {
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.defaultMinSize(100.dp, 150.dp),
-            ) {
-
-                ConstraintLayout() {
-                    val (titleEntry, imageSelect, buttonCancel, buttonConfirm, buttonAddPhoto) = createRefs()
-                    TextField(
-                        value = titlePhoto,
-                        onValueChange = { titlePhoto = it },
-                        label = { Text("Enter Title Photo") },
-                        maxLines = 2,
-                        modifier = Modifier.constrainAs(titleEntry) {
-                            top.linkTo(parent.top, margin = 15.dp)
-                            start.linkTo(parent.start, margin = 25.dp)
-                            end.linkTo(parent.end, margin = 25.dp)
-                        }
-                    )
+    DialogAddPhotoWithText(openDialogAddPhotoWithText, addPhotoWithText = {
+        listPhotos.add(it)
+    }, closeDialogAddPhoto = {openDialogAddPhotoWithText = false})
 
 
 
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
-                            .wrapContentSize()
-                            .constrainAs(imageSelect) {
-                                top.linkTo(titleEntry.bottom, margin = 15.dp)
-                                start.linkTo(parent.start, margin = 30.dp)
-                                end.linkTo(parent.end, margin = 30.dp)
-                            }
-
-                    ) {
-                        if (photoSelect != Uri.EMPTY) {
-                            GlideImage(
-                                imageModel = photoSelect,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(150.dp)
-                            )
-                        } else {
-                            GlideImage(
-                                imageModel = "",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.size(150.dp)
-                            )
-                        }
-
-                    }
-
-
-                    Button(
-                        modifier = Modifier.constrainAs(buttonAddPhoto) {
-                            top.linkTo(imageSelect.bottom, margin = 15.dp)
-                            start.linkTo(parent.start, margin = 25.dp)
-                            end.linkTo(parent.end, margin = 25.dp)
-                        },
-                        onClick = {
-                            when {
-                                ContextCompat.checkSelfPermission(
-                                    context,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE
-                                ) == PackageManager.PERMISSION_GRANTED -> {
-
-                                    val i = Intent(
-                                        Intent.ACTION_PICK,
-                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                    )
-                                    someActivityResultLauncher.launch(i)
-
-                                    // You can use the API that requires the permission.
-                                }
-                                shouldShowRequestPermissionRationale(activity, "") -> {}
-                                else -> {
-                                    // You can directly ask for the permission.
-                                    // The registered ActivityResultCallback gets the result of this request.
-                                    requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-
-                                }
-                            }
-                        }
-
-
-                    ) {
-                        Text(text = "Add Photo")
-                    }
-
-
-                    TextButton(
-                        modifier = Modifier.constrainAs(buttonCancel) {
-                            top.linkTo(buttonAddPhoto.bottom, margin = 15.dp)
-                            start.linkTo(parent.start, margin = 50.dp)
-                        },
-                        onClick = {
-                            openDialog.value = false
-                            photoSelect = Uri.EMPTY
-                            /*TODO*/
-                        }
-                    ) {
-                        Text(text = "Cancel")
-                    }
-                    TextButton(
-                        modifier = Modifier.constrainAs(buttonConfirm) {
-                            top.linkTo(buttonAddPhoto.bottom, margin = 15.dp)
-                            end.linkTo(parent.end, margin = 50.dp)
-                        },
-                        onClick = {
-                            val photoWithText = PhotoWithTextFirebase(photoSelect.toString(),"", titlePhoto)
-
-                            listPhotos.add(photoWithText)
-                            openDialog.value = false
-                            /*TODO*/
-                        }
-                    ) {
-                        Text(text = "Confirm")
-                    }
-
-
-                }
-            }
-
-
-        }
-    }
 
     Scaffold {
         var entryType by rememberSaveable { mutableStateOf("") }
@@ -309,15 +136,17 @@ fun NewRealEstateScreen(
                 value = entryType,
                 onValueChange = { entryType = it },
                 label = { Text("Type") },
-                modifier = Modifier.constrainAs(fieldType) {
-                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
-                }.onGloballyPositioned { coordinates ->
-                    // This value is used to assign to
-                    // the DropDown the same width
-                    mTextFieldSize = coordinates.size.toSize()
-                },
+                modifier = Modifier
+                    .constrainAs(fieldType) {
+                        top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
+                        start.linkTo(parent.start, margin = 50.dp)
+                        end.linkTo(parent.end, margin = 50.dp)
+                    }
+                    .onGloballyPositioned { coordinates ->
+                        // This value is used to assign to
+                        // the DropDown the same width
+                        mTextFieldSize = coordinates.size.toSize()
+                    },
                 trailingIcon = {
                     Icon(icon, "contentDescription",
                         Modifier.clickable { expanded = !expanded })
@@ -560,15 +389,17 @@ fun NewRealEstateScreen(
                 onValueChange = { entryStatus = it },
                 label = { Text("Status") },
                 singleLine = true,
-                modifier = Modifier.constrainAs(fieldStatus) {
-                    top.linkTo(rowParks.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
-                }.onGloballyPositioned { coordinates ->
-                    // This value is used to assign to
-                    // the DropDown the same width
-                    mTextFieldSizeStatus = coordinates.size.toSize()
-                },
+                modifier = Modifier
+                    .constrainAs(fieldStatus) {
+                        top.linkTo(rowParks.bottom, margin = 25.dp)
+                        start.linkTo(parent.start, margin = 50.dp)
+                        end.linkTo(parent.end, margin = 50.dp)
+                    }
+                    .onGloballyPositioned { coordinates ->
+                        // This value is used to assign to
+                        // the DropDown the same width
+                        mTextFieldSizeStatus = coordinates.size.toSize()
+                    },
                 trailingIcon = {
                     Icon(iconStatus, "contentDescription",
                         Modifier.clickable { expandedStatus = !expandedStatus })
@@ -663,8 +494,8 @@ fun NewRealEstateScreen(
                                 val (image, text) = createRefs()
 
                                 GlideImage(
-                                    imageModel = listPhotos[it].photoUri,
-                                    contentScale = ContentScale.Crop,
+                                    imageModel = {listPhotos[it].photoUri},
+                                    imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                                     modifier = Modifier.constrainAs(image) {
                                         top.linkTo(parent.top, margin = 0.dp)
                                         start.linkTo(parent.start, margin = 0.dp)
@@ -690,7 +521,7 @@ fun NewRealEstateScreen(
             Button(
                 onClick = {
 
-                    openDialog.value = true
+                    openDialogAddPhotoWithText = true
                 },
                 modifier = Modifier.constrainAs(buttonAddPhoto) {
                     top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
