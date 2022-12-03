@@ -26,11 +26,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.flowlayout.FlowRow
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
@@ -486,35 +489,21 @@ fun NewRealEstateScreen(
                 end.linkTo(parent.end, margin = 25.dp)
             }) {
                 repeat(listPhotos.size) {
-                    Box(modifier = Modifier.size(184.dp)) {
-
-                        Column() {
-                            ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-
-                                val (image, text) = createRefs()
-
+                        Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                                 GlideImage(
                                     imageModel = {listPhotos[it].photoUri},
                                     imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                                    modifier = Modifier.constrainAs(image) {
-                                        top.linkTo(parent.top, margin = 0.dp)
-                                        start.linkTo(parent.start, margin = 0.dp)
-                                        end.linkTo(parent.end, margin = 0.dp)
-                                    }
+                                    modifier = Modifier.size(150.dp)
                                 )
                                 Text(
-                                    text = listPhotos[it].text,
-                                    modifier = Modifier.constrainAs(text) {
-                                        top.linkTo(image.bottom, margin = 0.dp)
-                                        start.linkTo(parent.start, margin = 0.dp)
-                                        end.linkTo(parent.end, margin = 0.dp)
-                                    })
-
-                            }
-
-
+                                    text = listPhotos[it].text
+                                )
+                                Button(onClick = {
+                                    listPhotos.remove(listPhotos[it])
+                                }) {
+                                    Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
+                                }
                         }
-                    }
                 }
             }
 

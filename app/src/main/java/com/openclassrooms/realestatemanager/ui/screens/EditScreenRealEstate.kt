@@ -23,18 +23,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.serialization.descriptors.PrimitiveKind
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -521,39 +525,21 @@ fun EditScreenRealEstate(
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
                     repeat(listPhotos!!.size) {
-                        Box(modifier = Modifier
-                            .size(184.dp)
-                            .clickable {
-
-                            }) {
-
-                            Column {
-                                ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-
-                                    val (image, text) = createRefs()
-
-                                    GlideImage(
-                                        imageModel ={listPhotos?.get(it)?.photoUrl},
-                                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                                        modifier = Modifier.constrainAs(image) {
-                                            top.linkTo(parent.top, margin = 0.dp)
-                                            start.linkTo(parent.start, margin = 0.dp)
-                                            end.linkTo(parent.end, margin = 0.dp)
-                                        }
+                            Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                                GlideImage(
+                                    imageModel ={listPhotos?.get(it)?.photoUrl},
+                                    imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+                                    modifier = Modifier.size(150.dp)
                                     )
-                                    Text(
-                                        text = listPhotos?.get(it)?.text.toString(),
-                                        modifier = Modifier.constrainAs(text) {
-                                            top.linkTo(image.bottom, margin = 0.dp)
-                                            start.linkTo(parent.start, margin = 0.dp)
-                                            end.linkTo(parent.end, margin = 0.dp)
-                                        })
-
+                                Text(
+                                    text = listPhotos?.get(it)?.text.toString()
+                                )
+                                Button(onClick = {
+                                    listPhotos?.remove(listPhotos?.get(it))
+                                }) {
+                                    Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
                                 }
-
-
                             }
-                        }
                     }
                 }
 
