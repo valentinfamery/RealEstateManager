@@ -2,8 +2,10 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +27,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.maps.model.CameraPosition
@@ -40,7 +45,7 @@ import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
     drawerState: DrawerState,
@@ -52,15 +57,12 @@ fun MapScreen(
     val navController = rememberNavController()
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     val activity = LocalContext.current as Activity
-    val context = LocalContext.current
 
     val realEstates by realEstateViewModel.realEstates.collectAsState()
 
     var userPosition by remember {
         mutableStateOf(LatLng(0.0, 0.0))
     }
-
-
 
     fun startLocationUpdates() {
         fusedLocationProviderClient = getFusedLocationProviderClient(activity)
@@ -73,40 +75,17 @@ fun MapScreen(
         }
     }
 
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {
-            if (it) {
-                startLocationUpdates()
-
-            } else {
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
-            }
-        },
+    val locationPermissionState = rememberPermissionState(
+        Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-
-
-    when {
-        ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED -> {
-            startLocationUpdates()
-
-
-        }
-        ActivityCompat.shouldShowRequestPermissionRationale(activity, "") -> {}
-        else -> {
-            SideEffect {
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
-
+    if (locationPermissionState.status.isGranted) {
+        startLocationUpdates()
+    } else {
+        SideEffect {
+            locationPermissionState.launchPermissionRequest()
         }
     }
-
-
-
 
     ConstraintLayout {
         val (centerAlignedTopAppBar, map,textError) = createRefs()

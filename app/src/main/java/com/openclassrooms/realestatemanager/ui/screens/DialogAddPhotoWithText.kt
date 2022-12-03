@@ -3,11 +3,9 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -19,24 +17,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean,addPhotoWithText : (photoWithText : PhotoWithTextFirebase)-> Unit,closeDialogAddPhoto : () -> Unit) {
     var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
     var titlePhoto by remember { mutableStateOf("") }
-    val context = LocalContext.current
-    val activity = LocalContext.current as Activity
 
     val someActivityResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -55,23 +51,8 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean,addPhotoWithText 
         }
     )
 
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {
-            if (it) {
-                val i = Intent(
-                    Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                )
-                someActivityResultLauncher.launch(i)
-            } else {
-                Toast.makeText(
-                    context,
-                    "Impossible d'ajouter un biens , veuillez autorisé l'accees au stockage interne",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        },
+    val externalStoragePermissionState = rememberPermissionState(
+        Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
     if (openDialogAddPhotoWithText) {
@@ -124,27 +105,14 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean,addPhotoWithText 
                             end.linkTo(parent.end, margin = 25.dp)
                         },
                         onClick = {
-                            when {
-                                ContextCompat.checkSelfPermission(
-                                    context,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE
-                                ) == PackageManager.PERMISSION_GRANTED -> {
-
-                                    val i = Intent(
-                                        Intent.ACTION_PICK,
-                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                    )
-                                    someActivityResultLauncher.launch(i)
-
-                                    // You can use the API that requires the permission.
-                                }
-                                ActivityCompat.shouldShowRequestPermissionRationale(activity, "") -> {}
-                                else -> {
-                                    // You can directly ask for the permission.
-                                    // The registered ActivityResultCallback gets the result of this request.
-                                    requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-
-                                }
+                            if (externalStoragePermissionState.status.isGranted) {
+                                val i = Intent(
+                                    Intent.ACTION_PICK,
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                )
+                                someActivityResultLauncher.launch(i)
+                            } else {
+                                externalStoragePermissionState.launchPermissionRequest()
                             }
                         }
 

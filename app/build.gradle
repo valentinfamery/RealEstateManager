@@ -167,6 +167,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.12.1'
 
     implementation "com.google.accompanist:accompanist-adaptive:0.27.1"
+    implementation "com.google.accompanist:accompanist-permissions:0.28.0"
 
 
 }
