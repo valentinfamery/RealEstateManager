@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -134,10 +135,14 @@ fun RealEstateDetailScreen(
                                 start.linkTo(parent.start, margin = 25.dp)
                                 end.linkTo(parent.end, margin = 25.dp)
                             }
-                            .fillMaxWidth(0.80f).fillMaxHeight(0.25f),
+                            .fillMaxWidth(0.80f)
+                            .fillMaxHeight(0.25f),
                         ) {
                             repeat(listPhotos?.size ?: 0) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(0.50f).fillMaxHeight(1f).padding(5.dp)) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                                    .fillMaxWidth(0.50f)
+                                    .fillMaxHeight(1f)
+                                    .padding(5.dp)) {
                                     GlideImage(
                                         imageModel = {listPhotos?.get(it)?.photoUrl},
                                         imageOptions = ImageOptions(contentScale = ContentScale.Fit),
@@ -164,10 +169,10 @@ fun RealEstateDetailScreen(
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }
                                 .fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
-                            Text(text = itemRealEstate.type.toString())
-                            Text(text = itemRealEstate.price.toString() + " $")
+                            Text(text = "Type : "+itemRealEstate.type.toString())
+                            Text(text = "Price : "+itemRealEstate.price.toString() + " $")
                         }
 
 
@@ -179,28 +184,30 @@ fun RealEstateDetailScreen(
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }
                                 .fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_baseline_crop_square_24),
-                                contentDescription = ""
-                            )
-                            Text(text = itemRealEstate.area.toString() + " m2")
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_baseline_house_24),
-                                contentDescription = ""
-                            )
-                            Text(text = itemRealEstate.numberRoom.toString() + " Rooms")
+
+                            Text(text = "Surface : "+itemRealEstate.area.toString() + " m2")
+
+                            Text(text = "Number Rooms : "+itemRealEstate.numberRoom.toString())
                         }
 
-                        Row(modifier = Modifier
+                        Box(modifier = Modifier
                             .constrainAs(textDescription) {
                                 top.linkTo(textArea.bottom, margin = 25.dp)
                                 start.linkTo(parent.start, margin = 0.dp)
                                 end.linkTo(parent.end, margin = 0.dp)
                             }
-                            .fillMaxWidth(0.8f)) {
-                            Text(text = itemRealEstate.description.toString())
+                            .fillMaxWidth(0.8f)
+                            .wrapContentHeight()
+                            .padding(10.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.surface)) {
+                            Column() {
+                                Text(text = "Description : ")
+                                Spacer(modifier = Modifier.size(10.dp))
+                                Text(text = itemRealEstate.description.toString())
+                            }
                         }
 
                         Row(

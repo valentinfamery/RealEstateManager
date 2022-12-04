@@ -6,25 +6,62 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-
-private val DarkColorPalette = darkColorScheme(
-    primary = Blue200,
-    secondary = Teal200
+private val replyDarkColorScheme = darkColorScheme(
+    primary = replyDarkPrimary,
+    onPrimary = replyDarkOnPrimary,
+    primaryContainer = replyDarkPrimaryContainer,
+    onPrimaryContainer = replyDarkOnPrimaryContainer,
+    inversePrimary = replyDarkPrimaryInverse,
+    secondary = replyDarkSecondary,
+    onSecondary = replyDarkOnSecondary,
+    secondaryContainer = replyDarkSecondaryContainer,
+    onSecondaryContainer = replyDarkOnSecondaryContainer,
+    tertiary = replyDarkTertiary,
+    onTertiary = replyDarkOnTertiary,
+    tertiaryContainer = replyDarkTertiaryContainer,
+    onTertiaryContainer = replyDarkOnTertiaryContainer,
+    error = replyDarkError,
+    onError = replyDarkOnError,
+    errorContainer = replyDarkErrorContainer,
+    onErrorContainer = replyDarkOnErrorContainer,
+    background = replyDarkBackground,
+    onBackground = replyDarkOnBackground,
+    surface = replyDarkSurface,
+    onSurface = replyDarkOnSurface,
+    inverseSurface = replyDarkInverseSurface,
+    inverseOnSurface = replyDarkInverseOnSurface,
+    surfaceVariant = replyDarkSurfaceVariant,
+    onSurfaceVariant = replyDarkOnSurfaceVariant,
+    outline = replyDarkOutline
 )
 
-private val LightColorPalette = lightColorScheme(
-    primary = Blue500,
-    secondary = Teal200
-
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+private val replyLightColorScheme = lightColorScheme(
+    primary = replyLightPrimary,
+    onPrimary = replyLightOnPrimary,
+    primaryContainer = replyLightPrimaryContainer,
+    onPrimaryContainer = replyLightOnPrimaryContainer,
+    inversePrimary = replyLightPrimaryInverse,
+    secondary = replyLightSecondary,
+    onSecondary = replyLightOnSecondary,
+    secondaryContainer = replyLightSecondaryContainer,
+    onSecondaryContainer = replyLightOnSecondaryContainer,
+    tertiary = replyLightTertiary,
+    onTertiary = replyLightOnTertiary,
+    tertiaryContainer = replyLightTertiaryContainer,
+    onTertiaryContainer = replyLightOnTertiaryContainer,
+    error = replyLightError,
+    onError = replyLightOnError,
+    errorContainer = replyLightErrorContainer,
+    onErrorContainer = replyLightOnErrorContainer,
+    background = replyLightBackground,
+    onBackground = replyLightOnBackground,
+    surface = replyLightSurface,
+    onSurface = replyLightOnSurface,
+    inverseSurface = replyLightInverseSurface,
+    inverseOnSurface = replyLightInverseOnSurface,
+    surfaceVariant = replyLightSurfaceVariant,
+    onSurfaceVariant = replyLightOnSurfaceVariant,
+    outline = replyLightOutline
 )
 
 @Composable
@@ -41,8 +78,8 @@ fun Projet_9_OC_RealEstateManagerTheme(
         dynamicColor && !isDarkTheme -> {
             dynamicLightColorScheme(LocalContext.current)
         }
-        isDarkTheme -> DarkColorPalette
-        else -> LightColorPalette
+        isDarkTheme -> replyDarkColorScheme
+        else -> replyLightColorScheme
     }
 
     MaterialTheme(
