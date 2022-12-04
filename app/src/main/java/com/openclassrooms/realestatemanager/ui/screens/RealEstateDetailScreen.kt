@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
@@ -133,14 +134,13 @@ fun RealEstateDetailScreen(
                                 start.linkTo(parent.start, margin = 25.dp)
                                 end.linkTo(parent.end, margin = 25.dp)
                             }
-                            .fillMaxHeight(0.20f),
-                            mainAxisSpacing = 10.dp
+                            .fillMaxWidth(0.80f).fillMaxHeight(0.25f),
                         ) {
                             repeat(listPhotos?.size ?: 0) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(0.50f).fillMaxHeight(1f).padding(5.dp)) {
                                     GlideImage(
                                         imageModel = {listPhotos?.get(it)?.photoUrl},
-                                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+                                        imageOptions = ImageOptions(contentScale = ContentScale.Fit),
                                         modifier = Modifier
                                             .clickable {
                                                 val photoUrl =
@@ -148,8 +148,6 @@ fun RealEstateDetailScreen(
                                                 navController.navigate("PictureDetail/$photoUrl")
                                             }
                                             .clip(RoundedCornerShape(15.dp))
-                                            .fillMaxWidth(0.40f)
-                                            .fillMaxHeight(0.20f)
                                     )
                                     Text(text = listPhotos?.get(it)?.text ?: "")
                                 }
