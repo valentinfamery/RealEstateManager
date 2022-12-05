@@ -37,16 +37,7 @@ interface RealEstateDao {
             "schoolsNear = (CASE WHEN schoolsNear NOT LIKE :schoolsNear THEN (:schoolsNear)ELSE schoolsNear END)," +
             "shopsNear = (CASE WHEN shopsNear NOT LIKE :shopsNear THEN (:shopsNear)ELSE shopsNear END)," +
             "parksNear = (CASE WHEN parksNear NOT LIKE :parksNear THEn (:parksNear)ELSE parksNear END)" +
-            "WHERE id = :id AND ("+
-            "type NOT LIKE :entryType OR "+
-            "price NOT LIKE :entryPrice OR "+
-            "area NOT LIKE :entryArea OR "+
-            "numberRoom NOT LIKE :entryNumberRoom OR "+
-            "description NOT LIKE :entryDescription OR "+
-            "hospitalsNear NOT LIKE :hospitalsNear OR "+
-            "schoolsNear NOT LIKE :schoolsNear OR "+
-            "shopsNear NOT LIKE :shopsNear OR "+
-            "parksNear NOT LIKE :parksNear )")
+            "WHERE id = :id ")
     suspend fun updateRealEstate(
         entryType: String,
         id: String,
