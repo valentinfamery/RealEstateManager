@@ -135,25 +135,24 @@ fun RealEstateDetailScreen(
                                 start.linkTo(parent.start, margin = 25.dp)
                                 end.linkTo(parent.end, margin = 25.dp)
                             }
-                            .fillMaxWidth(0.80f)
-                            .fillMaxHeight(0.25f),
+                            .fillMaxWidth(0.80f).fillMaxHeight(0.10f)
                         ) {
                             repeat(listPhotos?.size ?: 0) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                                     .fillMaxWidth(0.50f)
-                                    .fillMaxHeight(1f)
                                     .padding(5.dp)) {
-                                    GlideImage(
-                                        imageModel = {listPhotos?.get(it)?.photoUrl},
-                                        imageOptions = ImageOptions(contentScale = ContentScale.Fit),
-                                        modifier = Modifier
-                                            .clickable {
+
+                                        GlideImage(
+                                            imageModel = {listPhotos?.get(it)?.photoUrl},
+                                            modifier = Modifier.clickable {
                                                 val photoUrl =
                                                     Uri.encode(Gson().toJson(listPhotos?.get(it)?.photoUrl))
                                                 navController.navigate("PictureDetail/$photoUrl")
-                                            }
-                                            .clip(RoundedCornerShape(15.dp))
-                                    )
+                                            }.aspectRatio(0.9f)
+                                                .clip(RoundedCornerShape(15.dp)),
+                                            imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
+                                        )
+
                                     Text(text = listPhotos?.get(it)?.text ?: "")
                                 }
                             }
@@ -161,30 +160,28 @@ fun RealEstateDetailScreen(
 
 
 
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .constrainAs(textType) {
                                     top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
                                     start.linkTo(parent.start, margin = 0.dp)
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }
-                                .fillMaxWidth(0.8f),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                .fillMaxWidth(0.8f)
                         ) {
                             Text(text = "Type : "+itemRealEstate.type.toString())
                             Text(text = "Price : "+itemRealEstate.price.toString() + " $")
                         }
 
 
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .constrainAs(textArea) {
                                     top.linkTo(textType.bottom, margin = 25.dp)
                                     start.linkTo(parent.start, margin = 0.dp)
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }
-                                .fillMaxWidth(0.8f),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                .fillMaxWidth(0.8f)
                         ) {
 
                             Text(text = "Surface : "+itemRealEstate.area.toString() + " m2")
@@ -200,28 +197,32 @@ fun RealEstateDetailScreen(
                             }
                             .fillMaxWidth(0.8f)
                             .wrapContentHeight()
-                            .padding(10.dp)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colorScheme.surface)) {
-                            Column() {
+                            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp))) {
+                            Column(modifier = Modifier.padding(20.dp)) {
                                 Text(text = "Description : ")
                                 Spacer(modifier = Modifier.size(10.dp))
                                 Text(text = itemRealEstate.description.toString())
                             }
                         }
 
-                        Row(
+                        Box(
                             modifier = Modifier
                                 .constrainAs(textAddress) {
                                     top.linkTo(textDescription.bottom, margin = 25.dp)
                                     start.linkTo(parent.start, margin = 0.dp)
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }
-                                .fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
+                                .clip(RoundedCornerShape(10.dp))
+                                .fillMaxWidth(0.8f).background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
                         ) {
-                            Icon(Icons.Filled.LocationOn, contentDescription = "")
-                            Text(text = itemRealEstate.numberAndStreet + " " + itemRealEstate.city + " " + itemRealEstate.postalCode + " " + itemRealEstate.region + " " + itemRealEstate.country)
+                            Column(modifier = Modifier.padding(20.dp)) {
+                                Row() {
+                                    Icon(Icons.Filled.LocationOn, contentDescription = "")
+                                    Text(text = " Address : ")
+                                }
+                                Text(text = itemRealEstate.numberAndStreet + " " + itemRealEstate.city + " " + itemRealEstate.postalCode + " " + itemRealEstate.region + " " + itemRealEstate.country)
+                            }
                         }
 
                         Row(
@@ -302,7 +303,7 @@ fun RealEstateDetailScreen(
                                 end.linkTo(parent.end, margin = 0.dp)
                             }
                             .fillMaxWidth(0.8f)) {
-                            Text(text = itemRealEstate.dateOfSale.toString())
+                            Text(text = "Date of Sale : " + itemRealEstate.dateOfSale.toString())
                         }
 
                         Row(modifier = Modifier.constrainAs(textRealEstateAgent) {

@@ -79,7 +79,7 @@ fun MainScreen(
         },
         content = {
 
-            if (windowSize.width == WindowType.Compact) {
+            if (windowSize.width == WindowType.Compact && windowSize.width == WindowType.Medium) {
 
                 Scaffold(
                     content = { innerPadding ->
@@ -258,18 +258,26 @@ fun MainScreen(
                                 )
                             },
                             second = {
-                                if (realEstateId != "") {
+                                var navControllerTwoPane = rememberNavController()
 
-                                    val itemRealEstate by realEstateViewModel.realEstateById(realEstateId).observeAsState()
+                                NavHost(navController = navControllerTwoPane , startDestination = "detailScreen"){
+                                    composable("detailScreen") {
+                                        if (realEstateId != "") {
 
-                                    RealEstateDetailScreen(
-                                        realEstateViewModel = realEstateViewModel,
-                                        navController = navController,
-                                        windowSize = windowSize,
-                                        itemRealEstate
-                                    )
+                                            val itemRealEstate by realEstateViewModel.realEstateById(realEstateId).observeAsState()
 
+                                            RealEstateDetailScreen(
+                                                realEstateViewModel = realEstateViewModel,
+                                                navController = navController,
+                                                windowSize = windowSize,
+                                                itemRealEstate
+                                            )
+
+                                        }
+                                    }
                                 }
+
+
 
                             },
                             strategy = HorizontalTwoPaneStrategy(splitFraction = 0.475f),

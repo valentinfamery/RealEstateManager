@@ -72,82 +72,57 @@ class MainActivity : ComponentActivity() {
 
                 val windowSize = rememberWindowSizeComposable()
 
-                var realEstateId by remember { mutableStateOf("")}
-                var photoUrl by remember { mutableStateOf("") }
+                var realEstateDetailId by remember {mutableStateOf("")}
+                var realEstateEditId by remember{mutableStateOf("")}
+                var photoUrl by remember {mutableStateOf("")}
 
 
+                    val navControllerMainActivity = rememberNavController()
 
 
-
-
-                    val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = startScreen) {
-                        composable("mainScreen") {
-                            MainScreen(
-                                navControllerDrawer = navController,
-                                auth = auth,
-                                userViewModel,
-                                realEstateViewModel,
-                                windowSize,
-                                realEstateId,
-                                realEstateIdSet = {
-                                    realEstateId = it
-                                }
-                            )
-                        }
-                        composable("settingsScreen") { SettingsScreen(navController = navController) }
-                        composable("registerScreen") {
-                            RegisterScreen(
-                                navController = navController,
-                                userViewModel = userViewModel
-                            )
-                        }
-                        composable("signInScreen") { SignInScreen(
-                            navigateToMainScreen = {
-                                navController.navigate("mainScreen")
-                        }, navigateToRegisterScreen = {
-                                navController.navigate("registerScreen")
-                        }) }
-                        composable("editScreen/{item}",
-                            arguments = listOf(
-                                navArgument("item") {
-                                    type = RealEstateDatabase.NavigationType
-                                }
-                            )
-                        ) { backStackEntry ->
-
-                            val item = backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
-
-                            EditScreenRealEstate(
-                                realEstateViewModel,
-                                item,
-                                navController,
-                                setPhotoUrl = {
-                                    photoUrl = it
-                                }
-                            )
-                        }
-
-                        composable(
-                            route = "picdetail"
-
-                        ) {
-                            PictureDetail(photoUrl, navController)
-                        }
-
-
-                        if(windowSize.width != WindowType.Expanded) {
+                    NavHost(navController = navControllerMainActivity, startDestination = startScreen) {
+                        if(windowSize.width == WindowType.Compact && windowSize.width == WindowType.Medium) {
+                            composable("mainScreen") {
+                                MainScreen(
+                                    navControllerDrawer = navControllerMainActivity,
+                                    auth = auth,
+                                    userViewModel,
+                                    realEstateViewModel,
+                                    windowSize,
+                                    realEstateDetailId,
+                                    realEstateIdSet = {
+                                        realEstateDetailId = it
+                                    }
+                                )
+                            }
+                            composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
+                            composable("registerScreen") {
+                                RegisterScreen(
+                                    navController = navControllerMainActivity,
+                                    userViewModel = userViewModel
+                                )
+                            }
+                            composable("signInScreen") {
+                                SignInScreen(
+                                    navigateToMainScreen = {
+                                        navControllerMainActivity.navigate("mainScreen")
+                                    }, navigateToRegisterScreen = {
+                                        navControllerMainActivity.navigate("registerScreen")
+                                    })
+                            }
 
                             composable(
                                 route = "detailScreen"
                             ) {
-                                if (realEstateId != "") {
+                                if (realEstateDetailId != "") {
 
-                                    val itemRealEstate by realEstateViewModel.realEstateById(realEstateId).observeAsState()
+                                    val itemRealEstate by realEstateViewModel.realEstateById(
+                                        realEstateDetailId
+                                    ).observeAsState()
 
                                     RealEstateDetailScreen(
                                         realEstateViewModel,
-                                        navController,
+                                        navControllerMainActivity,
                                         windowSize,
                                         itemRealEstate
                                     )
@@ -157,16 +132,68 @@ class MainActivity : ComponentActivity() {
 
                             }
 
+                            composable("editScreen/{item}",
+                                arguments = listOf(
+                                    navArgument("item") {
+                                        type = RealEstateDatabase.NavigationType
+                                    }
+                                )
+                            ) { backStackEntry ->
 
+                                val item =
+                                    backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
+
+                                EditScreenRealEstate(
+                                    realEstateViewModel,
+                                    item,
+                                    navControllerMainActivity,
+                                    setPhotoUrl = {
+                                        photoUrl = it
+                                    }
+                                )
+                            }
+
+                            composable(
+                                route = "picdetail"
+
+                            ) {
+                                PictureDetail(photoUrl, navControllerMainActivity)
+                            }
+
+                        }
+
+                        if(windowSize.width == WindowType.Expanded) {
+
+                            composable("mainScreen") {
+                                MainScreen(
+                                    navControllerDrawer = navControllerMainActivity,
+                                    auth = auth,
+                                    userViewModel,
+                                    realEstateViewModel,
+                                    windowSize,
+                                    realEstateDetailId,
+                                    realEstateIdSet = {
+                                        realEstateDetailId = it
+                                    }
+                                )
+                            }
+                            composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
+                            composable("registerScreen") {
+                                RegisterScreen(
+                                    navController = navControllerMainActivity,
+                                    userViewModel = userViewModel
+                                )
+                            }
+                            composable("signInScreen") { SignInScreen(
+                                navigateToMainScreen = {
+                                    navControllerMainActivity.navigate("mainScreen")
+                                                       }, navigateToRegisterScreen = {
+                                    navControllerMainActivity.navigate("registerScreen")
+                                                       }) }
                         }
 
 
                     }
-
-
-
-
-
 
             }
         }
