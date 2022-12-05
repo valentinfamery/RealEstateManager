@@ -135,7 +135,8 @@ fun RealEstateDetailScreen(
                                 start.linkTo(parent.start, margin = 25.dp)
                                 end.linkTo(parent.end, margin = 25.dp)
                             }
-                            .fillMaxWidth(0.80f).fillMaxHeight(0.10f)
+                            .fillMaxWidth(0.80f)
+                            .fillMaxHeight(0.10f)
                         ) {
                             repeat(listPhotos?.size ?: 0) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
@@ -144,11 +145,13 @@ fun RealEstateDetailScreen(
 
                                         GlideImage(
                                             imageModel = {listPhotos?.get(it)?.photoUrl},
-                                            modifier = Modifier.clickable {
-                                                val photoUrl =
-                                                    Uri.encode(Gson().toJson(listPhotos?.get(it)?.photoUrl))
-                                                navController.navigate("PictureDetail/$photoUrl")
-                                            }.aspectRatio(0.9f)
+                                            modifier = Modifier
+                                                .clickable {
+                                                    val photoUrl =
+                                                        Uri.encode(Gson().toJson(listPhotos?.get(it)?.photoUrl))
+                                                    navController.navigate("PictureDetail/$photoUrl")
+                                                }
+                                                .aspectRatio(0.9f)
                                                 .clip(RoundedCornerShape(15.dp)),
                                             imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
                                         )
@@ -160,7 +163,7 @@ fun RealEstateDetailScreen(
 
 
 
-                        Column(
+                        FlowRow(
                             modifier = Modifier
                                 .constrainAs(textType) {
                                     top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
@@ -169,29 +172,20 @@ fun RealEstateDetailScreen(
                                 }
                                 .fillMaxWidth(0.8f)
                         ) {
-                            Text(text = "Type : "+itemRealEstate.type.toString())
-                            Text(text = "Price : "+itemRealEstate.price.toString() + " $")
-                        }
-
-
-                        Column(
-                            modifier = Modifier
-                                .constrainAs(textArea) {
-                                    top.linkTo(textType.bottom, margin = 25.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
-                                }
-                                .fillMaxWidth(0.8f)
-                        ) {
-
-                            Text(text = "Surface : "+itemRealEstate.area.toString() + " m2")
-
-                            Text(text = "Number Rooms : "+itemRealEstate.numberRoom.toString())
+                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
+                                Text(text = "Type : "+itemRealEstate.type.toString())
+                                Text(text = "Price : "+itemRealEstate.price.toString() + " $")
+                            }
+                            Spacer(modifier = Modifier.fillMaxWidth(0.2f))
+                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
+                                Text(text = "Surface : "+itemRealEstate.area.toString() + " m2")
+                                Text(text = "Number Rooms : "+itemRealEstate.numberRoom.toString())
+                            }
                         }
 
                         Box(modifier = Modifier
                             .constrainAs(textDescription) {
-                                top.linkTo(textArea.bottom, margin = 25.dp)
+                                top.linkTo(textType.bottom, margin = 25.dp)
                                 start.linkTo(parent.start, margin = 0.dp)
                                 end.linkTo(parent.end, margin = 0.dp)
                             }
@@ -214,7 +208,8 @@ fun RealEstateDetailScreen(
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }
                                 .clip(RoundedCornerShape(10.dp))
-                                .fillMaxWidth(0.8f).background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
+                                .fillMaxWidth(0.8f)
+                                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
                         ) {
                             Column(modifier = Modifier.padding(20.dp)) {
                                 Row() {
@@ -225,58 +220,47 @@ fun RealEstateDetailScreen(
                             }
                         }
 
-                        Row(
+                        FlowRow(
                             modifier = Modifier
                                 .constrainAs(rowHospital) {
-                                    top.linkTo(textAddress.bottom, margin = 5.dp)
+                                    top.linkTo(textAddress.bottom, margin = 25.dp)
                                     start.linkTo(parent.start, margin = 0.dp)
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }
-                                .fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
-
-                            ) {
-
-                            Checkbox(
-                                checked = itemRealEstate.hospitalsNear,
-                                onCheckedChange = { itemRealEstate.hospitalsNear = it },
-                            )
-                            Text(text = "Near Hospital")
-                            Checkbox(
-                                checked = itemRealEstate.schoolsNear,
-                                onCheckedChange = { itemRealEstate.schoolsNear = it }
-                            )
-                            Text(text = "Near School")
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .constrainAs(rowShops) {
-                                    top.linkTo(rowHospital.bottom, margin = 5.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
-                                }
-                                .fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
+                                .fillMaxWidth(0.8f)
                         ) {
-                            Checkbox(
-                                checked = itemRealEstate.shopsNear,
-                                onCheckedChange = { itemRealEstate.shopsNear = it }
-                            )
-                            Text(text = "Near Shops")
-                            itemRealEstate?.let { it1 ->
+                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
                                 Checkbox(
-                                    checked = it1.parksNear,
-                                    onCheckedChange = { it1.parksNear = it }
+                                    checked = itemRealEstate.hospitalsNear,
+                                    onCheckedChange = { itemRealEstate.hospitalsNear = it },
                                 )
+                                Text(text = "Near Hospital")
+                                Checkbox(
+                                    checked = itemRealEstate.schoolsNear,
+                                    onCheckedChange = { itemRealEstate.schoolsNear = it }
+                                )
+                                Text(text = "Near School")
                             }
-                            Text(text = "Near Parks")
+                            Spacer(modifier = Modifier.fillMaxWidth(0.2f))
+                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
+                                Checkbox(
+                                    checked = itemRealEstate.shopsNear,
+                                    onCheckedChange = { itemRealEstate.shopsNear = it }
+                                )
+                                Text(text = "Near Shops")
+                                Checkbox(
+                                    checked = itemRealEstate.parksNear,
+                                    onCheckedChange = { itemRealEstate.parksNear = it }
+                                )
+                                Text(text = "Near Parks")
+                            }
                         }
+
 
                         Row(
                             modifier = Modifier
                                 .constrainAs(textStatus) {
-                                    top.linkTo(rowShops.bottom, margin = 25.dp)
+                                    top.linkTo(rowHospital.bottom, margin = 25.dp)
                                     start.linkTo(parent.start, margin = 0.dp)
                                     end.linkTo(parent.end, margin = 0.dp)
                                 }

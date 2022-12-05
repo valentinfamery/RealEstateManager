@@ -81,35 +81,38 @@ class MainActivity : ComponentActivity() {
 
 
                     NavHost(navController = navControllerMainActivity, startDestination = startScreen) {
-                        if(windowSize.width == WindowType.Compact && windowSize.width == WindowType.Medium) {
-                            composable("mainScreen") {
-                                MainScreen(
-                                    navControllerDrawer = navControllerMainActivity,
-                                    auth = auth,
-                                    userViewModel,
-                                    realEstateViewModel,
-                                    windowSize,
-                                    realEstateDetailId,
-                                    realEstateIdSet = {
-                                        realEstateDetailId = it
-                                    }
-                                )
-                            }
-                            composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
-                            composable("registerScreen") {
-                                RegisterScreen(
-                                    navController = navControllerMainActivity,
-                                    userViewModel = userViewModel
-                                )
-                            }
-                            composable("signInScreen") {
-                                SignInScreen(
-                                    navigateToMainScreen = {
-                                        navControllerMainActivity.navigate("mainScreen")
-                                    }, navigateToRegisterScreen = {
-                                        navControllerMainActivity.navigate("registerScreen")
-                                    })
-                            }
+
+                        composable("mainScreen") {
+                            MainScreen(
+                                navControllerDrawer = navControllerMainActivity,
+                                auth = auth,
+                                userViewModel,
+                                realEstateViewModel,
+                                windowSize,
+                                realEstateDetailId,
+                                realEstateIdSet = {
+                                    realEstateDetailId = it
+                                }
+                            )
+                        }
+                        composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
+                        composable("registerScreen") {
+                            RegisterScreen(
+                                navController = navControllerMainActivity,
+                                userViewModel = userViewModel
+                            )
+                        }
+                        composable("signInScreen") {
+                            SignInScreen(
+                                navigateToMainScreen = {
+                                    navControllerMainActivity.navigate("mainScreen")
+                                }, navigateToRegisterScreen = {
+                                    navControllerMainActivity.navigate("registerScreen")
+                                })
+                        }
+
+
+
 
                             composable(
                                 route = "detailScreen"
@@ -164,36 +167,11 @@ class MainActivity : ComponentActivity() {
 
                         if(windowSize.width == WindowType.Expanded) {
 
-                            composable("mainScreen") {
-                                MainScreen(
-                                    navControllerDrawer = navControllerMainActivity,
-                                    auth = auth,
-                                    userViewModel,
-                                    realEstateViewModel,
-                                    windowSize,
-                                    realEstateDetailId,
-                                    realEstateIdSet = {
-                                        realEstateDetailId = it
-                                    }
-                                )
-                            }
-                            composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
-                            composable("registerScreen") {
-                                RegisterScreen(
-                                    navController = navControllerMainActivity,
-                                    userViewModel = userViewModel
-                                )
-                            }
-                            composable("signInScreen") { SignInScreen(
-                                navigateToMainScreen = {
-                                    navControllerMainActivity.navigate("mainScreen")
-                                                       }, navigateToRegisterScreen = {
-                                    navControllerMainActivity.navigate("registerScreen")
-                                                       }) }
+
                         }
 
 
-                    }
+
 
             }
         }

@@ -204,6 +204,13 @@ class RealEstateRepositoryImpl @Inject constructor(
         shops: Boolean
     ): LiveData<List<RealEstateDatabase>> {
 
+        val onTheMarketLessALastWeekInt = if(onTheMarketLessALastWeek) 1 else 0
+        val soldOn3LastMonthInt = if(soldOn3LastMonth) 1 else 0
+        val min3photosInt = if(min3photos) 1 else 0
+        val schoolsInt = if(schools) 1 else 0
+        val shopsInt = if(shops) 1 else 0
+
+
         val iso = ISOChronology.getInstance()
         val today = LocalDate(iso)
 
@@ -218,13 +225,13 @@ class RealEstateRepositoryImpl @Inject constructor(
         val query = """SELECT * FROM RealEstateDatabase WHERE 
                         ('$type' ='' OR type LIKE '%$type%' ) AND 
                         ('$city' ='' OR city LIKE '%$city%' ) AND
-                        ($schools = false OR schoolsNear = $schools ) AND 
-                        ($shops = false OR shopsNear = $shops ) AND 
-                        ($min3photos = false OR count_photo >= 3 ) AND
+                        ($schoolsInt = 0 OR schoolsNear = $schoolsInt ) AND 
+                        ($shopsInt = 0 OR shopsNear = $shopsInt ) AND 
+                        ($min3photosInt = 0 OR count_photo >= 3 ) AND
                         ($minSurface =0 AND $maxSurface = 0  OR  area BETWEEN $minSurface AND $maxSurface  ) AND 
                         ($minPrice =0 AND $maxPrice = 0  OR  price BETWEEN $minPrice AND $maxPrice ) AND 
-                        ($onTheMarketLessALastWeek = false  OR  dateOfEntry BETWEEN '$dateMinus1Week' AND '$today' ) AND 
-                        ($soldOn3LastMonth = false  OR dateOfSale BETWEEN '$dateMinusThreeMonth' AND '$today') """
+                        ($onTheMarketLessALastWeekInt = 0  OR  dateOfEntry BETWEEN '$dateMinus1Week' AND '$today' ) AND 
+                        ($soldOn3LastMonthInt = 0  OR dateOfSale BETWEEN '$dateMinusThreeMonth' AND '$today') """
 
         Log.e("query", query)
 

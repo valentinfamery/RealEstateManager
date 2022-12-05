@@ -79,7 +79,7 @@ fun MainScreen(
         },
         content = {
 
-            if (windowSize.width == WindowType.Compact && windowSize.width == WindowType.Medium) {
+            if (windowSize.width != WindowType.Expanded) {
 
                 Scaffold(
                     content = { innerPadding ->
@@ -157,7 +157,7 @@ fun MainScreen(
 
                 )
 
-            } else if (windowSize.width == WindowType.Expanded){
+            } else {
 
 
 
