@@ -36,7 +36,15 @@ interface RealEstateDao {
             "hospitalsNear =(CASE WHEN hospitalsNear NOT LIKE :hospitalsNear THEN(:hospitalsNear)ELSE hospitalsNear END)," +
             "schoolsNear = (CASE WHEN schoolsNear NOT LIKE :schoolsNear THEN (:schoolsNear)ELSE schoolsNear END)," +
             "shopsNear = (CASE WHEN shopsNear NOT LIKE :shopsNear THEN (:shopsNear)ELSE shopsNear END)," +
-            "parksNear = (CASE WHEN parksNear NOT LIKE :parksNear THEn (:parksNear)ELSE parksNear END)" +
+            "parksNear = (CASE WHEN parksNear NOT LIKE :parksNear THEn (:parksNear)ELSE parksNear END)," +
+            "status = (CASE WHEN status NOT LIKE :entryStatus THEN (:entryStatus)ELSE status END)," +
+            "dateOfSale = (CASE WHEN dateOfSale NOT LIKE :textDateOfSale THEN (:textDateOfSale)ELSE dateOfSale END)," +
+            "numberApartment = (CASE WHEN numberApartment NOT LIKE :entryNumberApartement THEN (:entryNumberApartement)ELSE numberApartment END),"+
+            "numberAndStreet = (CASE WHEN numberAndStreet NOT LIKE :entryNumberAndStreet THEN (:entryNumberAndStreet)ELSE numberAndStreet END),"+
+            "city = (CASE WHEN city NOT LIKE :entryCity THEN (:entryCity)ELSE city END),"+
+            "region = (CASE WHEN region NOT LIKE :entryRegion THEN (:entryRegion)ELSE region END),"+
+            "postalCode = (CASE WHEN postalCode NOT LIKE :entryPostalCode THEN (:entryPostalCode)ELSE postalCode END),"+
+            "country = (CASE WHEN country NOT LIKE :entryCountry THEN (:entryCountry)ELSE country END)"+
             "WHERE id = :id ")
     suspend fun updateRealEstate(
         entryType: String,
@@ -48,7 +56,25 @@ interface RealEstateDao {
         hospitalsNear: Boolean,
         schoolsNear: Boolean,
         shopsNear: Boolean,
-        parksNear: Boolean
+        parksNear: Boolean,
+        entryStatus: String,
+        textDateOfSale: String,
+        entryNumberApartement: String,
+        entryNumberAndStreet: String,
+        entryCity: String,
+        entryRegion: String,
+        entryPostalCode: String,
+        entryCountry: String
+    )
+
+    @Query("UPDATE  RealEstateDatabase SET " +
+            "lat = (CASE WHEN lat NOT LIKE :lat THEN (:lat) ELSE lat END)," +
+            "lng = (CASE WHEN lng NOT LIKE :lng THEN (:lng) ELSE lng END)"+
+            "WHERE id = :id ")
+    suspend fun updateRealEstateLatLng(
+        id: String,
+        lat: Double?,
+        lng: Double?,
     )
 
     //"UPDATE  RealEstateDatabase SET type = :entryType WHERE id = :id AND type NOT LIKE :entryType "

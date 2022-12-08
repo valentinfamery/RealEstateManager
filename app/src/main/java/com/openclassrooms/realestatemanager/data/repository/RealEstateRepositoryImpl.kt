@@ -19,16 +19,10 @@ import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
-import org.joda.time.DateTime
-import org.joda.time.DateTime.now
 import org.joda.time.LocalDate
-import org.joda.time.LocalDateTime.now
 import org.joda.time.chrono.ISOChronology
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 import retrofit2.Call
 import retrofit2.Callback
-import java.time.LocalDate.now
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -299,8 +293,6 @@ class RealEstateRepositoryImpl @Inject constructor(
                 rEcollection.document(id).update("description",entryDescription)
             }
 
-
-
             if(checkedStateHopital.value !=itemRealEstate.hospitalsNear){
                 rEcollection.document(id).update("hospitalsNear",checkedStateHopital.value)
             }
@@ -314,7 +306,69 @@ class RealEstateRepositoryImpl @Inject constructor(
                 rEcollection.document(id).update("parksNear",checkedStateParks.value)
             }
 
-            realEstateDao.updateRealEstate(entryType,id,entryPrice.toInt(),entryArea.toInt(),entryNumberRoom,entryDescription,checkedStateHopital.value,checkedStateSchool.value,checkedStateShops.value,checkedStateParks.value)
+            if(entryStatus != itemRealEstate.status){
+                rEcollection.document(id).update("status",entryStatus)
+                rEcollection.document(id).update("dateOfSale",textDateOfSale)
+            }
+
+            if(entryNumberApartement != itemRealEstate.numberApartment){
+                rEcollection.document(id).update("numberApartment",entryNumberApartement)
+            }
+
+
+            if(entryNumberAndStreet != itemRealEstate.numberAndStreet || entryCity != itemRealEstate.city ||
+               entryRegion != itemRealEstate.region || entryPostalCode != itemRealEstate.postalCode || entryCountry != itemRealEstate.country   ){
+
+                val address3 = "$entryNumberAndStreet,$entryCity,$entryRegion"
+                val listRestaurantApiNearBySearchResponseOut4: Call<ResultGeocoding?>? =
+                    ApiService.`interface`.getResultGeocodingResponse(address3)
+
+                listRestaurantApiNearBySearchResponseOut4?.enqueue(object : Callback<ResultGeocoding?> {
+                    override fun onResponse(
+                        call: Call<ResultGeocoding?>,
+                        response: retrofit2.Response<ResultGeocoding?>
+                    ) {
+                        val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
+                        val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
+
+                        runBlocking {
+                            launch {
+                                realEstateDao.updateRealEstateLatLng(id,lat,lng)
+                            }
+                        }
+
+                        rEcollection.document(id).update("lat",lat)
+                        rEcollection.document(id).update("lng",lng)
+
+
+
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
+                rEcollection.document(id).update("numberAndStreet",entryNumberAndStreet)
+                rEcollection.document(id).update("city",entryCity)
+                rEcollection.document(id).update("region",entryRegion)
+                rEcollection.document(id).update("postalCode",entryPostalCode)
+                rEcollection.document(id).update("country",entryCountry)
+
+            }
+
+            if(listPhotoWithText != itemRealEstate.listPhotoWithText){
+
+            }
+
+            realEstateDao.updateRealEstate(
+                entryType,id,entryPrice.toInt(),entryArea.toInt(),entryNumberRoom,entryDescription,
+                checkedStateHopital.value,checkedStateSchool.value,checkedStateShops.value,
+                checkedStateParks.value,entryStatus,textDateOfSale,entryNumberApartement,
+                entryNumberAndStreet,entryCity,entryRegion,entryPostalCode,entryCountry
+            )
 
             Response.Success(true)
         }catch (e: Exception) {
