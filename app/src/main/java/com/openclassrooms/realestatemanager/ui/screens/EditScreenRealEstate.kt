@@ -39,6 +39,8 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewMode
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.serialization.descriptors.PrimitiveKind
+import org.joda.time.LocalDate
+import org.joda.time.chrono.ISOChronology
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -471,28 +473,23 @@ fun EditScreenRealEstate(
                 }
 
 
-                val year: Int
-                val month: Int
-                val day: Int
 
-                val calendar = Calendar.getInstance()
-                year = calendar.get(Calendar.YEAR)
-                month = calendar.get(Calendar.MONTH)
-                day = calendar.get(Calendar.DAY_OF_MONTH)
-                calendar.time = Date()
 
-                val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
 
-                textDateOfEntry = dateFormat.format(calendar.time)
+
+                val iso = ISOChronology.getInstance()
+                val today = LocalDate(iso)
+                textDateOfSale = today.toString()
+
 
                 val dateOfSalePickerDialog = DatePickerDialog(
                     context,
                     { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
 
-                        textDateOfSale = "$dayOfMonth/$month/$year"
+                        textDateOfSale = LocalDate(year,month,dayOfMonth).toString()
 
 
-                    }, year, month, day
+                    }, today.year, today.monthOfYear-1, today.dayOfMonth
                 )
 
                 if (entryStatus == "Sold") {
