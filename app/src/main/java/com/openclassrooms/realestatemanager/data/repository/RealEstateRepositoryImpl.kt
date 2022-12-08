@@ -341,12 +341,10 @@ class RealEstateRepositoryImpl @Inject constructor(
                         rEcollection.document(id).update("lng",lng)
 
 
-
-                        TODO("Not yet implemented")
                     }
 
                     override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
-                        TODO("Not yet implemented")
+
                     }
 
                 })
