@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -521,22 +523,27 @@ fun EditScreenRealEstate(
                     start.linkTo(parent.start, margin = 25.dp)
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
-                    repeat(listPhotos!!.size) {
-                            Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                                GlideImage(
-                                    imageModel ={listPhotos?.get(it)?.photoUrl},
-                                    imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                                    modifier = Modifier.size(150.dp)
-                                    )
-                                Text(
-                                    text = listPhotos?.get(it)?.text.toString()
-                                )
-                                Button(onClick = {
-                                    listPhotos?.remove(listPhotos?.get(it))
-                                }) {
-                                    Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
-                                }
+                    repeat(listPhotos?.size ?: 0) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                            .fillMaxWidth(0.50f)
+                            .padding(5.dp)) {
+                            GlideImage(
+                                imageModel = { listPhotos?.get(it)?.photoUrl },
+                                modifier = Modifier
+                                    .clickable {
+
+                                    }
+                                    .aspectRatio(0.9f)
+                                    .clip(RoundedCornerShape(15.dp)),
+                                imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
+                            )
+                            Text(text = listPhotos?.get(it)?.text ?: "")
+                            Button(onClick = {
+                                listPhotos?.remove(listPhotos?.get(it)  )
+                            }) {
+                                Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
                             }
+                        }
                     }
                 }
 

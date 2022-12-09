@@ -3,12 +3,14 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.Response
@@ -489,22 +492,28 @@ fun NewRealEstateScreen(
                 end.linkTo(parent.end, margin = 25.dp)
             }) {
                 repeat(listPhotos.size) {
-                        Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                                GlideImage(
-                                    imageModel = {listPhotos[it].photoUri},
-                                    imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                                    modifier = Modifier.size(150.dp)
-                                )
-                                Text(
-                                    text = listPhotos[it].text
-                                )
-                                Button(onClick = {
-                                    listPhotos.remove(listPhotos[it])
-                                }) {
-                                    Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                        .fillMaxWidth(0.50f)
+                        .padding(5.dp)) {
+                        GlideImage(
+                            imageModel = { listPhotos[it].photoUrl },
+                            modifier = Modifier
+                                .clickable {
+
                                 }
+                                .aspectRatio(0.9f)
+                                .clip(RoundedCornerShape(15.dp)),
+                            imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
+                        )
+                        Text(text = listPhotos[it].text)
+                        Button(onClick = {
+                            listPhotos.remove(listPhotos[it])
+                        }) {
+                            Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
                         }
+                    }
                 }
+
             }
 
             Button(
