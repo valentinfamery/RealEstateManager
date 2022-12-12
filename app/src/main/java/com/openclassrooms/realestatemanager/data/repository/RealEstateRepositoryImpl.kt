@@ -387,12 +387,13 @@ class RealEstateRepositoryImpl @Inject constructor(
 
                 }
                 if(photoWithText.toDeleteLatter){
-                    mutableListPhotoWithText?.remove(photoWithText)
                     val realEstateImage2: StorageReference = storageRef.child(
                         "realEstates/$id/${photoWithText.id}"
                     )
                     realEstateImage2.delete().await()
                     photoWithText.toDeleteLatter = false
+
+                    mutableListPhotoWithText?.remove(photoWithText)
                 }
 
             }

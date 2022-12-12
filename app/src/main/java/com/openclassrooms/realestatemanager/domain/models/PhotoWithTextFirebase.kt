@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.domain.models
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NavType
+import com.google.firebase.database.Exclude
 import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 
@@ -11,8 +12,11 @@ data class PhotoWithTextFirebase(
     var photoSource : String = "",
     var text: String ="",
     var id: String = "",
+    @Exclude
     var toAddLatter: Boolean = false,
+    @Exclude
     var toDeleteLatter: Boolean = false,
+    @Exclude
     var toUpdateLatter: Boolean = false,
 
     ): Parcelable {

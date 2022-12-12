@@ -63,6 +63,7 @@ fun NewRealEstateScreen(
     val context = LocalContext.current
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText, addPhotoWithText = {
+
         listPhotos.add(it)
     }, closeDialogAddPhoto = {openDialogAddPhotoWithText = false})
 

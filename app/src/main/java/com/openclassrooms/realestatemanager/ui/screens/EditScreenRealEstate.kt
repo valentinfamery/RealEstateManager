@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
@@ -511,35 +513,40 @@ fun EditScreenRealEstate(
                     start.linkTo(parent.start, margin = 25.dp)
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
-                    repeat(listPhotos?.size ?: 0) {
-                       if(listPhotos?.get(it)?.toDeleteLatter != true) {
-                           Column(
-                               horizontalAlignment = Alignment.CenterHorizontally,
-                               modifier = Modifier
-                                   .fillMaxWidth(0.50f)
-                                   .padding(5.dp)
-                           ) {
-                               GlideImage(
-                                   imageModel = { listPhotos?.get(it)?.photoSource },
-                                   modifier = Modifier
-                                       .clickable {
+                    listPhotos?.forEachIndexed {index,photoWithText->
+                        if (photoWithText.toDeleteLatter != true) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .fillMaxWidth(0.50f)
+                                    .padding(5.dp)
+                            ) {
+                                GlideImage(
+                                    imageModel = { photoWithText.photoSource },
+                                    modifier = Modifier
+                                        .clickable {
 
-                                       }
-                                       .aspectRatio(0.9f)
-                                       .clip(RoundedCornerShape(15.dp)),
-                                   imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
-                               )
-                               Text(text = listPhotos?.get(it)?.text ?: "")
-                               Button(onClick = {
-                                   listPhotos?.get(it)?.toDeleteLatter = true
-                               }) {
-                                   Icon(
-                                       painter = painterResource(id = R.drawable.ic_baseline_delete_24),
-                                       contentDescription = ""
-                                   )
-                               }
-                           }
-                       }
+                                        }
+                                        .aspectRatio(0.9f)
+                                        .clip(RoundedCornerShape(15.dp)),
+                                    imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
+                                )
+                                Text(text = photoWithText.text)
+                                Button(onClick = {
+                                    listPhotos[index].toDeleteLatter = true
+                                    val gson = Gson()
+                                    Log.e("1", gson.toJson(listPhotos))
+                                    Log.e("2", gson.toJson(photoWithText))
+
+
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_baseline_delete_24),
+                                        contentDescription = ""
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
