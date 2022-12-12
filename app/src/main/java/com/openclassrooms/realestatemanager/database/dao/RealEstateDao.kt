@@ -44,27 +44,29 @@ interface RealEstateDao {
             "city = (CASE WHEN city NOT LIKE :entryCity THEN (:entryCity)ELSE city END),"+
             "region = (CASE WHEN region NOT LIKE :entryRegion THEN (:entryRegion)ELSE region END),"+
             "postalCode = (CASE WHEN postalCode NOT LIKE :entryPostalCode THEN (:entryPostalCode)ELSE postalCode END),"+
-            "country = (CASE WHEN country NOT LIKE :entryCountry THEN (:entryCountry)ELSE country END)"+
+            "country = (CASE WHEN country NOT LIKE :entryCountry THEN (:entryCountry)ELSE country END),"+
+            "listPhotoWithText = (CASE WHEN listPhotoWithText NOT LIKE :listPhotoWithText THEN (:listPhotoWithText)ELSE listPhotoWithText END)"+
             "WHERE id = :id ")
     suspend fun updateRealEstate(
-        entryType: String,
-        id: String,
-        entryPrice: Int,
-        entryArea: Int,
-        entryNumberRoom: String,
-        entryDescription: String,
-        hospitalsNear: Boolean,
-        schoolsNear: Boolean,
-        shopsNear: Boolean,
-        parksNear: Boolean,
-        entryStatus: String,
-        textDateOfSale: String,
-        entryNumberApartement: String,
-        entryNumberAndStreet: String,
-        entryCity: String,
-        entryRegion: String,
-        entryPostalCode: String,
-        entryCountry: String
+        entryType: kotlin.String,
+        id: kotlin.String,
+        entryPrice: kotlin.Int,
+        entryArea: kotlin.Int,
+        entryNumberRoom: kotlin.String,
+        entryDescription: kotlin.String,
+        hospitalsNear: kotlin.Boolean,
+        schoolsNear: kotlin.Boolean,
+        shopsNear: kotlin.Boolean,
+        parksNear: kotlin.Boolean,
+        entryStatus: kotlin.String,
+        textDateOfSale: kotlin.String,
+        entryNumberApartement: kotlin.String,
+        entryNumberAndStreet: kotlin.String,
+        entryCity: kotlin.String,
+        entryRegion: kotlin.String,
+        entryPostalCode: kotlin.String,
+        entryCountry: kotlin.String,
+        listPhotoWithText: kotlin.collections.List<com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase>?
     )
 
     @Query("UPDATE  RealEstateDatabase SET " +

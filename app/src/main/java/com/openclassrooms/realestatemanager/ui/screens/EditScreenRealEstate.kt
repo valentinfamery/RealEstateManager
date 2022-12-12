@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -27,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -40,12 +40,8 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateVi
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
-import kotlinx.serialization.descriptors.PrimitiveKind
 import org.joda.time.LocalDate
 import org.joda.time.chrono.ISOChronology
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 @SuppressLint("SimpleDateFormat", "UnusedMaterial3ScaffoldPaddingParameter",
     "MutableCollectionMutableState"
@@ -60,21 +56,14 @@ fun EditScreenRealEstate(
     setPhotoUrl : (photoUrl : String) -> Unit
 ) {
     val listPhotos2 = itemRealEstate?.listPhotoWithText
-
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
-
-
-    val listPhotos by remember { mutableStateOf(listPhotos2?.toMutableList()  ) }
-
-
+    val listPhotos = remember { listPhotos2?.toMutableStateList() }
     val context = LocalContext.current
 
-
-
-
-
     DialogAddPhotoWithText(openDialogAddPhotoWithText = openDialogAddPhotoWithText, addPhotoWithText ={
+        it.toAddLatter = true
         listPhotos?.add(it)
+
     }, closeDialogAddPhoto = {
         openDialogAddPhotoWithText = false
     })
@@ -103,6 +92,8 @@ fun EditScreenRealEstate(
             val checkedStateSchool = remember { mutableStateOf(itemRealEstate.schoolsNear) }
             val checkedStateShops = remember { mutableStateOf(itemRealEstate.shopsNear) }
             val checkedStateParks = remember { mutableStateOf(itemRealEstate.parksNear) }
+
+
 
             val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
             val listStatus = listOf("For Sale", "Sold")
@@ -524,26 +515,34 @@ fun EditScreenRealEstate(
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
                     repeat(listPhotos?.size ?: 0) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                            .fillMaxWidth(0.50f)
-                            .padding(5.dp)) {
-                            GlideImage(
-                                imageModel = { listPhotos?.get(it)?.photoUrl },
-                                modifier = Modifier
-                                    .clickable {
+                       if(listPhotos?.get(it)?.toDeleteLatter != true) {
+                           Column(
+                               horizontalAlignment = Alignment.CenterHorizontally,
+                               modifier = Modifier
+                                   .fillMaxWidth(0.50f)
+                                   .padding(5.dp)
+                           ) {
+                               GlideImage(
+                                   imageModel = { listPhotos?.get(it)?.photoUrl },
+                                   modifier = Modifier
+                                       .clickable {
 
-                                    }
-                                    .aspectRatio(0.9f)
-                                    .clip(RoundedCornerShape(15.dp)),
-                                imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
-                            )
-                            Text(text = listPhotos?.get(it)?.text ?: "")
-                            Button(onClick = {
-                                listPhotos?.remove(listPhotos?.get(it)  )
-                            }) {
-                                Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
-                            }
-                        }
+                                       }
+                                       .aspectRatio(0.9f)
+                                       .clip(RoundedCornerShape(15.dp)),
+                                   imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
+                               )
+                               Text(text = listPhotos?.get(it)?.text ?: "")
+                               Button(onClick = {
+                                   listPhotos?.get(it)?.toDeleteLatter = true
+                               }) {
+                                   Icon(
+                                       painter = painterResource(id = R.drawable.ic_baseline_delete_24),
+                                       contentDescription = ""
+                                   )
+                               }
+                           }
+                       }
                     }
                 }
 
@@ -567,6 +566,8 @@ fun EditScreenRealEstate(
                         try {
 
                             listPhotos!!.size >= 1
+
+
 
                             realEstateViewModel.updateRealEstate(
                                 itemRealEstate.id,
@@ -592,7 +593,8 @@ fun EditScreenRealEstate(
                             checkedStateShops ,
                             checkedStateParks,
                                 itemRealEstate.listPhotoWithText,
-                            itemRealEstate)
+                            itemRealEstate
+                            )
 
 
                             navController.popBackStack()

@@ -10,8 +10,13 @@ import kotlinx.parcelize.Parcelize
 data class PhotoWithTextFirebase(
     var photoUri : String = "",
     var photoUrl : String = "",
-    var text: String =""
-): Parcelable {
+    var text: String ="",
+    var id: String = "",
+    var toAddLatter: Boolean = false,
+    var toDeleteLatter: Boolean = false,
+    var toUpdateLatter: Boolean = false,
+
+    ): Parcelable {
     companion object NavigationType : NavType<RealEstateDatabase>(isNullableAllowed = false) {
         override fun get(bundle: Bundle, key: String): RealEstateDatabase? {
             return bundle.getParcelable(key)

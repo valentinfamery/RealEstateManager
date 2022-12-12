@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.domain.models.*

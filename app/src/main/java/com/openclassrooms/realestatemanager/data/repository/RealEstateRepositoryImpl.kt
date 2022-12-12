@@ -118,8 +118,10 @@ class RealEstateRepositoryImpl @Inject constructor(
                             for (photoWithText in listPhotos) {
                                 runBlocking {
                                     launch {
+
+                                        val newId = UUID.randomUUID().toString()
                                         val realEstateImage: StorageReference = storageRef.child(
-                                            "realEstates/$id/" + UUID.randomUUID().toString()
+                                            "realEstates/$id/$newId"
                                         )
 
                                         val urlFinal = withContext(Dispatchers.IO) {
@@ -128,6 +130,7 @@ class RealEstateRepositoryImpl @Inject constructor(
                                         }.toString()
                                         Log.e("urlFinal", urlFinal)
                                         photoWithText.photoUrl = urlFinal
+                                        photoWithText.id = newId
                                         listPhotoWithTextFirebaseFinal.add(photoWithText)
                                     }
                                 }
@@ -267,6 +270,8 @@ class RealEstateRepositoryImpl @Inject constructor(
         return try {
             Response.Loading
 
+
+
             val rEcollection = firebaseFirestore.collection("real_estates")
 
             if(entryType != itemRealEstate.type ){
@@ -357,15 +362,46 @@ class RealEstateRepositoryImpl @Inject constructor(
 
             }
 
-            if(listPhotoWithText != itemRealEstate.listPhotoWithText){
+            val mutableListPhotoWithText = listPhotoWithText?.toMutableList()
+
+            for(photoWithText in listPhotoWithText!!){
+                if(photoWithText.toAddLatter){
+                    mutableListPhotoWithText?.add(photoWithText)
+                    val newId = UUID.randomUUID().toString()
+
+                    val realEstateImage2: StorageReference = storageRef.child(
+                        "realEstates/$id/$newId"
+                    )
+
+                    val urlFinal = withContext(Dispatchers.IO) {
+                        realEstateImage2.putFile(Uri.parse(photoWithText.photoUri))
+                            .await().storage.downloadUrl.await()
+                    }.toString()
+                    Log.e("urlFinal", urlFinal)
+                    photoWithText.photoUrl = urlFinal
+                    photoWithText.id = newId
+                    photoWithText.toAddLatter = false
+                }
+                if(photoWithText.toDeleteLatter){
+                    mutableListPhotoWithText?.remove(photoWithText)
+                    val realEstateImage2: StorageReference = storageRef.child(
+                        "realEstates/$id/${photoWithText.id}"
+                    )
+                    realEstateImage2.delete().await()
+                    photoWithText.toDeleteLatter = false
+                }
 
             }
+
+            rEcollection.document(id).update("listPhotoWithText",mutableListPhotoWithText)
+
 
             realEstateDao.updateRealEstate(
                 entryType,id,entryPrice.toInt(),entryArea.toInt(),entryNumberRoom,entryDescription,
                 checkedStateHopital.value,checkedStateSchool.value,checkedStateShops.value,
                 checkedStateParks.value,entryStatus,textDateOfSale,entryNumberApartement,
-                entryNumberAndStreet,entryCity,entryRegion,entryPostalCode,entryCountry
+                entryNumberAndStreet,entryCity,entryRegion,entryPostalCode,entryCountry,
+                mutableListPhotoWithText
             )
 
             Response.Success(true)
