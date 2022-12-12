@@ -496,11 +496,8 @@ fun NewRealEstateScreen(
                         .fillMaxWidth(0.50f)
                         .padding(5.dp)) {
                         GlideImage(
-                            imageModel = { listPhotos[it].photoUrl },
+                            imageModel = { listPhotos[it].photoUri },
                             modifier = Modifier
-                                .clickable {
-
-                                }
                                 .aspectRatio(0.9f)
                                 .clip(RoundedCornerShape(15.dp)),
                             imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)

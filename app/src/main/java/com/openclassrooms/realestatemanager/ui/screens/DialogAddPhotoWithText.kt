@@ -142,7 +142,10 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean,addPhotoWithText 
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = PhotoWithTextFirebase(photoSelect.toString(),"", titlePhoto)
+                            val photoWithText = PhotoWithTextFirebase(photoSelect.toString(),"", titlePhoto,"",false,
+                                toDeleteLatter = false,
+                                toUpdateLatter = false
+                            )
                             addPhotoWithText(photoWithText)
                             photoSelect = Uri.EMPTY
                             titlePhoto = ""
