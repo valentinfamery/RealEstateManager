@@ -125,11 +125,11 @@ class RealEstateRepositoryImpl @Inject constructor(
                                         )
 
                                         val urlFinal = withContext(Dispatchers.IO) {
-                                            realEstateImage.putFile(Uri.parse(photoWithText.photoUri))
+                                            realEstateImage.putFile(Uri.parse(photoWithText.photoSource))
                                                 .await().storage.downloadUrl.await()
                                         }.toString()
                                         Log.e("urlFinal", urlFinal)
-                                        photoWithText.photoUrl = urlFinal
+                                        photoWithText.photoSource = urlFinal
                                         photoWithText.id = newId
                                         listPhotoWithTextFirebaseFinal.add(photoWithText)
                                     }
@@ -365,22 +365,26 @@ class RealEstateRepositoryImpl @Inject constructor(
             val mutableListPhotoWithText = listPhotoWithText?.toMutableList()
 
             for(photoWithText in listPhotoWithText!!){
+                Log.e("photoWithTextToAddLater",photoWithText.toAddLatter.toString())
                 if(photoWithText.toAddLatter){
-                    mutableListPhotoWithText?.add(photoWithText)
-                    val newId = UUID.randomUUID().toString()
 
-                    val realEstateImage2: StorageReference = storageRef.child(
-                        "realEstates/$id/$newId"
-                    )
 
-                    val urlFinal = withContext(Dispatchers.IO) {
-                        realEstateImage2.putFile(Uri.parse(photoWithText.photoUri))
-                            .await().storage.downloadUrl.await()
-                    }.toString()
-                    Log.e("urlFinal", urlFinal)
-                    photoWithText.photoUrl = urlFinal
-                    photoWithText.id = newId
-                    photoWithText.toAddLatter = false
+                            val newId = UUID.randomUUID().toString()
+
+                            val realEstateImage2: StorageReference = storageRef.child(
+                                "realEstates/$id/$newId"
+                            )
+
+                            val urlFinal = withContext(Dispatchers.IO) {
+                                realEstateImage2.putFile(Uri.parse(photoWithText.photoSource))
+                                    .await().storage.downloadUrl.await()
+                            }.toString()
+                            Log.e("urlFinal", urlFinal)
+                            photoWithText.photoSource = urlFinal
+                            photoWithText.id = newId
+                            photoWithText.toAddLatter = false
+
+
                 }
                 if(photoWithText.toDeleteLatter){
                     mutableListPhotoWithText?.remove(photoWithText)

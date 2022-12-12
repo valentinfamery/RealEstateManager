@@ -53,9 +53,9 @@ fun RowList(
                         .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
-                    if (items2?.get(0)?.photoUrl != null) {
+                    if (items2?.get(0)?.photoSource != null) {
                         GlideImage(
-                            imageModel = {items2[0].photoUrl},
+                            imageModel = {items2[0].photoSource},
                             imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                         )
                     }
@@ -106,7 +106,7 @@ fun RowList(
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
                     GlideImage(
-                        imageModel = {items2?.get(0)?.photoUrl},
+                        imageModel = {items2?.get(0)?.photoSource},
                         imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                     )
                 }

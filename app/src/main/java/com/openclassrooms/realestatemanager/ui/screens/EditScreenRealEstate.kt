@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -61,9 +60,7 @@ fun EditScreenRealEstate(
     val context = LocalContext.current
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText = openDialogAddPhotoWithText, addPhotoWithText ={
-        it.toAddLatter = true
         listPhotos?.add(it)
-
     }, closeDialogAddPhoto = {
         openDialogAddPhotoWithText = false
     })
@@ -523,7 +520,7 @@ fun EditScreenRealEstate(
                                    .padding(5.dp)
                            ) {
                                GlideImage(
-                                   imageModel = { listPhotos?.get(it)?.photoUrl },
+                                   imageModel = { listPhotos?.get(it)?.photoSource },
                                    modifier = Modifier
                                        .clickable {
 
@@ -592,7 +589,7 @@ fun EditScreenRealEstate(
                             checkedStateSchool ,
                             checkedStateShops ,
                             checkedStateParks,
-                                itemRealEstate.listPhotoWithText,
+                                listPhotos,
                             itemRealEstate
                             )
 

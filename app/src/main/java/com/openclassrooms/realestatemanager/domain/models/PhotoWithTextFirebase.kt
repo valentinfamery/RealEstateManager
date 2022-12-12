@@ -8,8 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PhotoWithTextFirebase(
-    var photoUri : String = "",
-    var photoUrl : String = "",
+    var photoSource : String = "",
     var text: String ="",
     var id: String = "",
     var toAddLatter: Boolean = false,

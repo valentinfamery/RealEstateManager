@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,15 +15,11 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
@@ -36,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.Utils
@@ -144,11 +138,11 @@ fun RealEstateDetailScreen(
                                     .padding(5.dp)) {
 
                                         GlideImage(
-                                            imageModel = {listPhotos?.get(it)?.photoUrl},
+                                            imageModel = {listPhotos?.get(it)?.photoSource},
                                             modifier = Modifier
                                                 .clickable {
                                                     val photoUrl =
-                                                        Uri.encode(Gson().toJson(listPhotos?.get(it)?.photoUrl))
+                                                        Uri.encode(Gson().toJson(listPhotos?.get(it)?.photoSource))
                                                     navController.navigate("PictureDetail/$photoUrl")
                                                 }
                                                 .aspectRatio(0.9f)

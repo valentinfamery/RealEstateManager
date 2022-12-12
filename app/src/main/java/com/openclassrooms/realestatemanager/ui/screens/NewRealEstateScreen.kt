@@ -496,7 +496,7 @@ fun NewRealEstateScreen(
                         .fillMaxWidth(0.50f)
                         .padding(5.dp)) {
                         GlideImage(
-                            imageModel = { listPhotos[it].photoUri },
+                            imageModel = { listPhotos[it].photoSource },
                             modifier = Modifier
                                 .aspectRatio(0.9f)
                                 .clip(RoundedCornerShape(15.dp)),
@@ -536,7 +536,7 @@ fun NewRealEstateScreen(
 
                                     listPhotos.size >= 1
 
-                                    Log.e("listphotosItem1Uri", listPhotos[0].photoUri)
+                                    Log.e("listphotosItem1Uri", listPhotos[0].photoSource)
 
                                     realEstateViewModel.createRealEstate(
                                         entryType,
