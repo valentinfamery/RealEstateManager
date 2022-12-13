@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
@@ -264,7 +265,7 @@ class RealEstateRepositoryImpl @Inject constructor(
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: List<PhotoWithTextFirebase>?,
+        listPhotoWithText: SnapshotStateList<PhotoWithTextFirebase>,
         itemRealEstate: RealEstateDatabase
     ): Response<Boolean> {
         return try {
@@ -362,9 +363,9 @@ class RealEstateRepositoryImpl @Inject constructor(
 
             }
 
-            val mutableListPhotoWithText = listPhotoWithText?.toMutableList()
 
-            for(photoWithText in listPhotoWithText!!){
+
+            for(photoWithText in listPhotoWithText){
                 Log.e("photoWithTextToAddLater",photoWithText.toAddLatter.toString())
                 if(photoWithText.toAddLatter){
 
@@ -393,12 +394,12 @@ class RealEstateRepositoryImpl @Inject constructor(
                     realEstateImage2.delete().await()
                     photoWithText.toDeleteLatter = false
 
-                    mutableListPhotoWithText?.remove(photoWithText)
+                    listPhotoWithText.remove(photoWithText)
                 }
 
             }
 
-            rEcollection.document(id).update("listPhotoWithText",mutableListPhotoWithText)
+            rEcollection.document(id).update("listPhotoWithText",listPhotoWithText)
 
 
             realEstateDao.updateRealEstate(
@@ -406,7 +407,7 @@ class RealEstateRepositoryImpl @Inject constructor(
                 checkedStateHopital.value,checkedStateSchool.value,checkedStateShops.value,
                 checkedStateParks.value,entryStatus,textDateOfSale,entryNumberApartement,
                 entryNumberAndStreet,entryCity,entryRegion,entryPostalCode,entryCountry,
-                mutableListPhotoWithText
+                listPhotoWithText
             )
 
             Response.Success(true)

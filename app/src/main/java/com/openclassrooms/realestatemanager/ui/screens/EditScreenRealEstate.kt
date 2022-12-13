@@ -62,6 +62,7 @@ fun EditScreenRealEstate(
     val context = LocalContext.current
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText = openDialogAddPhotoWithText, addPhotoWithText ={
+        it.toAddLatter = true
         listPhotos?.add(it)
     }, closeDialogAddPhoto = {
         openDialogAddPhotoWithText = false

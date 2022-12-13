@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.domain.repository
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.domain.models.*
@@ -74,7 +75,7 @@ interface RealEstateRepository {
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: List<PhotoWithTextFirebase>?,
+        listPhotoWithText: SnapshotStateList<PhotoWithTextFirebase>,
         itemRealEstate: RealEstateDatabase
     ): Response<Boolean>
 

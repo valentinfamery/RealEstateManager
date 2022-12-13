@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.presentation.viewModels
 
 import android.util.Log
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
@@ -110,7 +111,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: List<PhotoWithTextFirebase>?,
+        listPhotoWithText: SnapshotStateList<PhotoWithTextFirebase>,
         itemRealEstate: RealEstateDatabase
     ) = viewModelScope.launch {
         updateRealEstateResponse = realEstateRepository.updateRealEstate(id,
