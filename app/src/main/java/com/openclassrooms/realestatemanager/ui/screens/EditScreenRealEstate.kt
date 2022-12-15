@@ -17,10 +17,12 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -56,14 +58,16 @@ fun EditScreenRealEstate(
     userViewModel: UserViewModel = hiltViewModel(),
     setPhotoUrl : (photoUrl : String) -> Unit
 ) {
-    val listPhotos2 = itemRealEstate?.listPhotoWithText
+
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
-    val listPhotos = remember { listPhotos2?.toMutableStateList() }
+
+    val listPhotos = realEstateViewModel.myUiState.observeAsState()
+
     val context = LocalContext.current
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText = openDialogAddPhotoWithText, addPhotoWithText ={
         it.toAddLatter = true
-        listPhotos?.add(it)
+        realEstateViewModel.addPhoto(it)
     }, closeDialogAddPhoto = {
         openDialogAddPhotoWithText = false
     })
@@ -509,13 +513,14 @@ fun EditScreenRealEstate(
 
 
 
+
                 FlowRow(modifier = Modifier.constrainAs(lazyColumnPhoto) {
                     top.linkTo(fieldStatus.bottom, margin = 75.dp)
                     start.linkTo(parent.start, margin = 25.dp)
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
-                    listPhotos?.forEachIndexed {index,photoWithText->
-                        if (photoWithText.toDeleteLatter != true) {
+
+                    listPhotos.value?.filter { !it.toDeleteLatter }?.forEachIndexed { index, photoWithText->
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
@@ -534,7 +539,7 @@ fun EditScreenRealEstate(
                                 )
                                 Text(text = photoWithText.text)
                                 Button(onClick = {
-                                    listPhotos[index].toDeleteLatter = true
+                                    realEstateViewModel.updateAttribute(photoWithText.id)
                                     val gson = Gson()
                                     Log.e("1", gson.toJson(listPhotos))
                                     Log.e("2", gson.toJson(photoWithText))
@@ -547,7 +552,7 @@ fun EditScreenRealEstate(
                                     )
                                 }
                             }
-                        }
+
                     }
                 }
 
@@ -570,7 +575,7 @@ fun EditScreenRealEstate(
 
                         try {
 
-                            listPhotos!!.size >= 1
+                            listPhotos.value!!.size >= 1
 
 
 
@@ -597,7 +602,7 @@ fun EditScreenRealEstate(
                             checkedStateSchool ,
                             checkedStateShops ,
                             checkedStateParks,
-                                listPhotos,
+                                listPhotos.value!!.toMutableList(),
                             itemRealEstate
                             )
 

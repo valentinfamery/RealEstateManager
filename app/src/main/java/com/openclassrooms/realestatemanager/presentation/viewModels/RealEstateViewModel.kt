@@ -26,10 +26,38 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
 
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
+    val myUiState = MutableLiveData<List<PhotoWithTextFirebase>>()
+
+
+    fun fillMyUiState(list : List<PhotoWithTextFirebase>){
+        myUiState.value = list
+    }
+
+    fun addPhoto(photoWithTextFirebase: PhotoWithTextFirebase){
+        myUiState.value = myUiState.value!! + photoWithTextFirebase
+    }
 
     val realEstates: StateFlow<List<RealEstateDatabase>> = realEstateRepository.realEstates().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), mutableListOf())
 
+    fun updateAttribute(id: String) {
+        myUiState.updateElement({ it.id == id }, {
+            it.copy(toDeleteLatter = true)
+        })
+    }
 
+
+    fun <T> MutableLiveData<List<T>>.updateElement(predicate: (T) -> Boolean, update: (T) -> T) {
+        // Récupérer la valeur actuelle de la liste
+        val currentValue = this.value ?: return
+
+        // Appliquer la fonction update à tous les éléments de la liste qui satisfont le prédicat
+        val updatedList = currentValue.map { element ->
+            if (predicate(element)) update(element) else element
+        }
+
+        // Mettre à jour la liste avec la nouvelle valeur
+        this.value = updatedList
+    }
 
     fun refreshRealEstates() = viewModelScope.launch {
         useCases.refreshRealEstates()
@@ -111,7 +139,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: SnapshotStateList<PhotoWithTextFirebase>,
+        listPhotoWithText:MutableList<PhotoWithTextFirebase>,
         itemRealEstate: RealEstateDatabase
     ) = viewModelScope.launch {
         updateRealEstateResponse = realEstateRepository.updateRealEstate(id,

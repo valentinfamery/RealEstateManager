@@ -146,13 +146,17 @@ class MainActivity : ComponentActivity() {
                                 val item =
                                     backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
 
+                                realEstateViewModel.fillMyUiState(item?.listPhotoWithText!!)
+
+
                                 EditScreenRealEstate(
                                     realEstateViewModel,
                                     item,
                                     navControllerMainActivity,
                                     setPhotoUrl = {
                                         photoUrl = it
-                                    }
+                                    },
+
                                 )
                             }
 

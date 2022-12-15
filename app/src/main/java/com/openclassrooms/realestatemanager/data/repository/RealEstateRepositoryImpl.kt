@@ -265,7 +265,7 @@ class RealEstateRepositoryImpl @Inject constructor(
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: SnapshotStateList<PhotoWithTextFirebase>,
+        listPhotoWithText: MutableList<PhotoWithTextFirebase>,
         itemRealEstate: RealEstateDatabase
     ): Response<Boolean> {
         return try {

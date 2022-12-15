@@ -75,7 +75,7 @@ interface RealEstateRepository {
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: SnapshotStateList<PhotoWithTextFirebase>,
+        listPhotoWithText: MutableList<PhotoWithTextFirebase>,
         itemRealEstate: RealEstateDatabase
     ): Response<Boolean>
 
