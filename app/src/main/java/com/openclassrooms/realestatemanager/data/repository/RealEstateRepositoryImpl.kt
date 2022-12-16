@@ -387,6 +387,21 @@ class RealEstateRepositoryImpl @Inject constructor(
 
 
                 }
+                if(photoWithText.toUpdateLatter){
+                    val realEstateImage2: StorageReference = storageRef.child(
+                        "realEstates/$id/${photoWithText.id}"
+                    )
+
+                    realEstateImage2.delete().await()
+
+                    val urlFinal = withContext(Dispatchers.IO) {
+                        realEstateImage2.putFile(Uri.parse(photoWithText.photoSource))
+                            .await().storage.downloadUrl.await()
+                    }.toString()
+                    Log.e("urlFinal", urlFinal)
+                    photoWithText.photoSource = urlFinal
+                    photoWithText.toUpdateLatter = false
+                }
                 if(photoWithText.toDeleteLatter){
                     val realEstateImage2: StorageReference = storageRef.child(
                         "realEstates/$id/${photoWithText.id}"

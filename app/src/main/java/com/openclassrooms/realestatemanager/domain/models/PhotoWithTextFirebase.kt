@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.domain.models
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavType
 import com.google.firebase.database.Exclude
 import com.google.gson.Gson
@@ -19,7 +20,8 @@ data class PhotoWithTextFirebase(
     @Exclude
     var toUpdateLatter: Boolean = false,
 
-    ): Parcelable {
+    ): Parcelable  {
+
     companion object NavigationType : NavType<RealEstateDatabase>(isNullableAllowed = false) {
         override fun get(bundle: Bundle, key: String): RealEstateDatabase? {
             return bundle.getParcelable(key)
@@ -33,4 +35,5 @@ data class PhotoWithTextFirebase(
             bundle.putParcelable(key, value)
         }
     }
+
 }

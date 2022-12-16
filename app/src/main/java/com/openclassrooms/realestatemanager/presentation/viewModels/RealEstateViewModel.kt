@@ -45,6 +45,24 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         })
     }
 
+    fun updateAttributeToUpdate(id: String) {
+        myUiState.updateElement({ it.id == id }, {
+            it.copy(toUpdateLatter = true)
+        })
+    }
+
+    fun updateAttributePhotoSource(id: String,photoSource : String) {
+        myUiState.updateElement({ it.id == id }, {
+            it.copy(photoSource = photoSource)
+        })
+    }
+
+    fun updateAttributePhotoText(id: String,text : String) {
+        myUiState.updateElement({ it.id == id }, {
+            it.copy(text = text)
+        })
+    }
+
 
     fun <T> MutableLiveData<List<T>>.updateElement(predicate: (T) -> Boolean, update: (T) -> T) {
         // Récupérer la valeur actuelle de la liste

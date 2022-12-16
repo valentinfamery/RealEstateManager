@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
@@ -47,7 +48,7 @@ import org.joda.time.LocalDate
 import org.joda.time.chrono.ISOChronology
 
 @SuppressLint("SimpleDateFormat", "UnusedMaterial3ScaffoldPaddingParameter",
-    "MutableCollectionMutableState"
+    "MutableCollectionMutableState", "UnrememberedMutableState"
 )
 @ExperimentalMaterial3Api
 @Composable
@@ -61,9 +62,17 @@ fun EditScreenRealEstate(
 
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
 
+    var openDialogUpdatePhotoWithText by remember { mutableStateOf(false) }
     val listPhotos = realEstateViewModel.myUiState.observeAsState()
 
     val context = LocalContext.current
+
+    val idEditPhoto = remember{ mutableStateOf("")}
+    val photoSourceEditPhoto = remember{ mutableStateOf("")}
+    val textEditPhoto = remember{ mutableStateOf("")}
+
+
+
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText = openDialogAddPhotoWithText, addPhotoWithText ={
         it.toAddLatter = true
@@ -71,6 +80,27 @@ fun EditScreenRealEstate(
     }, closeDialogAddPhoto = {
         openDialogAddPhotoWithText = false
     })
+
+    DialogUpdatePhotoWithText(
+        openDialogUpdatePhotoWithText = openDialogUpdatePhotoWithText,
+        closeDialogUpdatePhoto = {openDialogUpdatePhotoWithText = false},
+        idEditPhoto,
+        photoSourceEditPhoto,
+        textEditPhoto,
+        updatePhotoWithTextFirebase = { s: String, s1: Uri, s2: String ->
+            realEstateViewModel.updateAttributePhotoSource(
+                s,
+                s1.toString()
+            )
+            realEstateViewModel.updateAttributePhotoText(
+                s,
+                s2
+            )
+            realEstateViewModel.updateAttributeToUpdate(
+                s
+            )
+        }
+    )
 
     Scaffold {
         if(itemRealEstate !=null) {
@@ -531,7 +561,10 @@ fun EditScreenRealEstate(
                                     imageModel = { photoWithText.photoSource },
                                     modifier = Modifier
                                         .clickable {
-
+                                            idEditPhoto.value = photoWithText.id
+                                            photoSourceEditPhoto.value = photoWithText.photoSource
+                                            textEditPhoto.value = photoWithText.text
+                                            openDialogUpdatePhotoWithText = true
                                         }
                                         .aspectRatio(0.9f)
                                         .clip(RoundedCornerShape(15.dp)),
