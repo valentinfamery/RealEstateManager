@@ -38,10 +38,9 @@ fun DialogUpdatePhotoWithText(
     openDialogUpdatePhotoWithText: Boolean, closeDialogUpdatePhoto: () -> Unit,
     idEditPhoto: MutableState<String>,
     photoSourceEditPhoto: MutableState<String>,
-    textEditPhoto: MutableState<String>, realEstateViewModel: RealEstateViewModel = hiltViewModel(),updatePhotoWithTextFirebase: (idEditPhoto: String,
-                                                                                                                                  photoSourceEditPhoto:Uri,
-                                                                                                                                  textEditPhoto: String) -> Unit) {
-        var photoSelect = remember{ Uri.parse(photoSourceEditPhoto.toString()) }
+    textEditPhoto: MutableState<String>,
+    updatePhotoWithTextFirebase: (idEditPhoto: String,photoSourceEditPhoto:String,textEditPhoto: String) -> Unit) {
+        var photoSelect = remember{ photoSourceEditPhoto }
         var titlePhoto = remember { textEditPhoto}
 
         val someActivityResultLauncher = rememberLauncherForActivityResult(
@@ -53,7 +52,7 @@ fun DialogUpdatePhotoWithText(
                     if (uriImageSelected != null) {
 
 
-                        photoSelect = uriImageSelected
+                        photoSelect.value = uriImageSelected.toString()
                         Log.e("photoSelectLauncher", photoSelect.toString())
                     }
 
@@ -88,7 +87,7 @@ fun DialogUpdatePhotoWithText(
                             }
                         )
 
-
+                        Log.e("url", photoSelect.value)
 
                         Box(
                             modifier = Modifier
@@ -101,7 +100,7 @@ fun DialogUpdatePhotoWithText(
 
                         ) {
                             GlideImage(
-                                imageModel = {  photoSelect },
+                                imageModel = {  photoSelect.value },
                                 imageOptions = ImageOptions(
                                     contentScale = ContentScale.Crop,
                                     requestSize = IntSize(150, 150)
@@ -141,7 +140,7 @@ fun DialogUpdatePhotoWithText(
                                 start.linkTo(parent.start, margin = 50.dp)
                             },
                             onClick = {
-                                photoSelect = Uri.EMPTY
+                                photoSelect.value = ""
                                 titlePhoto.value = ""
                                 closeDialogUpdatePhoto()
                                 /*TODO*/
@@ -156,13 +155,13 @@ fun DialogUpdatePhotoWithText(
                             },
                             onClick = {
 
-                                updatePhotoWithTextFirebase(idEditPhoto.value,photoSelect, titlePhoto.value)
+                                updatePhotoWithTextFirebase(idEditPhoto.value,photoSelect.value, titlePhoto.value)
 
 
 
 
 
-                                photoSelect = Uri.EMPTY
+                                photoSelect.value = ""
                                 titlePhoto.value = ""
                                 closeDialogUpdatePhoto()
                             }

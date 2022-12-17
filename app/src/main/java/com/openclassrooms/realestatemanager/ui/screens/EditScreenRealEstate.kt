@@ -87,10 +87,10 @@ fun EditScreenRealEstate(
         idEditPhoto,
         photoSourceEditPhoto,
         textEditPhoto,
-        updatePhotoWithTextFirebase = { s: String, s1: Uri, s2: String ->
+        updatePhotoWithTextFirebase = { s: String, s1: String, s2: String ->
             realEstateViewModel.updateAttributePhotoSource(
                 s,
-                s1.toString()
+                s1
             )
             realEstateViewModel.updateAttributePhotoText(
                 s,
