@@ -46,7 +46,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
     }
 
     fun updateAttributeToUpdate(id: String) {
-        myUiState.updateElement({ it.id == id }, {
+        myUiState.updateElement({ it.id == id && !it.toAddLatter }, {
             it.copy(toUpdateLatter = true)
         })
     }

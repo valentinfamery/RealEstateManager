@@ -394,8 +394,12 @@ class RealEstateRepositoryImpl @Inject constructor(
 
                     realEstateImage2.delete().await()
 
+                    val realEstateImage3: StorageReference = storageRef.child(
+                        "realEstates/$id/${photoWithText.id}"
+                    )
+
                     val urlFinal = withContext(Dispatchers.IO) {
-                        realEstateImage2.putFile(Uri.parse(photoWithText.photoSource))
+                        realEstateImage3.putFile(Uri.parse(photoWithText.photoSource))
                             .await().storage.downloadUrl.await()
                     }.toString()
                     Log.e("urlFinal", urlFinal)
