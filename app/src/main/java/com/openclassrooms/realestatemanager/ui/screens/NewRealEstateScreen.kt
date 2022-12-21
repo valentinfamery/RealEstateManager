@@ -3,8 +3,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.net.Uri
-import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -19,6 +17,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,14 +29,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
@@ -58,15 +54,30 @@ fun NewRealEstateScreen(
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
 
 
-    val listPhotos = remember { mutableStateListOf<PhotoWithTextFirebase>() }
+    val listPhotos = realEstateViewModel.listPhotoNewScreenState.observeAsState()
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
-    DialogAddPhotoWithText(openDialogAddPhotoWithText, addPhotoWithText = {
+    var openDialogUpdatePhotoWithText by remember { mutableStateOf(false) }
+    val idEditPhoto = remember{ mutableStateOf("")}
+    val photoSourceEditPhoto = remember{ mutableStateOf("")}
+    val textEditPhoto = remember{ mutableStateOf("")}
 
-        listPhotos.add(it)
+    DialogAddPhotoWithText(openDialogAddPhotoWithText, addPhotoWithText = {
+        realEstateViewModel.addListPhotoNewScreenState(it)
     }, closeDialogAddPhoto = {openDialogAddPhotoWithText = false})
 
+    DialogUpdatePhotoWithText(
+        openDialogUpdatePhotoWithText = openDialogUpdatePhotoWithText,
+        closeDialogUpdatePhoto = {openDialogUpdatePhotoWithText = false},
+        idEditPhoto,
+        photoSourceEditPhoto,
+        textEditPhoto,
+        updatePhotoWithTextFirebase = { s: String, s1: String, s2: String ->
+            realEstateViewModel.updatePhotoSourceElementNewScreen(s,s1)
+            realEstateViewModel.updatePhotoTextElementNewScreen(s,s2)
+        }
+    )
 
 
 
@@ -492,26 +503,35 @@ fun NewRealEstateScreen(
                 start.linkTo(parent.start, margin = 25.dp)
                 end.linkTo(parent.end, margin = 25.dp)
             }) {
-                repeat(listPhotos.size) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                        .fillMaxWidth(0.50f)
-                        .padding(5.dp)) {
+                listPhotos.value?.forEach {photo->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                            .fillMaxWidth(0.50f)
+                            .padding(5.dp)
+                    ) {
                         GlideImage(
-                            imageModel = { listPhotos[it].photoSource },
+                            imageModel = { photo.photoSource },
                             modifier = Modifier
                                 .aspectRatio(0.9f)
-                                .clip(RoundedCornerShape(15.dp)),
+                                .clip(RoundedCornerShape(15.dp)).clickable {
+                                    idEditPhoto.value = photo.id
+                                    photoSourceEditPhoto.value = photo.photoSource
+                                    textEditPhoto.value = photo.text
+                                    openDialogUpdatePhotoWithText = true
+                                },
                             imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
                         )
-                        Text(text = listPhotos[it].text)
+                        Text(text = photo.text)
                         Button(onClick = {
-                            listPhotos.remove(listPhotos[it])
+                            realEstateViewModel.deleteListPhotoNewScreenState(photo)
                         }) {
-                            Icon(painter = painterResource(id = R.drawable.ic_baseline_delete_24), contentDescription = "")
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_delete_24),
+                                contentDescription = ""
+                            )
                         }
                     }
                 }
-
             }
 
             Button(
@@ -535,9 +555,8 @@ fun NewRealEstateScreen(
 
 
 
-                                    listPhotos.size >= 1
+                                    listPhotos.value?.size!! >= 1
 
-                                    Log.e("listphotosItem1Uri", listPhotos[0].photoSource)
 
                                     realEstateViewModel.createRealEstate(
                                         entryType,
@@ -552,7 +571,7 @@ fun NewRealEstateScreen(
                                         entryPostalCode,
                                         entryCountry,
                                         entryStatus,
-                                        listPhotos,
+                                        listPhotos.value!!,
                                         textDateOfEntry,
                                         textDateOfSale,
                                         "",

@@ -1,8 +1,6 @@
 package com.openclassrooms.realestatemanager.presentation.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
@@ -26,39 +24,60 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
 
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
-    val myUiState = MutableLiveData<List<PhotoWithTextFirebase>>()
+    val listPhotoEditScreenState = MutableLiveData<List<PhotoWithTextFirebase>>()
 
+    val listPhotoNewScreenState = MutableLiveData(listOf<PhotoWithTextFirebase>())
+
+    fun addListPhotoNewScreenState(photoWithTextFirebase: PhotoWithTextFirebase){
+        listPhotoNewScreenState.value = listPhotoNewScreenState.value!! + photoWithTextFirebase
+    }
+
+    fun deleteListPhotoNewScreenState(photoWithTextFirebase: PhotoWithTextFirebase){
+        listPhotoNewScreenState.value = listPhotoNewScreenState.value!! - photoWithTextFirebase
+    }
+
+    fun updatePhotoSourceElementNewScreen(id: String,photoSource : String) {
+        listPhotoNewScreenState.updateElement({ it.id == id }, {
+            it.copy(photoSource = photoSource)
+        })
+    }
+
+    fun updatePhotoTextElementNewScreen(id: String,text : String) {
+        listPhotoNewScreenState.updateElement({ it.id == id }, {
+            it.copy(text = text)
+        })
+    }
 
     fun fillMyUiState(list : List<PhotoWithTextFirebase>){
-        myUiState.value = list
+        listPhotoEditScreenState.value = list
     }
 
     fun addPhoto(photoWithTextFirebase: PhotoWithTextFirebase){
-        myUiState.value = myUiState.value!! + photoWithTextFirebase
+        listPhotoEditScreenState.value = listPhotoEditScreenState.value!! + photoWithTextFirebase
     }
 
     val realEstates: StateFlow<List<RealEstateDatabase>> = realEstateRepository.realEstates().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), mutableListOf())
 
-    fun updateAttribute(id: String) {
-        myUiState.updateElement({ it.id == id }, {
+    fun updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(id: String) {
+        listPhotoEditScreenState.updateElement({ it.id == id }, {
             it.copy(toDeleteLatter = true)
         })
     }
 
     fun updateAttributeToUpdate(id: String) {
-        myUiState.updateElement({ it.id == id && !it.toAddLatter }, {
+        listPhotoEditScreenState.updateElement({ it.id == id && !it.toAddLatter }, {
             it.copy(toUpdateLatter = true)
         })
     }
 
     fun updateAttributePhotoSource(id: String,photoSource : String) {
-        myUiState.updateElement({ it.id == id }, {
+        listPhotoEditScreenState.updateElement({ it.id == id }, {
             it.copy(photoSource = photoSource)
         })
     }
 
     fun updateAttributePhotoText(id: String,text : String) {
-        myUiState.updateElement({ it.id == id }, {
+        listPhotoEditScreenState.updateElement({ it.id == id }, {
             it.copy(text = text)
         })
     }
@@ -97,21 +116,21 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         postalCode: String,
         country: String,
         status: String,
-        listPhotosUri: MutableList<PhotoWithTextFirebase>,
+        listPhotosUri: List<PhotoWithTextFirebase>,
         dateEntry: String,
         dateSale: String,
         realEstateAgent:String,
-        checkedStateHospital : Boolean,
-        checkedStateSchool : Boolean,
-        checkedStateShops : Boolean,
-        checkedStateParks : Boolean
+        checkedStateHospital: Boolean,
+        checkedStateSchool: Boolean,
+        checkedStateShops: Boolean,
+        checkedStateParks: Boolean
     ) = viewModelScope.launch {
         createRealEstateResponse = useCases.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
             numberApartment,
             city,
             region,
             postalCode,
-            country, status,listPhotosUri,dateEntry,dateSale,realEstateAgent,checkedStateHospital,
+            country, status,listPhotosUri.toMutableList(),dateEntry,dateSale,realEstateAgent,checkedStateHospital,
             checkedStateSchool,
             checkedStateShops,
             checkedStateParks)

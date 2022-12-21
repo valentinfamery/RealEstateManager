@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.net.Uri
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
@@ -63,7 +62,7 @@ fun EditScreenRealEstate(
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
 
     var openDialogUpdatePhotoWithText by remember { mutableStateOf(false) }
-    val listPhotos = realEstateViewModel.myUiState.observeAsState()
+    val listPhotos = realEstateViewModel.listPhotoEditScreenState.observeAsState()
 
     val context = LocalContext.current
 
@@ -572,7 +571,7 @@ fun EditScreenRealEstate(
                                 )
                                 Text(text = photoWithText.text)
                                 Button(onClick = {
-                                    realEstateViewModel.updateAttribute(photoWithText.id)
+                                    realEstateViewModel.updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(photoWithText.id)
                                     val gson = Gson()
                                     Log.e("1", gson.toJson(listPhotos))
                                     Log.e("2", gson.toJson(photoWithText))
