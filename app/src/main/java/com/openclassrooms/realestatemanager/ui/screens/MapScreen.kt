@@ -52,7 +52,8 @@ fun MapScreen(
     scope: CoroutineScope,
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    realEstateIdSet : (realEstateId : String) ->Unit
 ) {
     val navController = rememberNavController()
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -88,7 +89,7 @@ fun MapScreen(
     }
 
     ConstraintLayout {
-        val (centerAlignedTopAppBar, map,textError) = createRefs()
+        val (centerAlignedTopAppBar, map, textError) = createRefs()
 
 
         NavHost(
@@ -112,7 +113,7 @@ fun MapScreen(
                             IconButton(onClick = {
                                 scope.launch { drawerState.open() }
                             }) {
-                                Icon(Icons.Filled.Menu,"")
+                                Icon(Icons.Filled.Menu, "")
                             }
                         },
 
@@ -163,49 +164,53 @@ fun MapScreen(
             ) {
 
                 //when (items) {
-                    //is Response.Loading -> {
-                    //}
-                    //is Response.Success -> {
-                        realEstates.let { items ->
+                //is Response.Loading -> {
+                //}
+                //is Response.Success -> {
+                realEstates.let { items ->
 
 
+                    items.forEach {
 
-                                items.forEach {
-
-                                    val realEstate: RealEstateDatabase = it
-
-
-                                    if (it.lat != null && it.lng != null) {
-
-                                        val latLng = LatLng(
-                                            it.lat!!, it.lng!!
-                                        )
-                                        Marker(
-                                            state = MarkerState(position = latLng),
-                                            title = "title",
-                                            onInfoWindowClick = {
-                                                val item = Uri.encode(Gson().toJson(realEstate))
+                        val realEstate: RealEstateDatabase = it
 
 
-                                            }
-                                        )
+                        if (it.lat != null && it.lng != null) {
+
+                            val latLng = LatLng(
+                                it.lat!!, it.lng!!
+                            )
+                            Marker(
+                                state = MarkerState(position = latLng),
+                                title = "title",
+                                onInfoWindowClick = {
+                                    realEstateIdSet(realEstate.id)
+
+
+                                    if (windowSize.width == WindowType.Compact) {
+                                        navControllerDrawer.navigate("detailScreen")
                                     }
                                 }
-
+                            )
                         }
-                    //}
-                    //else ->{}
+                    }
+
+                }
+                //}
+                //else ->{}
                 //}
 
             }
 
         } else {
 
-                Text(text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ", modifier = Modifier.constrainAs(textError){
+            Text(
+                text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ",
+                modifier = Modifier.constrainAs(textError) {
                     top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
                     start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end , margin = 0.dp)
-                    bottom.linkTo(parent.bottom , margin = 0.dp)
+                    end.linkTo(parent.end, margin = 0.dp)
+                    bottom.linkTo(parent.bottom, margin = 0.dp)
                 })
 
         }

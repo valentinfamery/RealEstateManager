@@ -108,7 +108,10 @@ fun MainScreen(
                                     scope,
                                     realEstateViewModel,
                                     navControllerDrawer,
-                                    windowSize
+                                    windowSize,
+                                    realEstateIdSet = {
+                                        realEstateIdSet(it)
+                                    }
                                 )
                             }
                         }
@@ -235,7 +238,10 @@ fun MainScreen(
                                                     scope,
                                                     realEstateViewModel,
                                                     navControllerDrawer,
-                                                    windowSize
+                                                    windowSize,
+                                                    realEstateIdSet = {
+                                                        realEstateIdSet(it)
+                                                    }
                                                 )
                                             }
                                         }
