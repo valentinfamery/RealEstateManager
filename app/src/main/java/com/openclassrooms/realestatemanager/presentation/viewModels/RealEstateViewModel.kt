@@ -4,14 +4,13 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
-import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RealEstateViewModel @Inject constructor(private val useCases: UseCases, private val realEstateRepository: RealEstateRepository) : ViewModel() {
+class RealEstateViewModel @Inject constructor(private val realEstateRepository: RealEstateRepository) : ViewModel() {
 
 
 
@@ -97,7 +96,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
     }
 
     fun refreshRealEstates() = viewModelScope.launch {
-        useCases.refreshRealEstates()
+        realEstateRepository.refreshRealEstatesFromFirestore()
     }
 
     fun realEstateById(realEstateId : String): LiveData<RealEstateDatabase?> {return realEstateRepository.realEstateById(realEstateId)}
@@ -125,7 +124,7 @@ class RealEstateViewModel @Inject constructor(private val useCases: UseCases, pr
         checkedStateShops: Boolean,
         checkedStateParks: Boolean
     ) = viewModelScope.launch {
-        createRealEstateResponse = useCases.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
+        createRealEstateResponse = realEstateRepository.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
             numberApartment,
             city,
             region,

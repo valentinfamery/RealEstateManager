@@ -12,8 +12,6 @@ import com.openclassrooms.realestatemanager.data.repository.UserRepositoryImpl
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.repository.UserRepository
-import com.openclassrooms.realestatemanager.domain.use_case.*
-import com.openclassrooms.realestatemanager.utils.ConnectionReceiver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,16 +64,5 @@ object AppModule {
         fireStore: FirebaseFirestore,
         @ApplicationContext context: Context
     ): UserRepository = UserRepositoryImpl(firebaseAuth,authUI,fireStore,context)
-
-    @Provides
-    fun provideUseCases(userRepository: UserRepository,realEstateRepository: RealEstateRepository) = UseCases(
-        refreshRealEstates = RefreshRealEstates(realEstateRepository),
-        createRealEstate = CreateRealEstate(realEstateRepository),
-        registerUser = RegisterUser(userRepository),
-        loginUser = LoginUser(userRepository),
-        sendPasswordResetEmail = SendPasswordResetEmail(userRepository),
-        deleteUser = DeleteUser(userRepository),
-        userData = UserData(userRepository)
-    )
 
 }

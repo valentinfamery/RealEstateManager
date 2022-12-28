@@ -4,16 +4,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
-import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
-import junit.framework.Assert
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -29,17 +24,13 @@ class RealEstateRepositoryInstrumentedTest {
     @Mock
     lateinit var realEstateRepository : RealEstateRepository
 
-    @Mock
-    lateinit var useCases: UseCases
-
     lateinit var realEstateViewModel: RealEstateViewModel
 
     @Before
     fun setUp(){
         MockitoAnnotations.openMocks(this)
-        realEstateViewModel = RealEstateViewModel(useCases,realEstateRepository)
+        realEstateViewModel = RealEstateViewModel(realEstateRepository)
     }
-
 
     @Test
     fun realEstates_returnsCorrectData() = runTest{
@@ -105,8 +96,6 @@ class RealEstateRepositoryInstrumentedTest {
         assertEquals(expectedRealEstates, result)
         println(result.size.toString())
         // Assert
-
-
 
     }
 
