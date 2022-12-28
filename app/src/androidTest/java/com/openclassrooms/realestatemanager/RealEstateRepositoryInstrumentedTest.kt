@@ -1,28 +1,30 @@
 package com.openclassrooms.realestatemanager
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
-import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.use_case.UseCases
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
-
+import junit.framework.Assert
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
-class RealEstateRepositoryTest  {
+@OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(AndroidJUnit4::class)
+class RealEstateRepositoryInstrumentedTest {
 
     @Mock
     lateinit var realEstateRepository : RealEstateRepository
@@ -38,8 +40,9 @@ class RealEstateRepositoryTest  {
         realEstateViewModel = RealEstateViewModel(useCases,realEstateRepository)
     }
 
+
     @Test
-    fun realEstates_returnsCorrectData() = runBlocking{
+    fun realEstates_returnsCorrectData() = runTest{
         // Arrange
         val realEstate1 = RealEstateDatabase(
             id = "1",
@@ -91,13 +94,19 @@ class RealEstateRepositoryTest  {
                 )
             )
         )
+
+
+
+
         val expectedRealEstates = listOf(realEstate1, realEstate2)
         `when`(realEstateRepository.realEstates()).thenReturn(flowOf(expectedRealEstates))
 
-        val result = realEstateRepository.realEstates().first()
+        val result = realEstateViewModel.realEstates.first()
+        assertEquals(expectedRealEstates, result)
         println(result.size.toString())
         // Assert
-        assertEquals(expectedRealEstates, result)
+
+
 
     }
 

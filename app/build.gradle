@@ -153,6 +153,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
+
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-alpha03'
 
 // viewModelScope:
@@ -170,8 +172,10 @@ dependencies {
     implementation "com.google.accompanist:accompanist-permissions:0.28.0"
 
     testImplementation "org.mockito:mockito-core:4.5.1"
+    androidTestImplementation "org.mockito:mockito-core:4.5.1"
 
     testImplementation("org.mockito:mockito-inline:2.8.47")
+    androidTestImplementation("org.mockito:mockito-inline:2.8.47")
 
 
 }
