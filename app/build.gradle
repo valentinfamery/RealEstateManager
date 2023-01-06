@@ -172,7 +172,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-permissions:0.28.0"
 
     testImplementation "org.mockito:mockito-core:4.5.1"
-    androidTestImplementation "org.mockito:mockito-android:4.5.1"
+
 
 
 

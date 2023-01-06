@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
@@ -12,13 +11,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(AndroidJUnit4::class)
 class RealEstateRepositoryInstrumentedTest {
 
     @Mock
@@ -92,7 +89,7 @@ class RealEstateRepositoryInstrumentedTest {
         val expectedRealEstates = listOf(realEstate1, realEstate2)
         `when`(realEstateRepository.realEstates()).thenReturn(flowOf(expectedRealEstates))
 
-        val result = realEstateViewModel.realEstates.first()
+        val result = realEstateRepository.realEstates().first()
         assertEquals(expectedRealEstates, result)
         println(result.size.toString())
         // Assert
