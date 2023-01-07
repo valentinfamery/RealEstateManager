@@ -12,9 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class RealEstateViewModel @Inject constructor(private val realEstateRepository: RealEstateRepository) : ViewModel() {
 
-
-
-
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
     var updateRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
@@ -55,7 +52,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         listPhotoEditScreenState.value = listPhotoEditScreenState.value!! + photoWithTextFirebase
     }
 
-    val realEstates: StateFlow<List<RealEstateDatabase>> = realEstateRepository.realEstates().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), mutableListOf())
+    val realEstates: StateFlow<List<RealEstateDatabase>> = realEstateRepository.realEstates().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), mutableListOf<RealEstateDatabase>())
 
     fun updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(id: String) {
         listPhotoEditScreenState.updateElement({ it.id == id }, {

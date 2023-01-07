@@ -29,16 +29,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RealEstateRepositoryImpl @Inject constructor(
+open class RealEstateRepositoryImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val storageRef : StorageReference,
     private val context: Context,
-    private val realEstateDao: RealEstateDao): RealEstateRepository {
+    val realEstateDao: RealEstateDao): RealEstateRepository {
 
 
-    override fun realEstates() : Flow<List<RealEstateDatabase>> {
-        return realEstateDao.realEstates()
-    }
+    override fun realEstates() : Flow<List<RealEstateDatabase>> = realEstateDao.realEstates()
+
 
     override suspend fun refreshRealEstatesFromFirestore() {
 
