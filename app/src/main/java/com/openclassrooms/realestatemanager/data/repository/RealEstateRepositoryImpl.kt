@@ -39,6 +39,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
     override fun realEstates() : Flow<List<RealEstateDatabase>> = realEstateDao.realEstates()
 
 
+
     override suspend fun refreshRealEstatesFromFirestore() {
 
             val isNetWorkAvailable = Utils.isInternetAvailable(context)

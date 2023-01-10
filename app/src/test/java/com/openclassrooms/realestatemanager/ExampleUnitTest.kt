@@ -1,7 +1,8 @@
 package com.openclassrooms.realestatemanager
 
-import org.junit.Assert
-import org.junit.Test
+
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.lang.Exception
 import kotlin.Throws
 
@@ -14,6 +15,6 @@ class ExampleUnitTest {
     @Test
     @Throws(Exception::class)
     fun addition_isCorrect() {
-        Assert.assertEquals(4, (2 + 2).toLong())
+        assertEquals(4, (2 + 2).toLong())
     }
 }

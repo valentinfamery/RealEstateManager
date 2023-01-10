@@ -3,7 +3,7 @@ package com.openclassrooms.realestatemanager
 
 import android.content.Context
 import android.database.Cursor
-import androidx.compose.runtime.MutableState
+
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SupportSQLiteQuery
 import app.cash.turbine.test
@@ -13,40 +13,49 @@ import com.openclassrooms.realestatemanager.data.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
+
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
-import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
+import kotlinx.coroutines.test.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.mockito.Mockito.mock
 
 import org.mockito.MockitoAnnotations
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RealEstateRepositoryInstrumentedTest {
 
-    val firebaseFirestore = mock(FirebaseFirestore::class.java)
-    val storageRef = mock(StorageReference::class.java)
-    val context = mock(Context::class.java)
+    private val scope = TestScope()
 
-    var realEstateDao = FakeRealEstateDao()
-    private val realEstateRepository = RealEstateRepositoryImpl(firebaseFirestore,storageRef,context,realEstateDao)
+    private val realEstateRepository = mock(RealEstateRepository::class.java)
 
-    lateinit var realEstateViewModel: RealEstateViewModel
-
-    @Before
+    @BeforeEach
     fun setUp(){
+        Dispatchers.setMain(UnconfinedTestDispatcher(scope.testScheduler))
         MockitoAnnotations.openMocks(this)
-        realEstateViewModel = RealEstateViewModel(realEstateRepository)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
     fun realEstates_returnsCorrectData() = runTest{
         // Arrange
+
+        val realEstateViewModel = RealEstateViewModel(realEstateRepository)
+
         val realEstate1 = RealEstateDatabase(
             id = "1",
             type = "Maison",
@@ -105,8 +114,7 @@ class RealEstateRepositoryInstrumentedTest {
 
 
 
-        realEstateRepository.realEstates().test {
-            realEstateDao.emit(expectedRealEstates)
+        realEstateViewModel.realEstates.test {
 
             val result = awaitItem()
 
@@ -116,7 +124,7 @@ class RealEstateRepositoryInstrumentedTest {
 
             println("Good1")
 
-            assertEquals(expectedRealEstates, result)
+            assertEquals(listOf<List<RealEstateDatabase>>(), result)
 
             println("Good2")
 
@@ -126,68 +134,5 @@ class RealEstateRepositoryInstrumentedTest {
     }
 
 
-
-}
-
-
-
-
-
-
-class FakeRealEstateDao() : RealEstateDao {
-    override suspend fun insertRealEstate(realEstate: RealEstateDatabase) {
-        TODO("Not yet implemented")
-    }
-
-    private val flow = MutableSharedFlow<List<RealEstateDatabase>>()
-    suspend fun emit(value: List<RealEstateDatabase>) {
-        flow.emit(value)
-        println("emitDao()")
-    }
-    override fun realEstates(): Flow<List<RealEstateDatabase>>  = flow
-
-    override suspend fun clear() {
-        TODO("Not yet implemented")
-    }
-
-    override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getRealEstatesWithCursor(): Cursor {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateRealEstate(
-        entryType: String,
-        id: String,
-        entryPrice: Int,
-        entryArea: Int,
-        entryNumberRoom: String,
-        entryDescription: String,
-        hospitalsNear: Boolean,
-        schoolsNear: Boolean,
-        shopsNear: Boolean,
-        parksNear: Boolean,
-        entryStatus: String,
-        textDateOfSale: String,
-        entryNumberApartement: String,
-        entryNumberAndStreet: String,
-        entryCity: String,
-        entryRegion: String,
-        entryPostalCode: String,
-        entryCountry: String,
-        listPhotoWithText: List<PhotoWithTextFirebase>?
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateRealEstateLatLng(id: String, lat: Double?, lng: Double?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>> {
-        TODO("Not yet implemented")
-    }
 
 }

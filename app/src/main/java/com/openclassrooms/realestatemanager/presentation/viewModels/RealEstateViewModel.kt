@@ -15,6 +15,10 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
     var updateRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
+    init {
+        fetchRealEstates()
+    }
+
     var list by mutableStateOf<Response<Boolean>>(Response.Empty)
     private val _isRefreshing = MutableStateFlow(false)
 
@@ -52,7 +56,21 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         listPhotoEditScreenState.value = listPhotoEditScreenState.value!! + photoWithTextFirebase
     }
 
-    val realEstates: StateFlow<List<RealEstateDatabase>> = realEstateRepository.realEstates().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), mutableListOf<RealEstateDatabase>())
+    private val _realEstates = MutableStateFlow<List<RealEstateDatabase>>(listOf())
+    val realEstates: StateFlow<List<RealEstateDatabase>> = _realEstates
+
+    fun fetchRealEstates() {
+        viewModelScope.launch {
+            realEstateRepository.realEstates().collect{
+                _realEstates.value = it
+            }
+        }
+    }
+
+
+
+
+
 
     fun updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(id: String) {
         listPhotoEditScreenState.updateElement({ it.id == id }, {
