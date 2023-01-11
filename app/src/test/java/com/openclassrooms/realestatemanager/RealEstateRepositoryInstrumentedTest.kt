@@ -1,60 +1,38 @@
 package com.openclassrooms.realestatemanager
 
-
-import android.content.Context
-import android.database.Cursor
-
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
-import androidx.sqlite.db.SupportSQLiteQuery
-import app.cash.turbine.test
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.StorageReference
-import com.openclassrooms.realestatemanager.data.repository.RealEstateRepositoryImpl
-import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
-
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
-import kotlinx.coroutines.Dispatchers
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.*
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.mockito.Mockito.mock
-
-import org.mockito.MockitoAnnotations
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@RunWith(JUnit4::class)
 class RealEstateRepositoryInstrumentedTest {
 
-    private val scope = TestScope()
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val realEstateRepository = mock(RealEstateRepository::class.java)
-
-    @BeforeEach
-    fun setUp(){
-        Dispatchers.setMain(UnconfinedTestDispatcher(scope.testScheduler))
-        MockitoAnnotations.openMocks(this)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
+    @get:Rule
+    val coroutineScope = CoroutineTestRule()
 
     @Test
-    fun realEstates_returnsCorrectData() = runTest{
+    fun realEstates_returnsCorrectData() = coroutineScope.runBlockingTest{
         // Arrange
+        val repository = FakeRepo()
 
-        val realEstateViewModel = RealEstateViewModel(realEstateRepository)
+        val realEstateViewModel = RealEstateViewModel(repository)
 
         val realEstate1 = RealEstateDatabase(
             id = "1",
@@ -111,12 +89,10 @@ class RealEstateRepositoryInstrumentedTest {
 
 
 
+            repository.emit(expectedRealEstates)
 
 
-
-        realEstateViewModel.realEstates.test {
-
-            val result = awaitItem()
+            val result = realEstateViewModel.realEstates.value
 
             for(real in result) {
                 println(real.id)
@@ -124,15 +100,102 @@ class RealEstateRepositoryInstrumentedTest {
 
             println("Good1")
 
-            assertEquals(listOf<List<RealEstateDatabase>>(), result)
+            assertEquals(expectedRealEstates, result)
 
             println("Good2")
 
 
-        }
+
 
     }
 
 
 
 }
+
+class FakeRepo : RealEstateRepository {
+    override suspend fun refreshRealEstatesFromFirestore() {
+        TODO("Not yet implemented")
+    }
+
+    private val flow = MutableSharedFlow<List<RealEstateDatabase>>()
+    suspend fun emit(value: List<RealEstateDatabase>) = flow.emit(value)
+
+    override fun realEstates(): Flow<List<RealEstateDatabase>> = flow
+
+    override suspend fun createRealEstate(
+        type: String,
+        price: String,
+        area: String,
+        numberRoom: String,
+        description: String,
+        numberAndStreet: String,
+        numberApartment: String,
+        city: String,
+        region: String,
+        postalCode: String,
+        country: String,
+        status: String,
+        listPhotos: MutableList<PhotoWithTextFirebase>?,
+        dateEntry: String,
+        dateSale: String,
+        realEstateAgent: String,
+        checkedStateHospital: Boolean,
+        checkedStateSchool: Boolean,
+        checkedStateShops: Boolean,
+        checkedStateParks: Boolean
+    ): Response<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPropertyBySearch(
+        type: String,
+        city: String,
+        minSurface: Int,
+        maxSurface: Int,
+        minPrice: Int,
+        maxPrice: Int,
+        onTheMarketLessALastWeek: Boolean,
+        soldOn3LastMonth: Boolean,
+        min3photos: Boolean,
+        schools: Boolean,
+        shops: Boolean
+    ): LiveData<List<RealEstateDatabase>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateRealEstate(
+        id: String,
+        entryType: String,
+        entryPrice: String,
+        entryArea: String,
+        entryNumberRoom: String,
+        entryDescription: String,
+        entryNumberAndStreet: String,
+        entryNumberApartement: String,
+        entryCity: String,
+        entryRegion: String,
+        entryPostalCode: String,
+        entryCountry: String,
+        entryStatus: String,
+        textDateOfEntry: String,
+        textDateOfSale: String,
+        realEstateAgent: String?,
+        lat: Double?,
+        lng: Double?,
+        checkedStateHopital: MutableState<Boolean>,
+        checkedStateSchool: MutableState<Boolean>,
+        checkedStateShops: MutableState<Boolean>,
+        checkedStateParks: MutableState<Boolean>,
+        listPhotoWithText: MutableList<PhotoWithTextFirebase>,
+        itemRealEstate: RealEstateDatabase
+    ): Response<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+}
+

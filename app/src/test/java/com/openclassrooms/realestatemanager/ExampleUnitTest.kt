@@ -1,8 +1,9 @@
 package com.openclassrooms.realestatemanager
 
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+
+import junit.framework.Assert.assertEquals
+import org.junit.Test
 import java.lang.Exception
 import kotlin.Throws
 
