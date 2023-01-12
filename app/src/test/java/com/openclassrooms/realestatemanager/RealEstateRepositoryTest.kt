@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager
 
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
@@ -9,9 +10,13 @@ import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.Dispatchers
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.*
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,16 +24,28 @@ import org.junit.runners.JUnit4
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
-class RealEstateRepositoryInstrumentedTest {
+class RealEstateRepositoryTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @get:Rule
-    val coroutineScope = CoroutineTestRule()
+    private val dispatcher = UnconfinedTestDispatcher()
+    private val scope = TestScope(dispatcher)
+
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+
 
     @Test
-    fun realEstates_returnsCorrectData() = coroutineScope.runBlockingTest{
+    fun realEstates_returnsCorrectData() = scope.runTest{
         // Arrange
         val repository = FakeRepo()
 
