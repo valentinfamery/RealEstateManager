@@ -54,165 +54,326 @@ fun MapScreen(
     navControllerDrawer: NavController,
     windowSize: WindowSize
 ) {
-    val navController = rememberNavController()
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    val activity = LocalContext.current as Activity
 
-    val realEstates by realEstateViewModel.realEstates.collectAsState()
+    if(windowSize.width == WindowType.Compact) {
 
-    var userPosition by remember {
-        mutableStateOf(LatLng(0.0, 0.0))
-    }
+        val navController = rememberNavController()
+        lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+        val activity = LocalContext.current as Activity
 
-    fun startLocationUpdates() {
-        fusedLocationProviderClient = getFusedLocationProviderClient(activity)
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+        val realEstates by realEstateViewModel.realEstates.collectAsState()
 
-            if (it != null) {
-                userPosition = LatLng(it.latitude, it.longitude)
+        var userPosition by remember {
+            mutableStateOf(LatLng(0.0, 0.0))
+        }
+
+        fun startLocationUpdates() {
+            fusedLocationProviderClient = getFusedLocationProviderClient(activity)
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+
+                if (it != null) {
+                    userPosition = LatLng(it.latitude, it.longitude)
+                }
+
+            }
+        }
+
+        val locationPermissionState = rememberPermissionState(
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+
+        if (locationPermissionState.status.isGranted) {
+            startLocationUpdates()
+        } else {
+            SideEffect {
+                locationPermissionState.launchPermissionRequest()
+            }
+        }
+
+        ConstraintLayout {
+            val (centerAlignedTopAppBar, map, textError) = createRefs()
+
+
+            NavHost(
+                navController = navController,
+                startDestination = "topBarMap",
+                modifier = Modifier
+                    .constrainAs(centerAlignedTopAppBar) {
+                        top.linkTo(parent.top, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }
+            ) {
+                composable("topBarMap") {
+
+                    if (windowSize.width == WindowType.Compact) {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(text = "Map")
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = {
+                                    scope.launch { drawerState.open() }
+                                }) {
+                                    Icon(Icons.Filled.Menu, "")
+                                }
+                            },
+
+
+                            )
+                    } else {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(text = "Map")
+                            },
+                            actions = {
+                                IconButton(onClick = {
+                                    navControllerDrawer.navigate("filterScreen")
+
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
+                                        contentDescription = ""
+                                    )
+                                }
+                            },
+
+                            )
+                    }
+                }
             }
 
-        }
-    }
+            if (userPosition != LatLng(0.0, 0.0)) {
 
-    val locationPermissionState = rememberPermissionState(
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
-
-    if (locationPermissionState.status.isGranted) {
-        startLocationUpdates()
-    } else {
-        SideEffect {
-            locationPermissionState.launchPermissionRequest()
-        }
-    }
-
-    ConstraintLayout {
-        val (centerAlignedTopAppBar, map, textError) = createRefs()
-
-
-        NavHost(
-            navController = navController,
-            startDestination = "topBarMap",
-            modifier = Modifier
-                .constrainAs(centerAlignedTopAppBar) {
-                    top.linkTo(parent.top, margin = 0.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
+                val cameraPositionState = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(userPosition, 10f)
                 }
-        ) {
-            composable("topBarMap") {
 
-                if (windowSize.width == WindowType.Compact) {
-                    CenterAlignedTopAppBar(
-                        title = {
-                            Text(text = "Map")
+                val mapProperties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
+                val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
+
+                GoogleMap(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .constrainAs(map) {
+                            top.linkTo(centerAlignedTopAppBar.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
                         },
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                scope.launch { drawerState.open() }
-                            }) {
-                                Icon(Icons.Filled.Menu, "")
-                            }
-                        },
+                    cameraPositionState = cameraPositionState,
+                    properties = mapProperties,
+                    uiSettings = uiSettings,
+                ) {
+
+                    //when (items) {
+                    //is Response.Loading -> {
+                    //}
+                    //is Response.Success -> {
+                    realEstates.let { items ->
 
 
-                        )
-                } else {
-                    CenterAlignedTopAppBar(
-                        title = {
-                            Text(text = "Map")
-                        },
-                        actions = {
-                            IconButton(onClick = {
-                                navControllerDrawer.navigate("filterScreen")
+                        items.forEach {
 
-                            }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
-                                    contentDescription = ""
+                            val realEstate: RealEstateDatabase = it
+
+
+                            if (it.lat != null && it.lng != null) {
+
+                                val latLng = LatLng(
+                                    it.lat!!, it.lng!!
+                                )
+                                Marker(
+                                    state = MarkerState(position = latLng),
+                                    title = "title",
+                                    onInfoWindowClick = {
+                                        realEstateViewModel.realEstateIdDetail.value = realEstate.id
+                                        navControllerDrawer.navigate("detailScreen")
+
+                                    }
                                 )
                             }
-                        },
-
-                        )
-                }
-            }
-        }
-
-        if (userPosition != LatLng(0.0, 0.0)) {
-
-            val cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(userPosition, 10f)
-            }
-
-            val mapProperties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
-            val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
-
-            GoogleMap(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .constrainAs(map) {
-                        top.linkTo(centerAlignedTopAppBar.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    },
-                cameraPositionState = cameraPositionState,
-                properties = mapProperties,
-                uiSettings = uiSettings,
-            ) {
-
-                //when (items) {
-                //is Response.Loading -> {
-                //}
-                //is Response.Success -> {
-                realEstates.let { items ->
-
-
-                    items.forEach {
-
-                        val realEstate: RealEstateDatabase = it
-
-
-                        if (it.lat != null && it.lng != null) {
-
-                            val latLng = LatLng(
-                                it.lat!!, it.lng!!
-                            )
-                            Marker(
-                                state = MarkerState(position = latLng),
-                                title = "title",
-                                onInfoWindowClick = {
-                                    realEstateViewModel.realEstateIdDetail.value = realEstate.id
-
-
-                                    if (windowSize.width != WindowType.Expanded) {
-                                        navControllerDrawer.navigate("detailScreen")
-                                    }
-                                }
-                            )
                         }
+
                     }
+                    //}
+                    //else ->{}
+                    //}
 
                 }
-                //}
-                //else ->{}
-                //}
+
+            } else {
+
+                Text(
+                    text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ",
+                    modifier = Modifier.constrainAs(textError) {
+                        top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                        bottom.linkTo(parent.bottom, margin = 0.dp)
+                    })
 
             }
-
-        } else {
-
-            Text(
-                text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ",
-                modifier = Modifier.constrainAs(textError) {
-                    top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
-                    bottom.linkTo(parent.bottom, margin = 0.dp)
-                })
-
         }
+
+    } else if (windowSize.width == WindowType.Expanded) {
+
+        val navController = rememberNavController()
+        lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+        val activity = LocalContext.current as Activity
+
+        val realEstates by realEstateViewModel.realEstates.collectAsState()
+
+        var userPosition by remember {
+            mutableStateOf(LatLng(0.0, 0.0))
+        }
+
+        fun startLocationUpdates() {
+            fusedLocationProviderClient = getFusedLocationProviderClient(activity)
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+
+                if (it != null) {
+                    userPosition = LatLng(it.latitude, it.longitude)
+                }
+
+            }
+        }
+
+        val locationPermissionState = rememberPermissionState(
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+
+        if (locationPermissionState.status.isGranted) {
+            startLocationUpdates()
+        } else {
+            SideEffect {
+                locationPermissionState.launchPermissionRequest()
+            }
+        }
+
+        ConstraintLayout {
+            val (centerAlignedTopAppBar, map, textError) = createRefs()
+
+
+            NavHost(
+                navController = navController,
+                startDestination = "topBarMap",
+                modifier = Modifier
+                    .constrainAs(centerAlignedTopAppBar) {
+                        top.linkTo(parent.top, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                    }
+            ) {
+                composable("topBarMap") {
+
+                    if (windowSize.width == WindowType.Compact) {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(text = "Map")
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = {
+                                    scope.launch { drawerState.open() }
+                                }) {
+                                    Icon(Icons.Filled.Menu, "")
+                                }
+                            },
+
+
+                            )
+                    } else {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(text = "Map")
+                            },
+                            actions = {
+                                IconButton(onClick = {
+                                    navControllerDrawer.navigate("filterScreen")
+
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
+                                        contentDescription = ""
+                                    )
+                                }
+                            },
+
+                            )
+                    }
+                }
+            }
+
+            if (userPosition != LatLng(0.0, 0.0)) {
+
+                val cameraPositionState = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(userPosition, 10f)
+                }
+
+                val mapProperties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
+                val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
+
+                GoogleMap(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .constrainAs(map) {
+                            top.linkTo(centerAlignedTopAppBar.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    cameraPositionState = cameraPositionState,
+                    properties = mapProperties,
+                    uiSettings = uiSettings,
+                ) {
+
+                    //when (items) {
+                    //is Response.Loading -> {
+                    //}
+                    //is Response.Success -> {
+                    realEstates.let { items ->
+
+
+                        items.forEach {
+
+                            val realEstate: RealEstateDatabase = it
+
+
+                            if (it.lat != null && it.lng != null) {
+
+                                val latLng = LatLng(
+                                    it.lat!!, it.lng!!
+                                )
+                                Marker(
+                                    state = MarkerState(position = latLng),
+                                    title = "title",
+                                    onInfoWindowClick = {
+                                        realEstateViewModel.realEstateIdDetail.value = realEstate.id
+
+                                    }
+                                )
+                            }
+                        }
+
+                    }
+                    //}
+                    //else ->{}
+                    //}
+
+                }
+
+            } else {
+
+                Text(
+                    text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ",
+                    modifier = Modifier.constrainAs(textError) {
+                        top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
+                        start.linkTo(parent.start, margin = 0.dp)
+                        end.linkTo(parent.end, margin = 0.dp)
+                        bottom.linkTo(parent.bottom, margin = 0.dp)
+                    })
+
+            }
+        }
+
     }
 
 }
