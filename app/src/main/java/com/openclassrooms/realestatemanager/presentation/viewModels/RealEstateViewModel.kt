@@ -24,6 +24,9 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
 
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
+    val realEstateIdDetail = MutableStateFlow("")
+
+
     val listPhotoEditScreenState = MutableLiveData<List<PhotoWithTextFirebase>>()
 
     val listPhotoNewScreenState = MutableLiveData(listOf<PhotoWithTextFirebase>())

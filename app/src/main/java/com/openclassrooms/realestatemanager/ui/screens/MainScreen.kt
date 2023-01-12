@@ -47,9 +47,7 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    windowSize: WindowSize,
-    realEstateId: String,
-    realEstateIdSet : (realEstateId : String) ->Unit
+    windowSize: WindowSize
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -59,11 +57,6 @@ fun MainScreen(
 
     val navController = rememberNavController()
     val context = LocalContext.current
-
-
-
-
-
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -95,11 +88,7 @@ fun MainScreen(
                                     realEstateViewModel,
                                     innerPadding,
                                     navControllerDrawer,
-                                    windowSize,
-                                    realEstateId,
-                                    realEstateIdSet = {
-                                        realEstateIdSet(it)
-                                    }
+                                    windowSize
                                 )
                             }
                             composable(Screen.MapScreen.route) {
@@ -108,10 +97,7 @@ fun MainScreen(
                                     scope,
                                     realEstateViewModel,
                                     navControllerDrawer,
-                                    windowSize,
-                                    realEstateIdSet = {
-                                        realEstateIdSet(it)
-                                    }
+                                    windowSize
                                 )
                             }
                         }
@@ -225,11 +211,7 @@ fun MainScreen(
                                                     realEstateViewModel,
                                                     innerPadding,
                                                     navControllerDrawer,
-                                                    windowSize,
-                                                    realEstateId,
-                                                    realEstateIdSet = {
-                                                        realEstateIdSet(it)
-                                                    }
+                                                    windowSize
                                                 )
                                             }
                                             composable(Screen.MapScreen.route) {
@@ -238,10 +220,7 @@ fun MainScreen(
                                                     scope,
                                                     realEstateViewModel,
                                                     navControllerDrawer,
-                                                    windowSize,
-                                                    realEstateIdSet = {
-                                                        realEstateIdSet(it)
-                                                    }
+                                                    windowSize
                                                 )
                                             }
                                         }
@@ -264,13 +243,15 @@ fun MainScreen(
                                 )
                             },
                             second = {
-                                var navControllerTwoPane = rememberNavController()
+                                val navControllerTwoPane = rememberNavController()
+
+                                val id = realEstateViewModel.realEstateIdDetail.collectAsState()
 
                                 NavHost(navController = navControllerTwoPane , startDestination = "detailScreen"){
                                     composable("detailScreen") {
-                                        if (realEstateId != "") {
+                                        if (id.value != "") {
 
-                                            val itemRealEstate by realEstateViewModel.realEstateById(realEstateId).observeAsState()
+                                            val itemRealEstate by realEstateViewModel.realEstateById(id.value).observeAsState()
 
                                             RealEstateDetailScreen(
                                                 realEstateViewModel = realEstateViewModel,

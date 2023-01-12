@@ -52,8 +52,7 @@ fun MapScreen(
     scope: CoroutineScope,
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
-    windowSize: WindowSize,
-    realEstateIdSet : (realEstateId : String) ->Unit
+    windowSize: WindowSize
 ) {
     val navController = rememberNavController()
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -184,10 +183,10 @@ fun MapScreen(
                                 state = MarkerState(position = latLng),
                                 title = "title",
                                 onInfoWindowClick = {
-                                    realEstateIdSet(realEstate.id)
+                                    realEstateViewModel.realEstateIdDetail.value = realEstate.id
 
 
-                                    if (windowSize.width == WindowType.Compact) {
+                                    if (windowSize.width != WindowType.Expanded) {
                                         navControllerDrawer.navigate("detailScreen")
                                     }
                                 }

@@ -37,9 +37,7 @@ fun ListScreen(
     realEstateViewModel: RealEstateViewModel,
     innerPadding: PaddingValues,
     navController: NavController,
-    windowSize: WindowSize,
-    realEstateId: String,
-    realEstateIdSet : (realEstateId : String) ->Unit
+    windowSize: WindowSize
 ) {
     val context = LocalContext.current
     val realEstates by realEstateViewModel.realEstates.collectAsState()
@@ -153,10 +151,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     windowSize,
-                                    realEstateId,
-                                    realEstateIdSet = {
-                                        realEstateIdSet(it)
-                                    }
+                                    realEstateViewModel
                                 )
                             }
 
@@ -169,10 +164,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     windowSize,
-                                    realEstateId,
-                                    realEstateIdSet = {
-                                        realEstateIdSet(it)
-                                    }
+                                    realEstateViewModel
                                 )
                             }
 
@@ -235,10 +227,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     windowSize,
-                                    realEstateId,
-                                    realEstateIdSet = {
-                                        realEstateIdSet(it)
-                                    }
+                                    realEstateViewModel
                                 )
                             }
 
@@ -251,10 +240,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     windowSize,
-                                    realEstateId,
-                                    realEstateIdSet = {
-                                        realEstateIdSet(it)
-                                    }
+                                    realEstateViewModel,
                                 )
                             }
 

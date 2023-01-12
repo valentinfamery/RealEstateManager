@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.utils.WindowType
 import com.skydoves.landscapist.ImageOptions
@@ -26,8 +27,7 @@ fun RowList(
     item: RealEstateDatabase,
     navController: NavController,
     windowSize: WindowSize,
-    realEstateId: String,
-    realEstateIdSet : (realEstateId : String) ->Unit
+    realEstateViewModel: RealEstateViewModel
 ) {
 
 
@@ -41,7 +41,7 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                realEstateIdSet(item.id)
+                realEstateViewModel.realEstateIdDetail.value = item.id
                 navController.navigate("detailScreen")
 
             }) {
@@ -95,7 +95,7 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                realEstateIdSet(item.id)
+                realEstateViewModel.realEstateIdDetail.value = item.id
             }) {
 
                 Box(

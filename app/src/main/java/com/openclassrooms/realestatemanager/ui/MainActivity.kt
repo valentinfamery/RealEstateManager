@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui
 import android.annotation.SuppressLint
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -72,9 +73,13 @@ class MainActivity : ComponentActivity() {
 
                 val windowSize = rememberWindowSizeComposable()
 
-                var realEstateDetailId by remember {mutableStateOf("")}
-                var realEstateEditId by remember{mutableStateOf("")}
+                Log.e("windowType",windowSize.width.toString())
+
+                val id = realEstateViewModel.realEstateIdDetail.collectAsState()
+
+
                 var photoUrl by remember {mutableStateOf("")}
+
 
 
                     val navControllerMainActivity = rememberNavController()
@@ -89,10 +94,6 @@ class MainActivity : ComponentActivity() {
                                 userViewModel,
                                 realEstateViewModel,
                                 windowSize,
-                                realEstateDetailId,
-                                realEstateIdSet = {
-                                    realEstateDetailId = it
-                                }
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
@@ -114,13 +115,15 @@ class MainActivity : ComponentActivity() {
 
 
 
+
                             composable(
                                 route = "detailScreen"
                             ) {
-                                if (realEstateDetailId != "") {
+
+                                if (id.value != "") {
 
                                     val itemRealEstate by realEstateViewModel.realEstateById(
-                                        realEstateDetailId
+                                        id.value
                                     ).observeAsState()
 
                                     RealEstateDetailScreen(
@@ -166,17 +169,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 PictureDetail(photoUrl, navControllerMainActivity)
                             }
-
-                        }
-
-                        if(windowSize.width == WindowType.Expanded) {
-
-
-                        }
-
-
-
-
+                    }
             }
         }
     }
