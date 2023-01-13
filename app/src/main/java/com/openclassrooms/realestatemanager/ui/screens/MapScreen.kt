@@ -55,7 +55,22 @@ fun MapScreen(
     windowSize: WindowSize
 ) {
 
+
+
+
     if(windowSize.width != WindowType.Expanded) {
+
+        var boolean by remember {
+            mutableStateOf(false)
+        }
+
+        LaunchedEffect(boolean){
+            if(boolean){
+                navControllerDrawer.navigate("detailScreen")
+                boolean = false
+            }
+        }
+
 
         val navController = rememberNavController()
         lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -187,8 +202,7 @@ fun MapScreen(
                                     title = "title",
                                     onInfoWindowClick = {
                                         realEstateViewModel.realEstateIdDetail.value = realEstate.id
-                                        navControllerDrawer.navigate("detailScreen")
-
+                                        boolean = true
                                     }
                                 )
                             }
