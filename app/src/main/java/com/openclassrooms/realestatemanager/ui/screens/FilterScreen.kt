@@ -116,37 +116,40 @@ ConstraintLayout(modifier = Modifier
 
         Spacer(modifier = Modifier.size(10.dp))
 
-        Row(horizontalArrangement = Arrangement.Start) {
+
             TextField(
                 value = entryMinSurface,
                 onValueChange = { entryMinSurface = it },
                 label = { Text("MinSurface") },
-                modifier = Modifier.fillMaxWidth(0.5f)
             )
+
+        Spacer(modifier = Modifier.size(10.dp))
+
             TextField(
                 value = entryMaxSurface,
                 onValueChange = { entryMaxSurface = it },
                 label = { Text("MaxSurface") },
-                modifier = Modifier.fillMaxWidth(0.5f)
             )
-        }
+
 
         Spacer(modifier = Modifier.size(10.dp))
 
-        Row(horizontalArrangement = Arrangement.Start) {
             TextField(
                 value = entryMinPrice,
                 onValueChange = { entryMinPrice = it },
                 label = { Text("MinPrice") },
                 modifier = Modifier.fillMaxWidth(0.5f)
             )
+
+        Spacer(modifier = Modifier.size(10.dp))
+
             TextField(
                 value = entryMaxPrice,
                 onValueChange = { entryMaxPrice = it },
                 label = { Text("MaxPrice") },
                 modifier = Modifier.fillMaxWidth(0.5f)
             )
-        }
+
 
         Spacer(modifier = Modifier.size(10.dp))
 
