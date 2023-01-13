@@ -55,7 +55,7 @@ fun MapScreen(
     windowSize: WindowSize
 ) {
 
-    if(windowSize.width == WindowType.Compact) {
+    if(windowSize.width != WindowType.Expanded) {
 
         val navController = rememberNavController()
         lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -215,7 +215,7 @@ fun MapScreen(
             }
         }
 
-    } else if (windowSize.width == WindowType.Expanded) {
+    } else {
 
         val navController = rememberNavController()
         lateinit var fusedLocationProviderClient: FusedLocationProviderClient

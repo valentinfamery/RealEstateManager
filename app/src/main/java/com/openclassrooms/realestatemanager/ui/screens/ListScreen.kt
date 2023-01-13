@@ -90,7 +90,7 @@ fun ListScreen(
 
 
 
-    if (windowSize.width == WindowType.Compact) {
+    if (windowSize.width != WindowType.Expanded) {
 
 
         Scaffold(
@@ -175,7 +175,7 @@ fun ListScreen(
 
             }
         )
-    }else if (windowSize.width == WindowType.Expanded){
+    }else {
         Scaffold(
             modifier = Modifier.padding(innerPadding),
             topBar = {
