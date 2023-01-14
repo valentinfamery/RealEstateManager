@@ -52,7 +52,8 @@ fun MainScreen(
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedItem by remember { mutableStateOf(0) }
+
+    var selectedItem = realEstateViewModel.selectedItem.collectAsState()
     val items = listOf(Screen.ListScreen, Screen.MapScreen)
 
     val navController = rememberNavController()
@@ -109,9 +110,9 @@ fun MainScreen(
                                 NavigationBarItem(
                                     icon = { Icon(item.icon, contentDescription = null) },
                                     label = { Text(item.title) },
-                                    selected = selectedItem == index,
+                                    selected = selectedItem.value == index,
                                     onClick = {
-                                        selectedItem = index
+                                        realEstateViewModel.selectedItem.value = index
                                         navController.navigate(item.route)
                                     }
                                 )
@@ -185,9 +186,9 @@ fun MainScreen(
                                     NavigationBarItem(
                                         icon = { Icon(item.icon, contentDescription = null) },
                                         label = { Text(item.title) },
-                                        selected = selectedItem == index,
+                                        selected = selectedItem.value == index,
                                         onClick = {
-                                            selectedItem = index
+                                            realEstateViewModel.selectedItem.value = index
                                             navController.navigate(item.route)
                                         }
                                     )
@@ -236,7 +237,7 @@ fun MainScreen(
                             .fillMaxWidth(0.05f)) {
                             NavigationRailItem(
                                 icon = { Icon(Icons.Default.Menu, contentDescription = null) },
-                                selected = selectedItem == 3,
+                                selected = selectedItem.value == 3,
                                 onClick = {
                                     scope.launch { drawerState.open() }
                                 }
@@ -246,9 +247,9 @@ fun MainScreen(
                                 NavigationRailItem(
                                     icon = { Icon(item.icon, contentDescription = null) },
                                     label = { Text(item.title) },
-                                    selected = selectedItem == index,
+                                    selected = selectedItem.value == index,
                                     onClick = {
-                                        selectedItem = index
+                                        realEstateViewModel.selectedItem.value = index
                                         navController.navigate(item.route)
                                     }
                                 )

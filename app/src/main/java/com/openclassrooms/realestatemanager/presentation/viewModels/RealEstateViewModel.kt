@@ -15,6 +15,8 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
     var updateRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
+    var selectedItem = MutableStateFlow(0)
+
     init {
         fetchRealEstates()
     }
