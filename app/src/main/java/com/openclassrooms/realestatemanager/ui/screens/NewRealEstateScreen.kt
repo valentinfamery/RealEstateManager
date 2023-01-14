@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
@@ -53,6 +54,7 @@ fun NewRealEstateScreen(
 
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
 
+    val user by userViewModel.userData.collectAsState()
 
     val listPhotos = realEstateViewModel.listPhotoNewScreenState.observeAsState()
     val activity = LocalContext.current as Activity
@@ -103,7 +105,7 @@ fun NewRealEstateScreen(
         val checkedStateShops = remember { mutableStateOf(false) }
         val checkedStateParks = remember { mutableStateOf(false) }
 
-        val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
+        val listType = listOf("Apartment", "Loft", "Mansion", "House")
         val listStatus = listOf("For Sale", "Sold")
 
         ConstraintLayout(
@@ -117,7 +119,7 @@ fun NewRealEstateScreen(
             val (rowHopital, rowSchool, rowShops, rowParks ,dropdownMenuStatus,fieldNumberAndStreet,fieldNumberApartement,fieldCity,fieldRegion,fieldPostalCode,fieldCountry) = createRefs()
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "New Estate Manager")
+                    Text(text = stringResource(R.string.TitleNewEstateScreen))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -574,7 +576,7 @@ fun NewRealEstateScreen(
                                         listPhotos.value!!,
                                         textDateOfEntry,
                                         textDateOfSale,
-                                        "",
+                                        user?.username.toString(),
                                         checkedStateHopital.value,
                                         checkedStateSchool.value,
                                         checkedStateShops.value,

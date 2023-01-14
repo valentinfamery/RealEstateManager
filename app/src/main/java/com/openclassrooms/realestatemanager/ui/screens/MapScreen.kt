@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -127,7 +128,7 @@ fun MapScreen(
 
                         CenterAlignedTopAppBar(
                             title = {
-                                Text(text = "Map")
+                                Text(text = stringResource(R.string.TitleTopAppBarMapScreen))
                             },
                             navigationIcon = {
                                 IconButton(onClick = {
@@ -183,7 +184,7 @@ fun MapScreen(
                                 )
                                 Marker(
                                     state = MarkerState(position = latLng),
-                                    title = realEstate.numberAndStreet + " " + realEstate.city + " " + realEstate.postalCode + " " + realEstate.region + " " + realEstate.country,
+                                    title = "${realEstate.numberAndStreet} ${realEstate.city} ${realEstate.postalCode} ${realEstate.region} ${realEstate.country}",
                                     onInfoWindowClick = {
                                         realEstateViewModel.realEstateIdDetail.value = realEstate.id
                                         boolean = true
@@ -202,7 +203,7 @@ fun MapScreen(
             } else {
 
                 Text(
-                    text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ",
+                    text = stringResource(R.string.ErrorMapScreen),
                     modifier = Modifier.constrainAs(textError) {
                         top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
                         start.linkTo(parent.start, margin = 0.dp)
@@ -267,7 +268,7 @@ fun MapScreen(
 
                         CenterAlignedTopAppBar(
                             title = {
-                                Text(text = "Map")
+                                Text(text = stringResource(R.string.TitleTopAppBarMapScreen))
                             },
                             navigationIcon = {
                                 IconButton(onClick = {
@@ -326,7 +327,7 @@ fun MapScreen(
                                 )
                                 Marker(
                                     state = MarkerState(position = latLng),
-                                    title = "title",
+                                    title = "${realEstate.numberAndStreet} ${realEstate.city} ${realEstate.postalCode} ${realEstate.region} ${realEstate.country}",
                                     onInfoWindowClick = {
                                         realEstateViewModel.realEstateIdDetail.value = realEstate.id
 
@@ -345,7 +346,7 @@ fun MapScreen(
             } else {
 
                 Text(
-                    text = "Impossible de recupérer la localisation des services google play verifier que une localisation a été enregistré dans ceux ci ",
+                    text = stringResource(R.string.ErrorMapScreen),
                     modifier = Modifier.constrainAs(textError) {
                         top.linkTo(centerAlignedTopAppBar.bottom, margin = 0.dp)
                         start.linkTo(parent.start, margin = 0.dp)

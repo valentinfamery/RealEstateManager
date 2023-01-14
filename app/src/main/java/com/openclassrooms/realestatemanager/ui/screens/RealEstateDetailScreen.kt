@@ -289,7 +289,7 @@ fun RealEstateDetailScreen(
                             start.linkTo(parent.start, margin = 0.dp)
                             end.linkTo(parent.end, margin = 0.dp)
                         }) {
-                            Text(text = itemRealEstate.realEstateAgent.toString())
+                            Text(text = "Agent : "+itemRealEstate.realEstateAgent.toString())
                         }
 
 

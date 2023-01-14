@@ -128,7 +128,7 @@ fun EditScreenRealEstate(
 
 
 
-            val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
+            val listType = listOf("Apartment", "Loft", "Mansion", "House")
             val listStatus = listOf("For Sale", "Sold")
 
 

@@ -5,4 +5,7 @@
     <string name="title_activity_new_real_estate">NewRealEstateActivity</string>
     <string name="title_activity_real_estate_detail">RealEstateDetail</string>
     <string name="title_activity_filter">FilterActivity</string>
+    <string name="ErrorMapScreen">Unable to retrieve the location of google play services verify that a location has been saved in these</string>
+    <string name="TitleTopAppBarMapScreen">Map</string>
+    <string name="TitleNewEstateScreen">New Estate Manager</string>
 </resources>
