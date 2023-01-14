@@ -140,11 +140,6 @@ fun RealEstateDetailScreen(
                                         GlideImage(
                                             imageModel = {listPhotos?.get(it)?.photoSource},
                                             modifier = Modifier
-                                                .clickable {
-                                                    val photoUrl =
-                                                        Uri.encode(Gson().toJson(listPhotos?.get(it)?.photoSource))
-                                                    navController.navigate("PictureDetail/$photoUrl")
-                                                }
                                                 .aspectRatio(0.9f)
                                                 .clip(RoundedCornerShape(15.dp)),
                                             imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
