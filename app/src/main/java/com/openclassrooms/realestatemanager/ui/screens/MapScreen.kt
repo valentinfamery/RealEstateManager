@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +10,7 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -82,6 +84,7 @@ fun MapScreen(
             mutableStateOf(LatLng(0.0, 0.0))
         }
 
+
         fun startLocationUpdates() {
             fusedLocationProviderClient = getFusedLocationProviderClient(activity)
             fusedLocationProviderClient.lastLocation.addOnSuccessListener {
@@ -121,7 +124,7 @@ fun MapScreen(
             ) {
                 composable("topBarMap") {
 
-                    if (windowSize.width == WindowType.Compact) {
+
                         CenterAlignedTopAppBar(
                             title = {
                                 Text(text = "Map")
@@ -136,25 +139,6 @@ fun MapScreen(
 
 
                             )
-                    } else {
-                        CenterAlignedTopAppBar(
-                            title = {
-                                Text(text = "Map")
-                            },
-                            actions = {
-                                IconButton(onClick = {
-                                    navControllerDrawer.navigate("filterScreen")
-
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
-                                        contentDescription = ""
-                                    )
-                                }
-                            },
-
-                            )
-                    }
                 }
             }
 
@@ -199,7 +183,7 @@ fun MapScreen(
                                 )
                                 Marker(
                                     state = MarkerState(position = latLng),
-                                    title = "title",
+                                    title = realEstate.numberAndStreet + " " + realEstate.city + " " + realEstate.postalCode + " " + realEstate.region + " " + realEstate.country,
                                     onInfoWindowClick = {
                                         realEstateViewModel.realEstateIdDetail.value = realEstate.id
                                         boolean = true
@@ -280,7 +264,7 @@ fun MapScreen(
             ) {
                 composable("topBarMap") {
 
-                    if (windowSize.width == WindowType.Compact) {
+
                         CenterAlignedTopAppBar(
                             title = {
                                 Text(text = "Map")
@@ -295,25 +279,9 @@ fun MapScreen(
 
 
                             )
-                    } else {
-                        CenterAlignedTopAppBar(
-                            title = {
-                                Text(text = "Map")
-                            },
-                            actions = {
-                                IconButton(onClick = {
-                                    navControllerDrawer.navigate("filterScreen")
 
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
-                                        contentDescription = ""
-                                    )
-                                }
-                            },
 
-                            )
-                    }
+                    
                 }
             }
 
