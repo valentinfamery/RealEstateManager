@@ -149,134 +149,212 @@ fun MainScreen(
             } else {
 
 
+                if(windowSize.height != WindowType.Compact){
+                    Scaffold(
+                        content = { innerPadding ->
 
-                ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-                    val (navigationRail,box) = createRefs()
-
-                    NavigationRail(modifier = Modifier
-                        .constrainAs(navigationRail) {
-                            top.linkTo(parent.top, margin = 0.dp)
-                            start.linkTo(parent.start, margin = 0.dp)
-                            bottom.linkTo(parent.bottom, margin = 0.dp)
-                        }
-                        .fillMaxHeight()
-                        .fillMaxWidth(0.05f)) {
-                        NavigationRailItem(
-                            icon = { Icon(Icons.Default.Menu, contentDescription = null) },
-                            selected = selectedItem == 3,
-                            onClick = {
-                                scope.launch { drawerState.open() }
+                            NavHost(
+                                navController = navController,
+                                startDestination = "listScreen"
+                            ) {
+                                composable(Screen.ListScreen.route) {
+                                    ListScreen(
+                                        drawerState,
+                                        scope,
+                                        realEstateViewModel,
+                                        innerPadding,
+                                        navControllerDrawer,
+                                        windowSize
+                                    )
+                                }
+                                composable(Screen.MapScreen.route) {
+                                    MapScreen(
+                                        drawerState,
+                                        scope,
+                                        realEstateViewModel,
+                                        navControllerDrawer,
+                                        windowSize
+                                    )
+                                }
                             }
-                        )
 
-                        items.forEachIndexed { index, item ->
-                            NavigationRailItem(
-                                icon = { Icon(item.icon, contentDescription = null) },
-                                label = { Text(item.title) },
-                                selected = selectedItem == index,
+                        },
+                        bottomBar = {
+                            NavigationBar {
+                                items.forEachIndexed { index, item ->
+                                    NavigationBarItem(
+                                        icon = { Icon(item.icon, contentDescription = null) },
+                                        label = { Text(item.title) },
+                                        selected = selectedItem == index,
+                                        onClick = {
+                                            selectedItem = index
+                                            navController.navigate(item.route)
+                                        }
+                                    )
+                                }
+                            }
+                        },
+                        floatingActionButton = {
+
+
+                            FloatingActionButton(
                                 onClick = {
-                                    selectedItem = index
-                                    navController.navigate(item.route)
+                                    val isInternetAvailable = Utils.isInternetAvailable(context)
+
+                                    if(isInternetAvailable){
+                                        context.startActivity(
+                                            Intent(context, NewRealEstateActivity::class.java)
+                                        )
+                                    }else{
+                                        Toast.makeText(context,"Impossible il n'y a pas de connexion Internet",Toast.LENGTH_LONG).show()
+                                    }
+
+
+                                },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(15.dp))
+                            ) {
+                                Icon(Icons.Filled.Add, "Localized description")
+                            }
+
+
+                        }
+
+                    )
+                }else {
+
+                    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+                        val (navigationRail, box) = createRefs()
+
+                        NavigationRail(modifier = Modifier
+                            .constrainAs(navigationRail) {
+                                top.linkTo(parent.top, margin = 0.dp)
+                                start.linkTo(parent.start, margin = 0.dp)
+                                bottom.linkTo(parent.bottom, margin = 0.dp)
+                            }
+                            .fillMaxHeight()
+                            .fillMaxWidth(0.05f)) {
+                            NavigationRailItem(
+                                icon = { Icon(Icons.Default.Menu, contentDescription = null) },
+                                selected = selectedItem == 3,
+                                onClick = {
+                                    scope.launch { drawerState.open() }
                                 }
                             )
-                        }
-                    }
 
-
-                    Box(modifier = Modifier
-                        .constrainAs(box) {
-                            top.linkTo(parent.top, margin = 0.dp)
-                            start.linkTo(navigationRail.end, margin = 0.dp)
-                            bottom.linkTo(parent.bottom, margin = 0.dp)
-                            end.linkTo(parent.end, margin = 0.dp)
-                        }
-                        .fillMaxHeight()
-                        .fillMaxWidth(0.95f)
-                    ) {
-                        TwoPane(
-                            first = {
-                                Scaffold(
-                                    modifier = Modifier.background(color = Color.Red),
-                                    content = {innerPadding->
-
-
-                                        NavHost(
-                                            navController = navController,
-                                            startDestination = "listScreen"
-                                        ) {
-                                            composable(Screen.ListScreen.route) {
-                                                ListScreen(
-                                                    drawerState,
-                                                    scope,
-                                                    realEstateViewModel,
-                                                    innerPadding,
-                                                    navControllerDrawer,
-                                                    windowSize
-                                                )
-                                            }
-                                            composable(Screen.MapScreen.route) {
-                                                MapScreen(
-                                                    drawerState,
-                                                    scope,
-                                                    realEstateViewModel,
-                                                    navControllerDrawer,
-                                                    windowSize
-                                                )
-                                            }
-                                        }
-
-                                    },
-                                    floatingActionButton = {
-                                        FloatingActionButton(
-                                            onClick = { /* do something */
-                                                context.startActivity(
-                                                    Intent(context, NewRealEstateActivity::class.java)
-                                                )
-                                            },
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(15.dp))
-                                        ) {
-                                            Icon(Icons.Filled.Add, "Localized description")
-                                        }
+                            items.forEachIndexed { index, item ->
+                                NavigationRailItem(
+                                    icon = { Icon(item.icon, contentDescription = null) },
+                                    label = { Text(item.title) },
+                                    selected = selectedItem == index,
+                                    onClick = {
+                                        selectedItem = index
+                                        navController.navigate(item.route)
                                     }
-
                                 )
-                            },
-                            second = {
-                                val navControllerTwoPane = rememberNavController()
+                            }
+                        }
 
-                                val id = realEstateViewModel.realEstateIdDetail.collectAsState()
 
-                                NavHost(navController = navControllerTwoPane , startDestination = "detailScreen"){
-                                    composable("detailScreen") {
-                                        if (id.value != "") {
+                        Box(modifier = Modifier
+                            .constrainAs(box) {
+                                top.linkTo(parent.top, margin = 0.dp)
+                                start.linkTo(navigationRail.end, margin = 0.dp)
+                                bottom.linkTo(parent.bottom, margin = 0.dp)
+                                end.linkTo(parent.end, margin = 0.dp)
+                            }
+                            .fillMaxHeight()
+                            .fillMaxWidth(0.95f)
+                        ) {
+                            TwoPane(
+                                first = {
+                                    Scaffold(
+                                        modifier = Modifier.background(color = Color.Red),
+                                        content = { innerPadding ->
 
-                                            val itemRealEstate by realEstateViewModel.realEstateById(id.value).observeAsState()
 
-                                            RealEstateDetailScreen(
-                                                realEstateViewModel = realEstateViewModel,
+                                            NavHost(
                                                 navController = navController,
-                                                windowSize = windowSize,
-                                                itemRealEstate
-                                            )
+                                                startDestination = "listScreen"
+                                            ) {
+                                                composable(Screen.ListScreen.route) {
+                                                    ListScreen(
+                                                        drawerState,
+                                                        scope,
+                                                        realEstateViewModel,
+                                                        innerPadding,
+                                                        navControllerDrawer,
+                                                        windowSize
+                                                    )
+                                                }
+                                                composable(Screen.MapScreen.route) {
+                                                    MapScreen(
+                                                        drawerState,
+                                                        scope,
+                                                        realEstateViewModel,
+                                                        navControllerDrawer,
+                                                        windowSize
+                                                    )
+                                                }
+                                            }
 
+                                        },
+                                        floatingActionButton = {
+                                            FloatingActionButton(
+                                                onClick = { /* do something */
+                                                    context.startActivity(
+                                                        Intent(
+                                                            context,
+                                                            NewRealEstateActivity::class.java
+                                                        )
+                                                    )
+                                                },
+                                                modifier = Modifier
+                                                    .clip(RoundedCornerShape(15.dp))
+                                            ) {
+                                                Icon(Icons.Filled.Add, "Localized description")
+                                            }
+                                        }
+
+                                    )
+                                },
+                                second = {
+                                    val navControllerTwoPane = rememberNavController()
+
+                                    val id = realEstateViewModel.realEstateIdDetail.collectAsState()
+
+                                    NavHost(
+                                        navController = navControllerTwoPane,
+                                        startDestination = "detailScreen"
+                                    ) {
+                                        composable("detailScreen") {
+                                            if (id.value != "") {
+
+                                                val itemRealEstate by realEstateViewModel.realEstateById(
+                                                    id.value
+                                                ).observeAsState()
+
+                                                RealEstateDetailScreen(
+                                                    realEstateViewModel = realEstateViewModel,
+                                                    navController = navController,
+                                                    windowSize = windowSize,
+                                                    itemRealEstate
+                                                )
+
+                                            }
                                         }
                                     }
-                                }
 
 
+                                },
+                                strategy = HorizontalTwoPaneStrategy(splitFraction = 0.475f),
+                                displayFeatures = calculateDisplayFeatures(activity = context as Activity),
+                                foldAwareConfiguration = FoldAwareConfiguration.AllFolds,
+                            )
+                        }
 
-                            },
-                            strategy = HorizontalTwoPaneStrategy(splitFraction = 0.475f),
-                            displayFeatures =  calculateDisplayFeatures(activity = context as Activity),
-                            foldAwareConfiguration = FoldAwareConfiguration.AllFolds,
-                        )
+
                     }
-
-
-
-
-
 
                 }
 

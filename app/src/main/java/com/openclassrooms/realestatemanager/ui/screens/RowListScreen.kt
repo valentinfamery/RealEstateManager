@@ -31,7 +31,7 @@ fun RowList(
 ) {
 
 
-    if (windowSize.width == WindowType.Compact) {
+    if (windowSize.width != WindowType.Expanded) {
         val items2 = item.listPhotoWithText
 
         Card(
@@ -85,7 +85,7 @@ fun RowList(
 
 
 
-    } else if (windowSize.width == WindowType.Expanded) {
+    } else  {
         val items2 = item.listPhotoWithText
 
         Card(
