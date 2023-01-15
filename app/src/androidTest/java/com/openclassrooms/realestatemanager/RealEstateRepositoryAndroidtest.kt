@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,20 +34,16 @@ class RealEstateRepositoryAndroidtest {
 
     lateinit var instrumentationContext: Context
 
-
-
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        instrumentationContext = ApplicationProvider.getApplicationContext();
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
     }
-
-
 
     @Test
     fun realEstates_returnsCorrectData() = scope.runTest{

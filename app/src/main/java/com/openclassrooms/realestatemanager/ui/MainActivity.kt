@@ -163,12 +163,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            composable(
-                                route = "picdetail"
 
-                            ) {
-                                PictureDetail(photoUrl, navControllerMainActivity)
-                            }
                     }
             }
         }
