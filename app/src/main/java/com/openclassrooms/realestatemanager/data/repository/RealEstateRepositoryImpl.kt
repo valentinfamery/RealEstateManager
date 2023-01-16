@@ -48,6 +48,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                 Log.e("items", "repo1")
 
 
+
                 val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
                     it.toObject(RealEstateDatabase::class.java)
                 }

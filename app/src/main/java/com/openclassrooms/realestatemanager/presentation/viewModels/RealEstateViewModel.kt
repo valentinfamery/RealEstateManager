@@ -17,6 +17,9 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
 
     var selectedItem = MutableStateFlow(0)
 
+    private val _realEstates = MutableStateFlow<List<RealEstateDatabase>>(listOf())
+    val realEstates: StateFlow<List<RealEstateDatabase>> = _realEstates
+
     init {
         fetchRealEstates()
     }
@@ -61,8 +64,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         listPhotoEditScreenState.value = listPhotoEditScreenState.value!! + photoWithTextFirebase
     }
 
-    private val _realEstates = MutableStateFlow<List<RealEstateDatabase>>(listOf())
-    val realEstates: StateFlow<List<RealEstateDatabase>> = _realEstates
+
 
     fun fetchRealEstates() {
         viewModelScope.launch {
