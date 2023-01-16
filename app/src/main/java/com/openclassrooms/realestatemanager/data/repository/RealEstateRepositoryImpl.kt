@@ -38,22 +38,19 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
     override fun realEstates() : Flow<List<RealEstateDatabase>> = realEstateDao.realEstates()
 
-    suspend fun getRealEstatesFromFirestore() = firebaseFirestore.collection("real_estates").get().await().map {
-        it.toObject(RealEstateDatabase::class.java)
-    }
-
-
     override suspend fun refreshRealEstatesFromFirestore() {
 
             val isNetWorkAvailable = Utils.isInternetAvailable(context)
 
-        val firebaseAuth = FirebaseAuth.getInstance()
+            val firebaseAuth = FirebaseAuth.getInstance()
 
             if(isNetWorkAvailable && firebaseAuth.currentUser != null){
                 Log.e("items", "repo1")
 
 
-                val realEstates = getRealEstatesFromFirestore()
+                val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
+                    it.toObject(RealEstateDatabase::class.java)
+                }
 
                 realEstateDao.clear()
 
