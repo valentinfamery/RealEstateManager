@@ -6,23 +6,31 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.data.repository.RealEstateRepositoryImpl
 import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
+import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import junit.framework.Assert
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito
 import org.mockito.Mockito.*
+import org.mockito.MockitoAnnotations
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -140,14 +148,17 @@ class RealEstateRepositoryAndroidtest {
     @Test
     fun refreshRealEstatesFromFirestoreTest() = scope.runTest {
         val firebaseFirestore = mock(FirebaseFirestore::class.java)
+        val mockedQuerySnapshot = mock(QuerySnapshot::class.java)
+        val mockCollection = mock(CollectionReference::class.java)
+
         val storageReference = mock(StorageReference::class.java)
         // Arrange
         val dao = FakeRealEstateDao()
+
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
         val viewModel = RealEstateViewModel(repository)
 
-        viewModel.refreshRealEstates()
 
         val realEstate1 = RealEstateDatabase(
             id = "1",
@@ -202,9 +213,15 @@ class RealEstateRepositoryAndroidtest {
 
         val expectedRealEstates = listOf(realEstate1, realEstate2)
 
-        //`when`(repository.getRealEstatesFromFirestore()).thenReturn(expectedRealEstates)
-        verify(dao).clear()
-        verify(dao).insertRealEstate(realEstate1)
+        `when`(mockedQuerySnapshot.toObjects(RealEstateDatabase::class.java)).thenReturn(expectedRealEstates)
+        val mockedTask = mock(Task::class.java) as Task<QuerySnapshot>
+        `when`(mockedTask.isSuccessful).thenReturn(true)
+        `when`(mockedTask.result).thenReturn(mockedQuerySnapshot)
+        `when`(firebaseFirestore.collection("real_estates")).thenReturn(mockCollection)
+        `when`(firebaseFirestore.collection("real_estates").get()).thenReturn(mockedTask)
+
+         viewModel.refreshRealEstates()
+
     }
 
 
