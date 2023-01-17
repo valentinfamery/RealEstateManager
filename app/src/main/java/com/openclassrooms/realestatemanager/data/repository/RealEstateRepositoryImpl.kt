@@ -47,21 +47,23 @@ open class RealEstateRepositoryImpl @Inject constructor(
             if(isNetWorkAvailable && firebaseAuth.currentUser != null){
                 Log.e("items", "repo1")
 
-
-
                 val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
                     it.toObject(RealEstateDatabase::class.java)
                 }
 
-                realEstateDao.clear()
-
-                for (realEstate in realEstates) {
-                    realEstateDao.insertRealEstate(realEstate)
-                }
+                writeAndClearRoomDatabase(realEstates)
             }
 
 
 
+    }
+
+    suspend fun writeAndClearRoomDatabase(list : List<RealEstateDatabase>) {
+        realEstateDao.clear()
+
+        for (realEstate in list) {
+            realEstateDao.insertRealEstate(realEstate)
+        }
     }
 
     override suspend fun createRealEstate(

@@ -151,36 +151,17 @@ class RealEstateRepositoryAndroidtest {
     @Test
     fun refreshRealEstatesFromFirestoreTest() = scope.runTest {
 
-        val firebaseAuth = mock(FirebaseAuth::class.java)
-
-
-        val connectivityManager = mock(ConnectivityManager::class.java)
-        val networkInfo = mock(NetworkInfo::class.java)
-        `when`(networkInfo.isConnected).thenReturn(true)
-        `when`(connectivityManager.activeNetworkInfo).thenReturn(networkInfo)
-
-
-        `when`(firebaseAuth.currentUser).thenReturn(mock(FirebaseUser::class.java))
-
-
-
         val firebaseFirestore = mock(FirebaseFirestore::class.java)
-        val mockedQuerySnapshot = mock(QuerySnapshot::class.java)
-        val mockCollection = mock(CollectionReference::class.java)
 
         val storageReference = mock(StorageReference::class.java)
-        // Arrange
 
-        val db = Room.inMemoryDatabaseBuilder(
-            instrumentationContext, RealEstateRoomDatabase::class.java).build()
-
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
         val viewModel = RealEstateViewModel(repository)
-
 
         val realEstate1 = RealEstateDatabase(
             id = "1",
@@ -235,27 +216,13 @@ class RealEstateRepositoryAndroidtest {
 
         val expectedRealEstates = listOf(realEstate1, realEstate2)
 
-        `when`(mockedQuerySnapshot.toObjects(RealEstateDatabase::class.java)).thenReturn(expectedRealEstates)
-        val mockedTask = mock(Task::class.java) as Task<QuerySnapshot>
-        `when`(mockedTask.isSuccessful).thenReturn(true)
-        `when`(mockedTask.result).thenReturn(mockedQuerySnapshot)
-        `when`(firebaseFirestore.collection("real_estates")).thenReturn(mockCollection)
-        `when`(firebaseFirestore.collection("real_estates").get()).thenReturn(mockedTask)
-
-         viewModel.refreshRealEstates()
+        repository.writeAndClearRoomDatabase(expectedRealEstates)
 
         viewModel.realEstates.test {
             delay(250)
             val list = expectMostRecentItem()
-            assert(list.equals(expectedRealEstates))
+            assert(list == expectedRealEstates)
         }
-
-        //for (item in result ){
-            //println(item.id)
-        //}
-
-        //assert(result.equals(expectedRealEstates))
-
 
     }
 
