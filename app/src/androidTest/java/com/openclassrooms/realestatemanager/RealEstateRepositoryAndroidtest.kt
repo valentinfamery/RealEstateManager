@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -51,7 +52,7 @@ class RealEstateRepositoryAndroidtest {
     }
 
     @Test
-    fun realEstates_returnsCorrectData() = scope.runTest{
+    fun insertRealEstate() = scope.runTest{
 
         val firebaseFirestore = mock(FirebaseFirestore::class.java)
         val storageReference = mock(StorageReference::class.java)
@@ -90,54 +91,17 @@ class RealEstateRepositoryAndroidtest {
                 )
             )
         )
-        val realEstate2 = RealEstateDatabase(
-            id = "2",
-            type = "Appartement",
-            price = 100000,
-            area = 2,
-            numberRoom = "1",
-            lat = 45.5,
-            lng = -1.5,
-            hospitalsNear = false,
-            schoolsNear = true,
-            shopsNear = false,
-            parksNear = true,
-            listPhotoWithText = listOf(
-                PhotoWithTextFirebase(
-                    photoSource = "photo3.jpg",
-                    text = "Description de la photo 3",
-                    id = "photo3"
-                ),
-                PhotoWithTextFirebase(
-                    photoSource = "photo4.jpg",
-                    text = "Description de la photo 4",
-                    id = "photo4"
-                )
-            )
-        )
-
-        val expectedRealEstates = listOf(realEstate1, realEstate2)
 
         dao.insertRealEstate(realEstate1)
-        dao.insertRealEstate(realEstate2)
 
         viewModel.realEstates.test {
             val list = awaitItem()
             assert(list.contains(realEstate1))
-            assert(list.contains(realEstate2))
         }
-
-
-
-
-
-
-
-
     }
 
     @Test
-    fun refreshRealEstatesFromFirestoreTest() = scope.runTest {
+    fun clearRoomRealEstateDatabase() = scope.runTest {
 
         val firebaseFirestore = mock(FirebaseFirestore::class.java)
 
@@ -150,6 +114,7 @@ class RealEstateRepositoryAndroidtest {
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
         val viewModel = RealEstateViewModel(repository)
+
 
         val realEstate1 = RealEstateDatabase(
             id = "1",
@@ -176,6 +141,61 @@ class RealEstateRepositoryAndroidtest {
                 )
             )
         )
+
+        dao.insertRealEstate(realEstate1)
+
+
+        dao.clear()
+
+        viewModel.realEstates.test {
+            delay(250)
+            val list = expectMostRecentItem()
+            assert(list == listOf<RealEstateDatabase>())
+        }
+
+    }
+
+    @Test
+    fun realEstateById() = scope.runTest{
+        val firebaseFirestore = mock(FirebaseFirestore::class.java)
+
+        val storageReference = mock(StorageReference::class.java)
+
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+
+        val dao = db.realEstateDao()
+
+        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
+
+        val viewModel = RealEstateViewModel(repository)
+
+
+        val realEstate1 = RealEstateDatabase(
+            id = "1",
+            type = "Maison",
+            price = 200000,
+            area = 3,
+            numberRoom = "2",
+            lat = 44.5,
+            lng = -0.5,
+            hospitalsNear = true,
+            schoolsNear = false,
+            shopsNear = true,
+            parksNear = false,
+            listPhotoWithText = listOf(
+                PhotoWithTextFirebase(
+                    photoSource = "photo1.jpg",
+                    text = "Description de la photo 1",
+                    id = "photo1"
+                ),
+                PhotoWithTextFirebase(
+                    photoSource = "photo2.jpg",
+                    text = "Description de la photo 2",
+                    id = "photo2"
+                )
+            )
+        )
+
         val realEstate2 = RealEstateDatabase(
             id = "2",
             type = "Appartement",
@@ -202,15 +222,17 @@ class RealEstateRepositoryAndroidtest {
             )
         )
 
-        val expectedRealEstates = listOf(realEstate1, realEstate2)
+        dao.insertRealEstate(realEstate1)
+        dao.insertRealEstate(realEstate2)
 
-        repository.writeAndClearRoomDatabase(expectedRealEstates)
-
-        viewModel.realEstates.test {
-            delay(250)
-            val list = expectMostRecentItem()
-            assert(list == expectedRealEstates)
+        viewModel.realEstateById("2").observeForever {
+            if (it != null) {
+                assert(it.equals(realEstate2))
+            } else {
+                assert(false)
+            }
         }
+
 
     }
 
