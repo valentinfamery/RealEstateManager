@@ -33,7 +33,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
 
 
 
-    private val _listPhotoEditScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
+    val _listPhotoEditScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
     val listPhotoEditScreenState: StateFlow<List<PhotoWithTextFirebase>> = _listPhotoEditScreenState
 
     val _listPhotoNewScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
