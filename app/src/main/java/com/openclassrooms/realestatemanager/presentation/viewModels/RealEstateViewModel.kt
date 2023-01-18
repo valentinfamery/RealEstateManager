@@ -32,36 +32,41 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
     val realEstateIdDetail = MutableStateFlow("")
 
 
-    val listPhotoEditScreenState = MutableLiveData<List<PhotoWithTextFirebase>>()
 
-    val listPhotoNewScreenState = MutableLiveData(listOf<PhotoWithTextFirebase>())
+    private val _listPhotoEditScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
+    val listPhotoEditScreenState: StateFlow<List<PhotoWithTextFirebase>> = _listPhotoEditScreenState
+
+    private val _listPhotoNewScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
+    val listPhotoNewScreenState: StateFlow<List<PhotoWithTextFirebase>> = _listPhotoNewScreenState
+
+
 
     fun addListPhotoNewScreenState(photoWithTextFirebase: PhotoWithTextFirebase){
-        listPhotoNewScreenState.value = listPhotoNewScreenState.value!! + photoWithTextFirebase
+        _listPhotoNewScreenState.value = listPhotoNewScreenState.value + photoWithTextFirebase
     }
 
     fun deleteListPhotoNewScreenState(photoWithTextFirebase: PhotoWithTextFirebase){
-        listPhotoNewScreenState.value = listPhotoNewScreenState.value!! - photoWithTextFirebase
+        _listPhotoNewScreenState.value = listPhotoNewScreenState.value - photoWithTextFirebase
     }
 
     fun updatePhotoSourceElementNewScreen(id: String,photoSource : String) {
-        listPhotoNewScreenState.updateElement({ it.id == id }, {
+        _listPhotoNewScreenState.updateElement({ it.id == id }, {
             it.copy(photoSource = photoSource)
         })
     }
 
     fun updatePhotoTextElementNewScreen(id: String,text : String) {
-        listPhotoNewScreenState.updateElement({ it.id == id }, {
+        _listPhotoNewScreenState.updateElement({ it.id == id }, {
             it.copy(text = text)
         })
     }
 
     fun fillMyUiState(list : List<PhotoWithTextFirebase>){
-        listPhotoEditScreenState.value = list
+        _listPhotoEditScreenState.value = list
     }
 
     fun addPhoto(photoWithTextFirebase: PhotoWithTextFirebase){
-        listPhotoEditScreenState.value = listPhotoEditScreenState.value!! + photoWithTextFirebase
+        _listPhotoEditScreenState.value = listPhotoEditScreenState.value + photoWithTextFirebase
     }
 
 
@@ -80,31 +85,31 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
 
 
     fun updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(id: String) {
-        listPhotoEditScreenState.updateElement({ it.id == id }, {
+        _listPhotoEditScreenState.updateElement({ it.id == id }, {
             it.copy(toDeleteLatter = true)
         })
     }
 
     fun updateAttributeToUpdate(id: String) {
-        listPhotoEditScreenState.updateElement({ it.id == id && !it.toAddLatter }, {
+        _listPhotoEditScreenState.updateElement({ it.id == id && !it.toAddLatter }, {
             it.copy(toUpdateLatter = true)
         })
     }
 
     fun updateAttributePhotoSource(id: String,photoSource : String) {
-        listPhotoEditScreenState.updateElement({ it.id == id }, {
+        _listPhotoEditScreenState.updateElement({ it.id == id }, {
             it.copy(photoSource = photoSource)
         })
     }
 
     fun updateAttributePhotoText(id: String,text : String) {
-        listPhotoEditScreenState.updateElement({ it.id == id }, {
+        _listPhotoEditScreenState.updateElement({ it.id == id }, {
             it.copy(text = text)
         })
     }
 
 
-    fun <T> MutableLiveData<List<T>>.updateElement(predicate: (T) -> Boolean, update: (T) -> T) {
+    fun <T> MutableStateFlow<List<T>>.updateElement(predicate: (T) -> Boolean, update: (T) -> T) {
         // Récupérer la valeur actuelle de la liste
         val currentValue = this.value ?: return
 

@@ -56,7 +56,7 @@ fun NewRealEstateScreen(
 
     val user by userViewModel.userData.collectAsState()
 
-    val listPhotos = realEstateViewModel.listPhotoNewScreenState.observeAsState()
+    val listPhotos = realEstateViewModel.listPhotoNewScreenState.collectAsState()
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
@@ -515,7 +515,8 @@ fun NewRealEstateScreen(
                             imageModel = { photo.photoSource },
                             modifier = Modifier
                                 .aspectRatio(0.9f)
-                                .clip(RoundedCornerShape(15.dp)).clickable {
+                                .clip(RoundedCornerShape(15.dp))
+                                .clickable {
                                     idEditPhoto.value = photo.id
                                     photoSourceEditPhoto.value = photo.photoSource
                                     textEditPhoto.value = photo.text

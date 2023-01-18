@@ -62,7 +62,7 @@ fun EditScreenRealEstate(
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
 
     var openDialogUpdatePhotoWithText by remember { mutableStateOf(false) }
-    val listPhotos = realEstateViewModel.listPhotoEditScreenState.observeAsState()
+    val listPhotos = realEstateViewModel.listPhotoEditScreenState.collectAsState()
 
     val context = LocalContext.current
 
