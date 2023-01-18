@@ -25,7 +25,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
     }
 
     var list by mutableStateOf<Response<Boolean>>(Response.Empty)
-    private val _isRefreshing = MutableStateFlow(false)
+    val _isRefreshing = MutableStateFlow(false)
 
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.gms.maps.model.LatLng

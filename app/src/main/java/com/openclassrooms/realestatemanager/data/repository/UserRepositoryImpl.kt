@@ -5,15 +5,10 @@ import android.util.Log
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.realestatemanager.domain.models.User
 import com.openclassrooms.realestatemanager.domain.repository.UserRepository
 import com.openclassrooms.realestatemanager.domain.models.Response
-import com.openclassrooms.realestatemanager.utils.Utils
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
