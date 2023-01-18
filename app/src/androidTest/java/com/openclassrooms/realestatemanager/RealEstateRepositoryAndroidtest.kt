@@ -237,6 +237,94 @@ class RealEstateRepositoryAndroidtest {
     }
 
     @Test
+    fun getPropertyBySearch() = scope.runTest{
+        val firebaseFirestore = mock(FirebaseFirestore::class.java)
+
+        val storageReference = mock(StorageReference::class.java)
+
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+
+        val dao = db.realEstateDao()
+
+        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
+
+        val viewModel = RealEstateViewModel(repository)
+
+
+        val listing1 = RealEstateDatabase(
+            id = "123",
+            type = "House",
+            price = 500000,
+            area = 1000,
+            numberRoom = "5",
+            description = "Beautiful 5 bedroom house for sale in a great neighborhood.",
+            numberAndStreet = "1234 Main St",
+            numberApartment = "",
+            city = "New York",
+            region = "NY",
+            postalCode = "10001",
+            country = "USA",
+            status = "For Sale",
+            dateOfEntry = "2022-01-01",
+            dateOfSale = "",
+            realEstateAgent = "John Smith",
+            lat = 40.730610,
+            lng = -73.935242,
+            hospitalsNear = true,
+            schoolsNear = true,
+            shopsNear = true,
+            parksNear = true,
+            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image1.jpg","This is a photo of the living room","1"),
+                PhotoWithTextFirebase("https://example.com/image2.jpg","This is a photo of the kitchen","2")),
+            count_photo = 2
+        )
+
+        val listing2 = RealEstateDatabase(
+            id = "456",
+            type = "Apartment",
+            price = 200000,
+            area = 500,
+            numberRoom = "3",
+            description = "Beautiful 3 bedroom apartment for sale in a great location.",
+            numberAndStreet = "5678 Park Ave",
+            numberApartment = "12",
+            city = "Los Angeles",
+            region = "CA",
+            postalCode = "90001",
+            country = "USA",
+            status = "For Sale",
+            dateOfEntry = "2022-01-01",
+            dateOfSale = "",
+            realEstateAgent = "Jane Smith",
+            lat = 34.052235,
+            lng = -118.243683,
+            hospitalsNear = true,
+            schoolsNear = true,
+            shopsNear = true,
+            parksNear = true,
+            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
+                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")),
+            count_photo = 2
+        )
+
+        dao.insertRealEstate(listing1)
+        dao.insertRealEstate(listing2)
+
+        viewModel.getPropertyBySearch(
+            listing2.type.toString(),listing2.city.toString(),250,750,
+            100000,300000,false,
+            false,false,listing2.schoolsNear,listing2.shopsNear).observeForever({
+                if(it != null){
+                    assert(it.contains(listing2))
+                }else{
+                    assert(false)
+                }
+        })
+
+
+    }
+
+    @Test
     fun testAddListPhotoNewScreenState() {
 
         val firebaseFirestore = mock(FirebaseFirestore::class.java)
