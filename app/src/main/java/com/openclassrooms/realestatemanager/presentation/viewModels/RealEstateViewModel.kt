@@ -36,7 +36,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
     private val _listPhotoEditScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
     val listPhotoEditScreenState: StateFlow<List<PhotoWithTextFirebase>> = _listPhotoEditScreenState
 
-    private val _listPhotoNewScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
+    val _listPhotoNewScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
     val listPhotoNewScreenState: StateFlow<List<PhotoWithTextFirebase>> = _listPhotoNewScreenState
 
 
@@ -78,10 +78,6 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
             }
         }
     }
-
-
-
-
 
 
     fun updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(id: String) {

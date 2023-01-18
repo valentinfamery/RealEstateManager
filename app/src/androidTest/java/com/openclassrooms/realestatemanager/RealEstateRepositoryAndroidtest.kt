@@ -24,6 +24,7 @@ import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.Utils
 import junit.framework.Assert
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -226,6 +227,89 @@ class RealEstateRepositoryAndroidtest {
 
     }
 
+    @Test
+    fun testAddListPhotoNewScreenState() {
+
+        val firebaseFirestore = mock(FirebaseFirestore::class.java)
+
+        val storageReference = mock(StorageReference::class.java)
+
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+
+        val dao = db.realEstateDao()
+
+        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
+
+        val viewModel = RealEstateViewModel(repository)
+
+        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
+        val list = listOf(photoWithTextFirebase)
+        viewModel._listPhotoNewScreenState.value = list
+        viewModel.addListPhotoNewScreenState(photoWithTextFirebase)
+        assertEquals(list + photoWithTextFirebase, viewModel.listPhotoNewScreenState.value)
+    }
+
+    @Test
+    fun testDeleteListPhotoNewScreenState() {
+
+        val firebaseFirestore = mock(FirebaseFirestore::class.java)
+
+        val storageReference = mock(StorageReference::class.java)
+
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+
+        val dao = db.realEstateDao()
+
+        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
+
+        val viewModel = RealEstateViewModel(repository)
+
+        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
+        val list = listOf(photoWithTextFirebase)
+        viewModel._listPhotoNewScreenState.value = list
+        viewModel.deleteListPhotoNewScreenState(photoWithTextFirebase)
+        assertEquals(emptyList<PhotoWithTextFirebase>(), viewModel.listPhotoNewScreenState.value)
+    }
+
+    @Test
+    fun testUpdatePhotoSourceElementNewScreen() {
+        val firebaseFirestore = mock(FirebaseFirestore::class.java)
+
+        val storageReference = mock(StorageReference::class.java)
+
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+
+        val dao = db.realEstateDao()
+
+        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
+
+        val viewModel = RealEstateViewModel(repository)
+        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
+        val list = listOf(photoWithTextFirebase)
+        viewModel._listPhotoNewScreenState.value = list
+        viewModel.updatePhotoSourceElementNewScreen("1", "photo2.jpg")
+        assertEquals("photo2.jpg", viewModel.listPhotoNewScreenState.value[0].photoSource)
+    }
+
+    @Test
+    fun testUpdatePhotoTextElementNewScreen() {
+        val firebaseFirestore = mock(FirebaseFirestore::class.java)
+
+        val storageReference = mock(StorageReference::class.java)
+
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+
+        val dao = db.realEstateDao()
+
+        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
+
+        val viewModel = RealEstateViewModel(repository)
+        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
+        val list = listOf(photoWithTextFirebase)
+        viewModel._listPhotoNewScreenState.value = list
+        viewModel.updatePhotoTextElementNewScreen("1", "text2")
+        assertEquals("text2", viewModel._listPhotoNewScreenState.value[0].text)
+    }
 
 
 }
