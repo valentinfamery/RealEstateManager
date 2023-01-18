@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager
 
 import android.content.Context
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import androidx.room.Room
@@ -320,6 +321,101 @@ class RealEstateRepositoryAndroidtest {
                     assert(false)
                 }
         })
+
+
+    }
+
+    @Test
+    fun updateRealEstate() = scope.runTest{
+        val firebaseFirestore = mock(FirebaseFirestore::class.java)
+
+        val storageReference = mock(StorageReference::class.java)
+
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+
+        val dao = db.realEstateDao()
+
+        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
+
+        val viewModel = RealEstateViewModel(repository)
+
+
+        val listing1 = RealEstateDatabase(
+            id = "123",
+            type = "House",
+            price = 500000,
+            area = 1000,
+            numberRoom = "5",
+            description = "Beautiful 5 bedroom house for sale in a great neighborhood.",
+            numberAndStreet = "1234 Main St",
+            numberApartment = "",
+            city = "New York",
+            region = "NY",
+            postalCode = "10001",
+            country = "USA",
+            status = "For Sale",
+            dateOfEntry = "2022-01-01",
+            dateOfSale = "",
+            realEstateAgent = "John Smith",
+            lat = 40.730610,
+            lng = -73.935242,
+            hospitalsNear = true,
+            schoolsNear = true,
+            shopsNear = true,
+            parksNear = true,
+            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image1.jpg","This is a photo of the living room","1"),
+                PhotoWithTextFirebase("https://example.com/image2.jpg","This is a photo of the kitchen","2")),
+            count_photo = 2
+        )
+
+        val listing2 = RealEstateDatabase(
+            id = "456",
+            type = "Apartment",
+            price = 200000,
+            area = 500,
+            numberRoom = "3",
+            description = "Beautiful 3 bedroom apartment for sale in a great location.",
+            numberAndStreet = "5678 Park Ave",
+            numberApartment = "12",
+            city = "Los Angeles",
+            region = "CA",
+            postalCode = "90001",
+            country = "USA",
+            status = "For Sale",
+            dateOfEntry = "2022-01-01",
+            dateOfSale = "",
+            realEstateAgent = "Jane Smith",
+            lat = 34.052235,
+            lng = -118.243683,
+            hospitalsNear = true,
+            schoolsNear = true,
+            shopsNear = true,
+            parksNear = true,
+            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
+                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")),
+            count_photo = 2
+        )
+
+        dao.insertRealEstate(listing1)
+
+        dao.updateRealEstate(
+            listing2.type!!, listing1.id, listing2.price!!,
+            listing2.area!!,listing2.numberRoom!!,listing2.description!!,
+            listing2.hospitalsNear,listing2.schoolsNear,listing2.shopsNear,
+            listing2.parksNear, listing2.status!!,listing2.dateOfSale!!,
+            listing2.numberApartment!!,
+            listing2.numberAndStreet!!, listing2.city!!,
+            listing2.region!!,
+            listing2.postalCode!!, listing2.country!!,listing2.listPhotoWithText)
+        dao.updateRealEstateLatLng(listing2.id,listing2.lat,listing2.lng)
+
+
+
+        viewModel.realEstates.test {
+            delay(250)
+            val list = awaitItem()
+            assert(list[0].type.equals("Apartment"))
+        }
 
 
     }
