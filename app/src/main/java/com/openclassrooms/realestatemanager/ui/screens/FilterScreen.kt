@@ -25,7 +25,7 @@ import com.openclassrooms.realestatemanager.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterScreen() {
-    val listType = listOf("Appartement", "Loft", "Manoir", "Maison")
+    val listType = listOf("Apartment", "Loft", "Mansion", "House")
     val activity = LocalContext.current as Activity
     var expanded by remember { mutableStateOf(false) }
 
