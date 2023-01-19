@@ -326,13 +326,13 @@ class RealEstateRepositoryAndroidtest {
         viewModel.getPropertyBySearch(
             listing2.type.toString(),listing2.city.toString(),250,750,
             100000,300000,true,
-            true,true,listing2.schoolsNear,listing2.shopsNear).observeForever({
-                if(it != null){
-                    assert(it.contains(listing2))
-                }else{
-                    assert(false)
-                }
-        })
+            true,true,listing2.schoolsNear,listing2.shopsNear).observeForever {
+            if (it != null) {
+                assert(it.contains(listing2))
+            } else {
+                assert(false)
+            }
+        }
 
 
     }
@@ -419,7 +419,7 @@ class RealEstateRepositoryAndroidtest {
             listing2.numberAndStreet!!, listing2.city!!,
             listing2.region!!,
             listing2.postalCode!!, listing2.country!!,listing2.listPhotoWithText)
-        dao.updateRealEstateLatLng(listing2.id,listing2.lat,listing2.lng)
+        dao.updateRealEstateLatLng(listing1.id,listing2.lat,listing2.lng)
 
 
 
@@ -427,6 +427,28 @@ class RealEstateRepositoryAndroidtest {
             delay(250)
             val list = awaitItem()
             assert(list[0].type.equals("Apartment"))
+            assert(list[0].price == 200000)
+            assert(list[0].area == 500)
+            assert(list[0].numberRoom == "3")
+            assert(list[0].description == "Beautiful 3 bedroom apartment for sale in a great location.")
+            assert(list[0].numberAndStreet == "5678 Park Ave")
+            assert(list[0].numberApartment == "12")
+            assert(list[0].city == "Los Angeles")
+            assert(list[0].region == "CA")
+            assert(list[0].postalCode == "90001")
+            assert(list[0].country == "USA")
+            assert(list[0].status == "For Sale")
+            assert(list[0].dateOfEntry == "2022-01-01")
+            assert(list[0].dateOfSale == "")
+            assert(list[0].lat == 34.052235)
+            assert(list[0].lng == -118.243683)
+            assert(list[0].hospitalsNear == true)
+            assert(list[0].schoolsNear == true)
+            assert(list[0].shopsNear == true)
+            assert(list[0].parksNear == true)
+            assert(list[0].listPhotoWithText == listOf(PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
+                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")))
+
         }
 
 
