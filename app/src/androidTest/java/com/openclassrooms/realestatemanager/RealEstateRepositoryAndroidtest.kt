@@ -22,6 +22,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.*
+import org.joda.time.LocalDate
+import org.joda.time.chrono.ISOChronology
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -239,6 +241,13 @@ class RealEstateRepositoryAndroidtest {
 
     @Test
     fun getPropertyBySearch() = scope.runTest{
+
+        val iso = ISOChronology.getInstance()
+        val today = LocalDate(iso)
+
+        val dateMinusThreeMonth = today.minusMonths(3)
+        val dateMinus1Week = today.minusDays(7)
+
         val firebaseFirestore = mock(FirebaseFirestore::class.java)
 
         val storageReference = mock(StorageReference::class.java)
@@ -294,8 +303,8 @@ class RealEstateRepositoryAndroidtest {
             postalCode = "90001",
             country = "USA",
             status = "For Sale",
-            dateOfEntry = "2022-01-01",
-            dateOfSale = "",
+            dateOfEntry = dateMinus1Week.toString(),
+            dateOfSale = dateMinusThreeMonth.toString(),
             realEstateAgent = "Jane Smith",
             lat = 34.052235,
             lng = -118.243683,
@@ -303,9 +312,12 @@ class RealEstateRepositoryAndroidtest {
             schoolsNear = true,
             shopsNear = true,
             parksNear = true,
-            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
-                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")),
-            count_photo = 2
+            listPhotoWithText = listOf(
+                PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
+                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4"),
+                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")
+            ),
+            count_photo = 3
         )
 
         dao.insertRealEstate(listing1)
@@ -313,8 +325,8 @@ class RealEstateRepositoryAndroidtest {
 
         viewModel.getPropertyBySearch(
             listing2.type.toString(),listing2.city.toString(),250,750,
-            100000,300000,false,
-            false,false,listing2.schoolsNear,listing2.shopsNear).observeForever({
+            100000,300000,true,
+            true,true,listing2.schoolsNear,listing2.shopsNear).observeForever({
                 if(it != null){
                     assert(it.contains(listing2))
                 }else{
