@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +34,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.Utils
-import com.openclassrooms.realestatemanager.utils.WindowSize
-import com.openclassrooms.realestatemanager.utils.WindowType
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -45,7 +43,7 @@ import com.skydoves.landscapist.glide.GlideImage
 fun RealEstateDetailScreen(
     realEstateViewModel: RealEstateViewModel,
     navController: NavController,
-    windowSize: WindowSize,
+    windowSize: WindowWidthSizeClass,
     itemRealEstate: RealEstateDatabase?
 ) {
 
@@ -90,7 +88,7 @@ fun RealEstateDetailScreen(
 
                         val (rowHospital, rowSchool, rowShops, rowParks) = createRefs()
 
-                        if(windowSize.width == WindowType.Compact || windowSize.width == WindowType.Medium ){
+                        if(windowSize == WindowWidthSizeClass.Compact || windowSize == WindowWidthSizeClass.Medium ){
                             CenterAlignedTopAppBar(
                                 title = {
                                     Text(text = "Estate Manager")
@@ -109,7 +107,7 @@ fun RealEstateDetailScreen(
                                 }
 
                             )
-                        }else if (windowSize.width == WindowType.Expanded){
+                        }else if (windowSize == WindowWidthSizeClass.Expanded){
                             CenterAlignedTopAppBar(
                                 title = {
                                     Text(text = "Estate Manager")

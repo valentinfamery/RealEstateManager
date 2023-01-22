@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
-import com.openclassrooms.realestatemanager.utils.WindowSize
-import com.openclassrooms.realestatemanager.utils.WindowType
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -26,12 +25,12 @@ import com.skydoves.landscapist.glide.GlideImage
 fun RowList(
     item: RealEstateDatabase,
     navController: NavController,
-    windowSize: WindowSize,
+    windowSize: WindowWidthSizeClass,
     realEstateViewModel: RealEstateViewModel
 ) {
 
 
-    if (windowSize.width != WindowType.Expanded) {
+    if (windowSize != WindowWidthSizeClass.Expanded) {
         val items2 = item.listPhotoWithText
 
         Card(

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,11 +33,9 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
-import com.openclassrooms.realestatemanager.utils.WindowSize
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.utils.Utils
-import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,7 +46,7 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    windowSize: WindowSize
+    windowSize: WindowWidthSizeClass
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -73,7 +72,7 @@ fun MainScreen(
         },
         content = {
 
-            if (windowSize.width != WindowType.Expanded) {
+            if (windowSize != WindowWidthSizeClass.Expanded) {
 
                 Scaffold(
                     content = { innerPadding ->
@@ -150,79 +149,6 @@ fun MainScreen(
             } else {
 
 
-                if(windowSize.height != WindowType.Compact){
-                    Scaffold(
-                        content = { innerPadding ->
-
-                            NavHost(
-                                navController = navController,
-                                startDestination = "listScreen"
-                            ) {
-                                composable(Screen.ListScreen.route) {
-                                    ListScreen(
-                                        drawerState,
-                                        scope,
-                                        realEstateViewModel,
-                                        innerPadding,
-                                        navControllerDrawer,
-                                        windowSize
-                                    )
-                                }
-                                composable(Screen.MapScreen.route) {
-                                    MapScreen(
-                                        drawerState,
-                                        scope,
-                                        realEstateViewModel,
-                                        navControllerDrawer,
-                                        windowSize
-                                    )
-                                }
-                            }
-
-                        },
-                        bottomBar = {
-                            NavigationBar {
-                                items.forEachIndexed { index, item ->
-                                    NavigationBarItem(
-                                        icon = { Icon(item.icon, contentDescription = null) },
-                                        label = { Text(item.title) },
-                                        selected = selectedItem.value == index,
-                                        onClick = {
-                                            realEstateViewModel.selectedItem.value = index
-                                            navController.navigate(item.route)
-                                        }
-                                    )
-                                }
-                            }
-                        },
-                        floatingActionButton = {
-
-
-                            FloatingActionButton(
-                                onClick = {
-                                    val isInternetAvailable = Utils.isInternetAvailable(context)
-
-                                    if(isInternetAvailable){
-                                        context.startActivity(
-                                            Intent(context, NewRealEstateActivity::class.java)
-                                        )
-                                    }else{
-                                        Toast.makeText(context,"Impossible il n'y a pas de connexion Internet",Toast.LENGTH_LONG).show()
-                                    }
-
-
-                                },
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(15.dp))
-                            ) {
-                                Icon(Icons.Filled.Add, "Localized description")
-                            }
-
-
-                        }
-
-                    )
-                }else {
 
                     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
                         val (navigationRail, box) = createRefs()
@@ -357,7 +283,7 @@ fun MainScreen(
 
                     }
 
-                }
+
 
 
 

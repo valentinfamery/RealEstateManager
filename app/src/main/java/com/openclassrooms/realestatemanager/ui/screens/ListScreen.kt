@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,8 +23,6 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.ui.FilterActivity
-import com.openclassrooms.realestatemanager.utils.WindowSize
-import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -37,7 +36,7 @@ fun ListScreen(
     realEstateViewModel: RealEstateViewModel,
     innerPadding: PaddingValues,
     navController: NavController,
-    windowSize: WindowSize
+    windowSize: WindowWidthSizeClass
 ) {
     val context = LocalContext.current
     val realEstates by realEstateViewModel.realEstates.collectAsState()
@@ -90,7 +89,7 @@ fun ListScreen(
 
 
 
-    if (windowSize.width != WindowType.Expanded) {
+    if (windowSize != WindowWidthSizeClass.Expanded) {
 
 
         Scaffold(
@@ -126,7 +125,7 @@ fun ListScreen(
                 )
 
             },
-            content = { it ->
+            content = {
 
                 Log.e("realEstatesResponse", "Success")
 
@@ -202,7 +201,7 @@ fun ListScreen(
                 )
 
             },
-            content = { it ->
+            content = {
 
                 Log.e("realEstatesResponse", "Success")
 

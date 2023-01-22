@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,10 +42,7 @@ import com.google.gson.Gson
 import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.utils.WindowSize
-
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
-import com.openclassrooms.realestatemanager.utils.WindowType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -55,13 +53,13 @@ fun MapScreen(
     scope: CoroutineScope,
     realEstateViewModel: RealEstateViewModel,
     navControllerDrawer: NavController,
-    windowSize: WindowSize
+    windowSize: WindowWidthSizeClass
 ) {
 
 
 
 
-    if(windowSize.width != WindowType.Expanded) {
+    if(windowSize != WindowWidthSizeClass.Expanded) {
 
         var boolean by remember {
             mutableStateOf(false)
