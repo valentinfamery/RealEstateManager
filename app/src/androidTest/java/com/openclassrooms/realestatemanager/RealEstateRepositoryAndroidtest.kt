@@ -228,13 +228,13 @@ class RealEstateRepositoryAndroidtest {
         dao.insertRealEstate(realEstate1)
         dao.insertRealEstate(realEstate2)
 
-        viewModel.realEstateById("2").observeForever {
-            if (it != null) {
-                assert(it.equals(realEstate2))
-            } else {
-                assert(false)
-            }
+        viewModel.realEstateById("2").test {
+            val item = awaitItem()
+            assert(item?.equals(realEstate2) ?: false)
         }
+
+
+
 
 
     }
@@ -326,12 +326,9 @@ class RealEstateRepositoryAndroidtest {
         viewModel.getPropertyBySearch(
             listing2.type.toString(),listing2.city.toString(),250,750,
             100000,300000,true,
-            true,true,listing2.schoolsNear,listing2.shopsNear).observeForever {
-            if (it != null) {
-                assert(it.contains(listing2))
-            } else {
-                assert(false)
-            }
+            true,true,listing2.schoolsNear,listing2.shopsNear).test {
+                val list = awaitItem()
+            assert(list.contains(listing2))
         }
 
 
