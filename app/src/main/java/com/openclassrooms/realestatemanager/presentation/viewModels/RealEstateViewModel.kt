@@ -122,7 +122,18 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         realEstateRepository.refreshRealEstatesFromFirestore()
     }
 
-    fun realEstateById(realEstateId : String): LiveData<RealEstateDatabase?> {return realEstateRepository.realEstateById(realEstateId)}
+    fun realEstateById(realEstateId : String): MutableStateFlow<RealEstateDatabase?> {
+        val realEstate = MutableStateFlow<RealEstateDatabase?>(null)
+
+        viewModelScope.launch {
+            realEstateRepository.realEstateById(realEstateId).collect{
+                realEstate.value = it
+            }
+        }
+
+
+        return realEstate
+    }
 
 
     fun createRealEstate(
@@ -171,8 +182,17 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         min3photos: Boolean,
         schools: Boolean,
         shops: Boolean
-    ): LiveData<List<RealEstateDatabase>> {
-          return  realEstateRepository.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops)
+    ): StateFlow<List<RealEstateDatabase>> {
+
+        val _realEstatesFilter = MutableStateFlow<List<RealEstateDatabase>>(listOf())
+        val realEstatesFilter: StateFlow<List<RealEstateDatabase>> = _realEstates
+
+        viewModelScope.launch {
+            realEstateRepository.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops).collect{
+                _realEstatesFilter.value = it
+            }
+        }
+        return realEstatesFilter
     }
 
     fun updateRealEstate(

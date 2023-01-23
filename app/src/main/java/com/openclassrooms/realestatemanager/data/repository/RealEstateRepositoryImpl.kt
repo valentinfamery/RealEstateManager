@@ -200,7 +200,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         min3photos: Boolean,
         schools: Boolean,
         shops: Boolean
-    ): LiveData<List<RealEstateDatabase>> {
+    ): Flow<List<RealEstateDatabase>> {
 
         val onTheMarketLessALastWeekInt = if(onTheMarketLessALastWeek) 1 else 0
         val soldOn3LastMonthInt = if(soldOn3LastMonth) 1 else 0
@@ -237,7 +237,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         return realEstateDao.getPropertyBySearch(SimpleSQLiteQuery(query))
     }
 
-    override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {
+    override fun realEstateById(realEstateId: String): Flow<RealEstateDatabase?> {
         Log.e("realEstateById()","repo")
         return realEstateDao.realEstateById(realEstateId)
     }

@@ -123,7 +123,7 @@ class MainActivity : ComponentActivity() {
 
                                     val itemRealEstate by realEstateViewModel.realEstateById(
                                         id.value
-                                    ).observeAsState()
+                                    ).collectAsState()
 
                                     RealEstateDetailScreen(
                                         realEstateViewModel,

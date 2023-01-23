@@ -72,10 +72,8 @@ fun ListScreen(
 
 
 
-                realEstateViewModel.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops)
-                    .observeForever { list ->
-                        realEstatesFilter = list
-                    }
+                realEstatesFilter = realEstateViewModel.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops).value
+
             }
         }
 

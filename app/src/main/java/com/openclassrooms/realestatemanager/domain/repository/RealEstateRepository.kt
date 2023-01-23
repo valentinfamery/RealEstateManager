@@ -48,9 +48,9 @@ interface RealEstateRepository {
         min3photos: Boolean,
         schools: Boolean,
         shops: Boolean
-    ): LiveData<List<RealEstateDatabase>>
+    ): Flow<List<RealEstateDatabase>>
 
-    fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?>
+    fun realEstateById(realEstateId: String): Flow<RealEstateDatabase?>
 
     suspend fun updateRealEstate(
         id: String,
