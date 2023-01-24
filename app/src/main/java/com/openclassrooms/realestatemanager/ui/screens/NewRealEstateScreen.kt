@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -36,8 +37,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.Response
+import com.openclassrooms.realestatemanager.notifications.NotificationHelper
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import org.joda.time.LocalDate
@@ -610,6 +613,9 @@ fun NewRealEstateScreen(
                 Text("Confirm")
             }
 
+
+
+
         }
 
     }
@@ -621,6 +627,14 @@ fun NewRealEstateScreen(
                 "Ajout reussi",
                 Toast.LENGTH_SHORT
             ).show()
+
+            NotificationHelper.sendSimpleNotification(
+                context = context,
+                title = "Real Estate Manager",
+                message = "Succefully added new Estate",
+                intent = Intent(context, NewRealEstateActivity::class.java),
+                reqCode = 10001
+            )
 
             activity.finish()
         }
