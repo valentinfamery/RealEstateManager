@@ -162,6 +162,10 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
+                        composable("currencyConverterScreen"){
+                            CurrencyConverterScreen()
+                        }
+
 
                     }
             }

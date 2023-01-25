@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -31,13 +32,13 @@ fun DrawerScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel
 ) {
-    val items = listOf(Icons.Default.Settings)
-    val selectedItem = remember { mutableStateOf(items[0]) }
+
+
     val user by userViewModel.userData.collectAsState()
 
 
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
-        val (username,userEmail,drawerItems,buttonLogout) = createRefs()
+        val (username,userEmail,buttonLogout,item1,item2) = createRefs()
 
 
                 Text(text = user?.email.toString(), modifier = Modifier.constrainAs(username) {
@@ -62,15 +63,32 @@ fun DrawerScreen(
 
 
 
-        items.forEach { item ->
+
             NavigationDrawerItem(
-                icon = { Icon(item, contentDescription = null) },
+                icon = { Icon(Icons.Default.Settings, contentDescription = null) },
                 label = { Text("Settings") },
-                selected = item == selectedItem.value,
+                selected = true,
                 onClick = {
                     scope.launch { drawerState.close() }
-                    selectedItem.value = item
                     navController.navigate("settingsScreen") {
+                    }
+                },
+                modifier = Modifier
+                    .padding(
+                        NavigationDrawerItemDefaults.ItemPadding
+                    )
+                    .constrainAs(item1) {
+                        top.linkTo(username.bottom, margin = 10.dp)
+                    }
+            )
+
+            NavigationDrawerItem(
+                icon = { Icon(Icons.Default.Info, contentDescription = null) },
+                label = { Text("CurrencyConverter") },
+                selected = true,
+                onClick = {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("currencyConverterScreen") {
                     }
                 },
                 modifier = Modifier
@@ -78,11 +96,14 @@ fun DrawerScreen(
                         NavigationDrawerItemDefaults.ItemPadding
 
                     )
-                    .constrainAs(drawerItems) {
-                        top.linkTo(parent.top, margin = 100.dp)
+                    .constrainAs(item2) {
+                        top.linkTo(item1.bottom, margin = 0.dp)
                     }
             )
-        }
+
+
+
+
 
 
 
