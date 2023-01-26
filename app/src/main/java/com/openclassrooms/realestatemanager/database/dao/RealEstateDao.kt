@@ -22,7 +22,7 @@ interface RealEstateDao {
 
 
     @Query("SELECT * FROM RealEstateDatabase WHERE id = :realEstateId")
-    fun realEstateById(realEstateId : String):Flow<RealEstateDatabase?>
+    fun realEstateById(realEstateId : String):LiveData<RealEstateDatabase?>
 
     @Query("SELECT * FROM RealEstateDatabase")
     fun getRealEstatesWithCursor(): Cursor
@@ -86,6 +86,6 @@ interface RealEstateDao {
     //            "WHERE id =:id"
 
     @RawQuery(observedEntities = [RealEstateDatabase::class])
-    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): Flow<List<RealEstateDatabase>>
+    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>>
 
 }

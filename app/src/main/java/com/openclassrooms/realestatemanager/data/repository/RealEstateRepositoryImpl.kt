@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.internal.LiveLiteralFileInfo
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
@@ -200,7 +201,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         min3photos: Boolean,
         schools: Boolean,
         shops: Boolean
-    ): Flow<List<RealEstateDatabase>> {
+    ): LiveData<List<RealEstateDatabase>> {
 
         val onTheMarketLessALastWeekInt = if(onTheMarketLessALastWeek) 1 else 0
         val soldOn3LastMonthInt = if(soldOn3LastMonth) 1 else 0
@@ -237,7 +238,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         return realEstateDao.getPropertyBySearch(SimpleSQLiteQuery(query))
     }
 
-    override fun realEstateById(realEstateId: String): Flow<RealEstateDatabase?> {
+    override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {
         Log.e("realEstateById()","repo")
         return realEstateDao.realEstateById(realEstateId)
     }

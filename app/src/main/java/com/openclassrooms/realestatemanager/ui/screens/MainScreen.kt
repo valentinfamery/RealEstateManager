@@ -259,7 +259,7 @@ fun MainScreen(
 
                                                 val itemRealEstate by realEstateViewModel.realEstateById(
                                                     id.value
-                                                ).collectAsState()
+                                                ).observeAsState()
 
                                                 RealEstateDetailScreen(
                                                     realEstateViewModel = realEstateViewModel,
