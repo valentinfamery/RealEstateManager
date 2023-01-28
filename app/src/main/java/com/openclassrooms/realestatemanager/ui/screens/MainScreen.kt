@@ -154,17 +154,10 @@ fun MainScreen(
 
 
 
-                    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-                        val (navigationRail, box) = createRefs()
+                    Row {
 
-                        NavigationRail(modifier = Modifier
-                            .constrainAs(navigationRail) {
-                                top.linkTo(parent.top, margin = 0.dp)
-                                start.linkTo(parent.start, margin = 0.dp)
-                                bottom.linkTo(parent.bottom, margin = 0.dp)
-                            }
-                            .fillMaxHeight()
-                            .fillMaxWidth(0.05f)) {
+
+                        NavigationRail {
                             NavigationRailItem(
                                 icon = { Icon(Icons.Default.Menu, contentDescription = null) },
                                 selected = selectedItem.value == 3,
@@ -187,16 +180,7 @@ fun MainScreen(
                         }
 
 
-                        Box(modifier = Modifier
-                            .constrainAs(box) {
-                                top.linkTo(parent.top, margin = 0.dp)
-                                start.linkTo(navigationRail.end, margin = 0.dp)
-                                bottom.linkTo(parent.bottom, margin = 0.dp)
-                                end.linkTo(parent.end, margin = 0.dp)
-                            }
-                            .fillMaxHeight()
-                            .fillMaxWidth(0.95f)
-                        ) {
+                        Box {
                             TwoPane(
                                 first = {
                                     Scaffold(
