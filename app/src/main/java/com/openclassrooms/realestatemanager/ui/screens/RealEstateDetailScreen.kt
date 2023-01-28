@@ -41,8 +41,8 @@ import com.skydoves.landscapist.glide.GlideImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealEstateDetailScreen(
-    realEstateViewModel: RealEstateViewModel,
-    navController: NavController,
+    navigateToEditScreen : () -> Unit,
+    navigateToEditScreenExpanded : () -> Unit,
     windowSize: WindowWidthSizeClass,
     itemRealEstate: RealEstateDatabase?
 ) {
@@ -60,9 +60,8 @@ fun RealEstateDetailScreen(
                             val isInternetAvailable = Utils.isInternetAvailable(context)
 
                             if(isInternetAvailable) {
-
-                                val item = Uri.encode(Gson().toJson(itemRealEstate))
-                                navController.navigate("editScreen/$item")
+                                navigateToEditScreen()
+                                navigateToEditScreenExpanded()
 
                             }else{
                                 Toast.makeText(context,"Impossible il n'y a pas de connexion Internet",
@@ -78,15 +77,15 @@ fun RealEstateDetailScreen(
                 },
                 content = {
 
-                    ConstraintLayout(
+                    Column(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
-                            .fillMaxHeight()
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        val (centerAlignedTopAppBar, textType, textPrice, textArea, textNumberRoom, textDescription, textAddress, textStatus, textDateOfEntry, textDateOfSale, textRealEstateAgent, lazyColumnPhoto, googleMap) = createRefs()
 
-                        val (rowHospital, rowSchool, rowShops, rowParks) = createRefs()
 
                         if(windowSize == WindowWidthSizeClass.Compact || windowSize == WindowWidthSizeClass.Medium ){
                             CenterAlignedTopAppBar(
@@ -95,15 +94,10 @@ fun RealEstateDetailScreen(
                                 },
                                 navigationIcon = {
                                     IconButton(onClick = {
-                                        navController.popBackStack()
+                                        //navController.popBackStack()
                                     }) {
                                         Icon(Icons.Filled.ArrowBack, "")
                                     }
-                                },
-                                modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
-                                    top.linkTo(parent.top, margin = 0.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
                                 }
 
                             )
@@ -112,21 +106,13 @@ fun RealEstateDetailScreen(
                                 title = {
                                     Text(text = "Estate Manager")
                                 },
-                                modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
-                                    top.linkTo(parent.top, margin = 0.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
-                                }
 
                             )
                         }
 
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+
                         FlowRow(modifier = Modifier
-                            .constrainAs(lazyColumnPhoto) {
-                                top.linkTo(centerAlignedTopAppBar.bottom, margin = 25.dp)
-                                start.linkTo(parent.start, margin = 25.dp)
-                                end.linkTo(parent.end, margin = 25.dp)
-                            }
                             .fillMaxWidth(0.80f)
                             .fillMaxHeight(0.10f)
                         ) {
@@ -147,16 +133,10 @@ fun RealEstateDetailScreen(
                                 }
                             }
                         }
-
-
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
 
                         FlowRow(
                             modifier = Modifier
-                                .constrainAs(textType) {
-                                    top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
-                                }
                                 .fillMaxWidth(0.8f)
                         ) {
                             Column(modifier = Modifier.fillMaxWidth(0.4f)) {
@@ -170,12 +150,9 @@ fun RealEstateDetailScreen(
                             }
                         }
 
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+
                         Box(modifier = Modifier
-                            .constrainAs(textDescription) {
-                                top.linkTo(textType.bottom, margin = 25.dp)
-                                start.linkTo(parent.start, margin = 0.dp)
-                                end.linkTo(parent.end, margin = 0.dp)
-                            }
                             .fillMaxWidth(0.8f)
                             .wrapContentHeight()
                             .clip(RoundedCornerShape(10.dp))
@@ -187,13 +164,10 @@ fun RealEstateDetailScreen(
                             }
                         }
 
+                        Spacer(modifier = Modifier.fillMaxSize(0.10f))
+
                         Box(
                             modifier = Modifier
-                                .constrainAs(textAddress) {
-                                    top.linkTo(textDescription.bottom, margin = 25.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
-                                }
                                 .clip(RoundedCornerShape(10.dp))
                                 .fillMaxWidth(0.8f)
                                 .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
@@ -207,13 +181,10 @@ fun RealEstateDetailScreen(
                             }
                         }
 
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+
                         FlowRow(
                             modifier = Modifier
-                                .constrainAs(rowHospital) {
-                                    top.linkTo(textAddress.bottom, margin = 25.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
-                                }
                                 .fillMaxWidth(0.8f)
                         ) {
                             Column(modifier = Modifier.fillMaxWidth(0.4f)) {
@@ -243,47 +214,37 @@ fun RealEstateDetailScreen(
                             }
                         }
 
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
 
                         Row(
                             modifier = Modifier
-                                .constrainAs(textStatus) {
-                                    top.linkTo(rowHospital.bottom, margin = 25.dp)
-                                    start.linkTo(parent.start, margin = 0.dp)
-                                    end.linkTo(parent.end, margin = 0.dp)
-                                }
                                 .fillMaxWidth(0.8f),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(text = "Status : " + itemRealEstate.status.toString())
                         }
 
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+
                         Row(modifier = Modifier
-                            .constrainAs(textDateOfEntry) {
-                                top.linkTo(textStatus.bottom, margin = 25.dp)
-                                start.linkTo(parent.start, margin = 0.dp)
-                                end.linkTo(parent.end, margin = 0.dp)
-                            }
                             .fillMaxWidth(0.8f)) {
                             Text(text = "Date of Entry : " + itemRealEstate.dateOfEntry.toString())
                         }
 
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+
                         Row(modifier = Modifier
-                            .constrainAs(textDateOfSale) {
-                                top.linkTo(textDateOfEntry.bottom, margin = 25.dp)
-                                start.linkTo(parent.start, margin = 0.dp)
-                                end.linkTo(parent.end, margin = 0.dp)
-                            }
                             .fillMaxWidth(0.8f)) {
                             Text(text = "Date of Sale : " + itemRealEstate.dateOfSale.toString())
                         }
 
-                        Row(modifier = Modifier.constrainAs(textRealEstateAgent) {
-                            top.linkTo(textDateOfSale.bottom, margin = 25.dp)
-                            start.linkTo(parent.start, margin = 0.dp)
-                            end.linkTo(parent.end, margin = 0.dp)
-                        }) {
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+
+                        Row() {
                             Text(text = "Agent : "+itemRealEstate.realEstateAgent.toString())
                         }
+
+                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
 
 
                         if (itemRealEstate.lat != null && itemRealEstate.lng != null) {
@@ -299,12 +260,6 @@ fun RealEstateDetailScreen(
 
 
                             GoogleMap(cameraPositionState = cameraPositionState, modifier = Modifier
-                                .constrainAs(googleMap) {
-                                    top.linkTo(textRealEstateAgent.bottom, margin = 5.dp)
-                                    start.linkTo(parent.start, margin = 5.dp)
-                                    end.linkTo(parent.end, margin = 5.dp)
-                                    bottom.linkTo(parent.bottom, margin = 75.dp)
-                                }
                                 .size(200.dp)
                                 .clip(RoundedCornerShape(15.dp))
                             ) {

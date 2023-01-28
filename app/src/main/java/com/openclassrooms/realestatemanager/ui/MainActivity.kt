@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui
 
 import android.annotation.SuppressLint
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
@@ -126,8 +128,13 @@ class MainActivity : ComponentActivity() {
                                     ).observeAsState()
 
                                     RealEstateDetailScreen(
-                                        realEstateViewModel,
-                                        navControllerMainActivity,
+                                        navigateToEditScreen = {
+                                            val item = Uri.encode(Gson().toJson(itemRealEstate))
+                                            navControllerMainActivity.navigate("editScreen/$item")
+                                        },
+                                        navigateToEditScreenExpanded = {
+
+                                        },
                                         windowSize,
                                         itemRealEstate
                                     )

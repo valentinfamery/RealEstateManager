@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,11 +27,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.adaptive.FoldAwareConfiguration
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
+import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
@@ -262,13 +266,43 @@ fun MainScreen(
                                                 ).observeAsState()
 
                                                 RealEstateDetailScreen(
-                                                    realEstateViewModel = realEstateViewModel,
-                                                    navController = navController,
+                                                    navigateToEditScreen = {
+
+                                                    },
+                                                    navigateToEditScreenExpanded = {
+                                                        val item = Uri.encode(Gson().toJson(itemRealEstate))
+                                                        navControllerTwoPane.navigate("editScreen/$item")
+                                                    },
                                                     windowSize = windowSize,
                                                     itemRealEstate
                                                 )
 
                                             }
+                                        }
+
+                                        composable("editScreen/{item}",
+                                            arguments = listOf(
+                                                navArgument("item") {
+                                                    type = RealEstateDatabase
+                                                }
+                                            )
+                                        ) { backStackEntry ->
+
+                                            val item =
+                                                backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
+
+                                            realEstateViewModel.fillMyUiState(item?.listPhotoWithText!!)
+
+
+                                            EditScreenRealEstate(
+                                                realEstateViewModel,
+                                                item,
+                                                navControllerTwoPane,
+                                                setPhotoUrl = {
+
+                                                },
+
+                                                )
                                         }
                                     }
 
