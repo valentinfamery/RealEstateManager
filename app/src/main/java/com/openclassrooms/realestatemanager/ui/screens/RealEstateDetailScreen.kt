@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,18 +20,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.navigation.NavController
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.Gson
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -41,9 +36,9 @@ import com.skydoves.landscapist.glide.GlideImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealEstateDetailScreen(
-    navigateToEditScreen : () -> Unit,
-    navigateToEditScreenExpanded : () -> Unit,
-    windowSize: WindowWidthSizeClass,
+    navigateToEditScreen: () -> Unit,
+    navigateToEditScreenExpanded: () -> Unit,
+    isExpanded: Boolean,
     itemRealEstate: RealEstateDatabase?
 ) {
 
@@ -87,7 +82,7 @@ fun RealEstateDetailScreen(
 
 
 
-                        if(windowSize == WindowWidthSizeClass.Compact || windowSize == WindowWidthSizeClass.Medium ){
+                        if(!isExpanded){
                             CenterAlignedTopAppBar(
                                 title = {
                                     Text(text = "Estate Manager")
@@ -101,7 +96,7 @@ fun RealEstateDetailScreen(
                                 }
 
                             )
-                        }else if (windowSize == WindowWidthSizeClass.Expanded){
+                        }else{
                             CenterAlignedTopAppBar(
                                 title = {
                                     Text(text = "Estate Manager")

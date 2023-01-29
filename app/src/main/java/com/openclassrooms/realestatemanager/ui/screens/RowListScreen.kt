@@ -25,12 +25,12 @@ import com.skydoves.landscapist.glide.GlideImage
 fun RowList(
     item: RealEstateDatabase,
     navController: NavController,
-    windowSize: WindowWidthSizeClass,
+    isExpanded : Boolean,
     realEstateViewModel: RealEstateViewModel
 ) {
 
 
-    if (windowSize != WindowWidthSizeClass.Expanded) {
+    if (!isExpanded) {
         val items2 = item.listPhotoWithText
 
         Card(

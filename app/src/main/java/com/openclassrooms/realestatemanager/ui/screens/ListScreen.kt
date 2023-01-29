@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,7 +35,7 @@ fun ListScreen(
     realEstateViewModel: RealEstateViewModel,
     innerPadding: PaddingValues,
     navController: NavController,
-    windowSize: WindowWidthSizeClass
+    isExpanded: Boolean
 ) {
     val context = LocalContext.current
     val realEstates by realEstateViewModel.realEstates.collectAsState()
@@ -89,7 +88,7 @@ fun ListScreen(
 
 
 
-    if (windowSize != WindowWidthSizeClass.Expanded) {
+    if (!isExpanded) {
 
 
         Scaffold(
@@ -149,7 +148,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     navController,
-                                    windowSize,
+                                    isExpanded,
                                     realEstateViewModel
                                 )
                             }
@@ -162,7 +161,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     navController,
-                                    windowSize,
+                                    isExpanded,
                                     realEstateViewModel
                                 )
                             }
@@ -225,7 +224,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     navController,
-                                    windowSize,
+                                    isExpanded,
                                     realEstateViewModel
                                 )
                             }
@@ -238,7 +237,7 @@ fun ListScreen(
                                 RowList(
                                     item,
                                     navController,
-                                    windowSize,
+                                    isExpanded,
                                     realEstateViewModel,
                                 )
                             }

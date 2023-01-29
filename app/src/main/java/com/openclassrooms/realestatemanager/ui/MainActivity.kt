@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -72,8 +73,9 @@ class MainActivity : ComponentActivity() {
 
 
 
-                val windowSize = calculateWindowSizeClass(this).widthSizeClass
+                val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
 
+                var isExpanded = widthSizeClass == WindowWidthSizeClass.Expanded
 
 
                 val id = realEstateViewModel.realEstateIdDetail.collectAsState()
@@ -94,7 +96,7 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 userViewModel,
                                 realEstateViewModel,
-                                windowSize,
+                                isExpanded
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
@@ -135,7 +137,7 @@ class MainActivity : ComponentActivity() {
                                         navigateToEditScreenExpanded = {
 
                                         },
-                                        windowSize,
+                                        isExpanded,
                                         itemRealEstate
                                     )
 

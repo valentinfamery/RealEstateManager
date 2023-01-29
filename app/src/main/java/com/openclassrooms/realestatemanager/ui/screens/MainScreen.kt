@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -22,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,7 +48,7 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    windowSize: WindowWidthSizeClass
+    isExpanded: Boolean
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -76,7 +74,7 @@ fun MainScreen(
         },
         content = {
 
-            if (windowSize != WindowWidthSizeClass.Expanded) {
+            if (!isExpanded) {
 
                 Scaffold(
                     content = { innerPadding ->
@@ -92,7 +90,7 @@ fun MainScreen(
                                     realEstateViewModel,
                                     innerPadding,
                                     navControllerDrawer,
-                                    windowSize
+                                    isExpanded
                                 )
                             }
                             composable(Screen.MapScreen.route) {
@@ -101,7 +99,7 @@ fun MainScreen(
                                     scope,
                                     realEstateViewModel,
                                     navControllerDrawer,
-                                    windowSize
+                                    isExpanded
                                 )
                             }
                         }
@@ -199,7 +197,7 @@ fun MainScreen(
                                                         realEstateViewModel,
                                                         innerPadding,
                                                         navControllerDrawer,
-                                                        windowSize
+                                                        isExpanded
                                                     )
                                                 }
                                                 composable(Screen.MapScreen.route) {
@@ -208,7 +206,7 @@ fun MainScreen(
                                                         scope,
                                                         realEstateViewModel,
                                                         navControllerDrawer,
-                                                        windowSize
+                                                        isExpanded
                                                     )
                                                 }
                                             }
@@ -257,7 +255,7 @@ fun MainScreen(
                                                         val item = Uri.encode(Gson().toJson(itemRealEstate))
                                                         navControllerTwoPane.navigate("editScreen/$item")
                                                     },
-                                                    windowSize = windowSize,
+                                                    isExpanded,
                                                     itemRealEstate
                                                 )
 
