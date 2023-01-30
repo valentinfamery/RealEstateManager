@@ -15,10 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.domain.models.User
+import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -30,11 +32,13 @@ fun DrawerScreen(
     scope: CoroutineScope,
     navController: NavController,
     auth: FirebaseAuth,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    realEstateViewModel: RealEstateViewModel = hiltViewModel()
 ) {
 
 
     val user by userViewModel.userData.collectAsState()
+
 
 
     ConstraintLayout(modifier = Modifier.fillMaxHeight()) {
@@ -67,7 +71,7 @@ fun DrawerScreen(
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Settings, contentDescription = null) },
                 label = { Text("Settings") },
-                selected = true,
+                selected = false,
                 onClick = {
                     scope.launch { drawerState.close() }
                     navController.navigate("settingsScreen") {
@@ -85,7 +89,7 @@ fun DrawerScreen(
             NavigationDrawerItem(
                 icon = { Icon(Icons.Default.Info, contentDescription = null) },
                 label = { Text("CurrencyConverter") },
-                selected = true,
+                selected = false,
                 onClick = {
                     scope.launch { drawerState.close() }
                     navController.navigate("currencyConverterScreen") {
@@ -94,7 +98,6 @@ fun DrawerScreen(
                 modifier = Modifier
                     .padding(
                         NavigationDrawerItemDefaults.ItemPadding
-
                     )
                     .constrainAs(item2) {
                         top.linkTo(item1.bottom, margin = 0.dp)

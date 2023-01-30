@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -11,7 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.ui.components.TopBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -19,28 +23,19 @@ import androidx.navigation.NavController
 fun SettingsScreen(navController: NavController) {
     Scaffold(
         content = {
-            ConstraintLayout {
-                val (centerAlignedTopAppBar,text) = createRefs()
+            Column() {
 
-                CenterAlignedTopAppBar(
-
-                    title = {
-                        Text(text = "Settings")
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "")
-                        }
-                    },
-                    modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
-                        top.linkTo(parent.top, margin = 0.dp)
-                        start.linkTo(parent.start, margin = 0.dp)
-                        end.linkTo(parent.end, margin = 0.dp)
-                    }
-
+                TopBar(
+                    title = "Settings",
+                    backNavigate = true,
+                    filterScreen = false,
+                    drawerButton = false,
+                    navigateToFilterScreen = { /*TODO*/ },
+                    navigateToBack = { /*TODO*/ },
+                    openDrawer = { /*TODO*/ },
+                    modifier = Modifier
                 )
+
             }
         },
     )

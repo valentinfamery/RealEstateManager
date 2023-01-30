@@ -22,6 +22,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.ui.FilterActivity
+import com.openclassrooms.realestatemanager.ui.components.TopBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -94,35 +95,24 @@ fun ListScreen(
         Scaffold(
             modifier = Modifier.padding(innerPadding),
             topBar = {
-
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(text = "RealEstateManager")
+                TopBar(
+                    title = "RealEstateManager",
+                    backNavigate = false,
+                    filterScreen = true,
+                    drawerButton = true,
+                    navigateToFilterScreen = {
+                        launcherActivityResult.launch(
+                            Intent(
+                                context,
+                                FilterActivity::class.java
+                            ))
                     },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch { drawerState.open() }
-                        }) {
-                            Icon(Icons.Filled.Menu, "")
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            launcherActivityResult.launch(
-                                Intent(
-                                    context,
-                                    FilterActivity::class.java
-                                )
-                            )
-                        }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
-                                contentDescription = ""
-                            )
-                        }
-                    },
+                    navigateToBack = { /*TODO*/ },
+                    modifier = Modifier,
+                    openDrawer = {
+                        scope.launch { drawerState.open() }
+                    }
                 )
-
             },
             content = {
 
@@ -177,28 +167,24 @@ fun ListScreen(
         Scaffold(
             modifier = Modifier.padding(innerPadding),
             topBar = {
-
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(text = "RealEstateManager")
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            launcherActivityResult.launch(
-                                Intent(
-                                    context,
-                                    FilterActivity::class.java
-                                )
-                            )
-                        }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_baseline_filter_list_24),
-                                contentDescription = ""
-                            )
-                        }
-                    },
+                TopBar(
+                    title = "RealEstateManager",
+                    backNavigate = false,
+                    filterScreen = true,
+                    drawerButton = false,
+                    navigateToFilterScreen = {
+                        launcherActivityResult.launch(
+                        Intent(
+                            context,
+                            FilterActivity::class.java
+                        ))
+                                             },
+                    navigateToBack = { /*TODO*/ },
+                    modifier = Modifier,
+                    openDrawer = {
+                        scope.launch { drawerState.open() }
+                    }
                 )
-
             },
             content = {
 

@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -80,30 +81,16 @@ fun RealEstateDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-
-
-                        if(!isExpanded){
-                            CenterAlignedTopAppBar(
-                                title = {
-                                    Text(text = "Estate Manager")
-                                },
-                                navigationIcon = {
-                                    IconButton(onClick = {
-                                        //navController.popBackStack()
-                                    }) {
-                                        Icon(Icons.Filled.ArrowBack, "")
-                                    }
-                                }
-
-                            )
-                        }else{
-                            CenterAlignedTopAppBar(
-                                title = {
-                                    Text(text = "Estate Manager")
-                                },
-
-                            )
-                        }
+                        TopBar(
+                            title = "Estate",
+                            backNavigate = true,
+                            filterScreen = false,
+                            drawerButton = false,
+                            navigateToFilterScreen = { /*TODO*/ },
+                            navigateToBack = { },
+                            openDrawer = { /*TODO*/ },
+                            modifier = Modifier
+                        )
 
                         Spacer(modifier = Modifier.fillMaxSize(0.01f))
 

@@ -41,6 +41,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import org.joda.time.LocalDate
@@ -138,26 +139,25 @@ fun EditScreenRealEstate(
                     .fillMaxHeight()
             ) {
 
-                val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
+                val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldStatus, rowDateSaleButtonAndText, topAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
 
                 val (rowHopital, rowSchool, rowShops, rowParks, dropdownMenuStatus, fieldNumberAndStreet, fieldNumberApartement, fieldCity, fieldRegion, fieldPostalCode, fieldCountry) = createRefs()
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(text = "Edit Estate")
+
+                TopBar(
+                    title = "Edit Estate",
+                    backNavigate = true,
+                    drawerButton = false,
+                    filterScreen = false,
+                    navigateToFilterScreen = {},
+                    navigateToBack = {
+
                     },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        }) {
-                            Icon(Icons.Filled.ArrowBack, "")
-                        }
-                    },
-                    modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
+                    modifier = Modifier.constrainAs(topAppBar) {
                         top.linkTo(parent.top, margin = 0.dp)
                         start.linkTo(parent.start, margin = 0.dp)
                         end.linkTo(parent.end, margin = 0.dp)
-                    }
-
+                    },
+                    openDrawer = {}
                 )
 
                 var expanded by remember { mutableStateOf(false) }
@@ -182,7 +182,7 @@ fun EditScreenRealEstate(
                     label = { Text("Type") },
                     modifier = Modifier
                         .constrainAs(fieldType) {
-                            top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
+                            top.linkTo(topAppBar.bottom, margin = 10.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
                         }

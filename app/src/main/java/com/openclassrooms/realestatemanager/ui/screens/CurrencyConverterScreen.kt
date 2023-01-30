@@ -9,19 +9,32 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Utils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurrencyConverterScreen(){
 
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
 
+
+        TopBar(
+            title = "CurrencyConverter",
+            backNavigate = true,
+            filterScreen = false,
+            drawerButton = false,
+            navigateToFilterScreen = { /*TODO*/ },
+            navigateToBack = { /*TODO*/ },
+            openDrawer = { /*TODO*/ },
+            modifier = Modifier
+        )
 
         var euro by remember { mutableStateOf("") }
         var dollar by remember { mutableStateOf("") }

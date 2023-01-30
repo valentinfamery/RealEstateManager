@@ -41,6 +41,7 @@ import com.openclassrooms.realestatemanager.notifications.NotificationHelper
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
+import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import org.joda.time.LocalDate
@@ -120,23 +121,20 @@ fun NewRealEstateScreen(
             val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
 
             val (rowHopital, rowSchool, rowShops, rowParks ,dropdownMenuStatus,fieldNumberAndStreet,fieldNumberApartement,fieldCity,fieldRegion,fieldPostalCode,fieldCountry) = createRefs()
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = stringResource(R.string.TitleNewEstateScreen))
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        activity.finish()
-                    }) {
-                        Icon(Icons.Filled.ArrowBack, "")
-                    }
-                },
+
+            TopBar(
+                title = stringResource(R.string.TitleNewEstateScreen),
+                backNavigate = true,
+                filterScreen = false,
+                drawerButton = false,
+                navigateToFilterScreen = { /*TODO*/ },
+                navigateToBack = {activity.finish()},
+                openDrawer = { /*TODO*/ },
                 modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
                     top.linkTo(parent.top, margin = 0.dp)
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
                 }
-
             )
 
             var expanded by remember { mutableStateOf(false) }
