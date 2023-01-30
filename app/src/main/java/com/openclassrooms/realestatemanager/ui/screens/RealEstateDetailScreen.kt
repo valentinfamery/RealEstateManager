@@ -40,7 +40,8 @@ fun RealEstateDetailScreen(
     navigateToEditScreen: () -> Unit,
     navigateToEditScreenExpanded: () -> Unit,
     isExpanded: Boolean,
-    itemRealEstate: RealEstateDatabase?
+    itemRealEstate: RealEstateDatabase?,
+    navigateToBack : () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -77,7 +78,6 @@ fun RealEstateDetailScreen(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
                             .fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
@@ -87,12 +87,12 @@ fun RealEstateDetailScreen(
                             filterScreen = false,
                             drawerButton = false,
                             navigateToFilterScreen = { /*TODO*/ },
-                            navigateToBack = { },
+                            navigateToBack = { navigateToBack() },
                             openDrawer = { /*TODO*/ },
                             modifier = Modifier
                         )
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         FlowRow(modifier = Modifier
                             .fillMaxWidth(0.80f)
@@ -115,7 +115,7 @@ fun RealEstateDetailScreen(
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         FlowRow(
                             modifier = Modifier
@@ -132,7 +132,7 @@ fun RealEstateDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         Box(modifier = Modifier
                             .fillMaxWidth(0.8f)
@@ -146,7 +146,7 @@ fun RealEstateDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.10f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.10f))
 
                         Box(
                             modifier = Modifier
@@ -163,7 +163,7 @@ fun RealEstateDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         FlowRow(
                             modifier = Modifier
@@ -196,7 +196,7 @@ fun RealEstateDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         Row(
                             modifier = Modifier
@@ -206,27 +206,29 @@ fun RealEstateDetailScreen(
                             Text(text = "Status : " + itemRealEstate.status.toString())
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         Row(modifier = Modifier
                             .fillMaxWidth(0.8f)) {
                             Text(text = "Date of Entry : " + itemRealEstate.dateOfEntry.toString())
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         Row(modifier = Modifier
                             .fillMaxWidth(0.8f)) {
-                            Text(text = "Date of Sale : " + itemRealEstate.dateOfSale.toString())
+                            if(itemRealEstate.status == "Sold") {
+                                Text(text = "Date of Sale : " + itemRealEstate.dateOfSale.toString())
+                            }
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         Row() {
                             Text(text = "Agent : "+itemRealEstate.realEstateAgent.toString())
                         }
 
-                        Spacer(modifier = Modifier.fillMaxSize(0.01f))
+                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
 
                         if (itemRealEstate.lat != null && itemRealEstate.lng != null) {

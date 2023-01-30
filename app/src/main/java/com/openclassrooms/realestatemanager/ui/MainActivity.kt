@@ -138,7 +138,10 @@ class MainActivity : ComponentActivity() {
 
                                         },
                                         isExpanded,
-                                        itemRealEstate
+                                        itemRealEstate,
+                                        navigateToBack = {
+                                            navControllerMainActivity.popBackStack()
+                                        }
                                     )
 
                                 }

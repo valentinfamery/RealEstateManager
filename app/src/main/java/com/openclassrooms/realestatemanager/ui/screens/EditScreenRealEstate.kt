@@ -150,7 +150,7 @@ fun EditScreenRealEstate(
                     filterScreen = false,
                     navigateToFilterScreen = {},
                     navigateToBack = {
-
+                        navController.popBackStack()
                     },
                     modifier = Modifier.constrainAs(topAppBar) {
                         top.linkTo(parent.top, margin = 0.dp)

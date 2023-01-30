@@ -228,8 +228,8 @@ class RealEstateRepositoryAndroidtest {
         dao.insertRealEstate(realEstate1)
         dao.insertRealEstate(realEstate2)
 
-        viewModel.realEstateById("2").test {
-            val item = awaitItem()
+        viewModel.realEstateById("2").observeForever() {
+            val item = it
             assert(item?.equals(realEstate2) ?: false)
         }
 
@@ -326,8 +326,8 @@ class RealEstateRepositoryAndroidtest {
         viewModel.getPropertyBySearch(
             listing2.type.toString(),listing2.city.toString(),250,750,
             100000,300000,true,
-            true,true,listing2.schoolsNear,listing2.shopsNear).test {
-                val list = awaitItem()
+            true,true,listing2.schoolsNear,listing2.shopsNear).observeForever(){
+                val list = it
             assert(list.contains(listing2))
         }
 
@@ -706,28 +706,6 @@ class RealEstateRepositoryAndroidtest {
 
         viewModel.updateRealEstateResponse = Response.Failure(Exception("Error message"))
         assertTrue((viewModel.updateRealEstateResponse as Response.Failure).e.message == "Error message")
-    }
-
-    @Test
-    fun testSelectedItem() = runTest {
-
-        val firebaseFirestore = mock(FirebaseFirestore::class.java)
-
-        val storageReference = mock(StorageReference::class.java)
-
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
-
-        val dao = db.realEstateDao()
-
-        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
-
-        val viewModel = RealEstateViewModel(repository)
-
-        viewModel.selectedItem.value = 1
-        assertTrue(viewModel.selectedItem.value == 1)
-
-        viewModel.selectedItem.value = 2
-        assertTrue(viewModel.selectedItem.value == 2)
     }
 
     @Test

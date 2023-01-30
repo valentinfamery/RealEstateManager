@@ -120,7 +120,6 @@ fun MainScreen(
                                     label = { Text(item.title) },
                                     selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                                     onClick = {
-                                        realEstateViewModel.selectedItem.value = index
                                         navController.navigate(item.route)
                                     }
                                 )
@@ -177,7 +176,7 @@ fun MainScreen(
                                     label = { Text(item.title) },
                                     selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                                     onClick = {
-                                        realEstateViewModel.selectedItem.value = index
+
                                         navController.navigate(item.route)
                                     }
                                 )
@@ -263,7 +262,10 @@ fun MainScreen(
                                                         navControllerTwoPane.navigate("editScreen/$item")
                                                     },
                                                     isExpanded,
-                                                    itemRealEstate
+                                                    itemRealEstate,
+                                                    navigateToBack = {
+
+                                                    }
                                                 )
 
                                             }
