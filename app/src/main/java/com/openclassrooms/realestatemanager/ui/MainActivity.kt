@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                                 isExpanded
                             )
                         }
-                        composable("settingsScreen") { SettingsScreen(navController = navControllerMainActivity) }
+                        composable("settingsScreen") { SettingsScreen(navigateToBack = {navControllerMainActivity.popBackStack()}) }
                         composable("registerScreen") {
                             RegisterScreen(
                                 navController = navControllerMainActivity,
@@ -172,7 +172,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                         composable("currencyConverterScreen"){
-                            CurrencyConverterScreen()
+                            CurrencyConverterScreen(navigateToBack = {navControllerMainActivity.popBackStack()})
                         }
 
 

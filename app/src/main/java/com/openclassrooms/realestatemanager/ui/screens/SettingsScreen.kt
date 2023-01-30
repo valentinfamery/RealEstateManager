@@ -20,7 +20,7 @@ import com.openclassrooms.realestatemanager.ui.components.TopBar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterial3Api
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(navigateToBack : () -> Unit) {
     Scaffold(
         content = {
             Column() {
@@ -31,7 +31,7 @@ fun SettingsScreen(navController: NavController) {
                     filterScreen = false,
                     drawerButton = false,
                     navigateToFilterScreen = { /*TODO*/ },
-                    navigateToBack = { /*TODO*/ },
+                    navigateToBack = {navigateToBack()},
                     openDrawer = { /*TODO*/ },
                     modifier = Modifier
                 )

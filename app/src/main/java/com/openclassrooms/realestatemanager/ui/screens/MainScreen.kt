@@ -69,7 +69,8 @@ fun MainScreen(
                 scope,
                 navControllerDrawer,
                 auth,
-                userViewModel
+                userViewModel,
+                modifier = Modifier.fillMaxSize()
             )
         },
         content = {

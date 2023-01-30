@@ -20,7 +20,7 @@ import com.openclassrooms.realestatemanager.utils.Utils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CurrencyConverterScreen(){
+fun CurrencyConverterScreen(navigateToBack : () -> Unit){
 
     Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -31,7 +31,7 @@ fun CurrencyConverterScreen(){
             filterScreen = false,
             drawerButton = false,
             navigateToFilterScreen = { /*TODO*/ },
-            navigateToBack = { /*TODO*/ },
+            navigateToBack = {navigateToBack()},
             openDrawer = { /*TODO*/ },
             modifier = Modifier
         )
