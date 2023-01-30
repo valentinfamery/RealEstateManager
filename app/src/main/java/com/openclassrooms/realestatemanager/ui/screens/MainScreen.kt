@@ -265,7 +265,8 @@ fun MainScreen(
                                                     itemRealEstate,
                                                     navigateToBack = {
 
-                                                    }
+                                                    },
+                                                    modifier = Modifier.fillMaxSize()
                                                 )
 
                                             }

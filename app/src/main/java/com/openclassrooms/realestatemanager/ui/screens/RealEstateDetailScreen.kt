@@ -41,7 +41,8 @@ fun RealEstateDetailScreen(
     navigateToEditScreenExpanded: () -> Unit,
     isExpanded: Boolean,
     itemRealEstate: RealEstateDatabase?,
-    navigateToBack : () -> Unit
+    navigateToBack : () -> Unit,
+    modifier: Modifier
 ) {
 
     val context = LocalContext.current
@@ -77,7 +78,7 @@ fun RealEstateDetailScreen(
                     Column(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
-                            .fillMaxHeight(),
+                            .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
@@ -96,11 +97,10 @@ fun RealEstateDetailScreen(
 
                         FlowRow(modifier = Modifier
                             .fillMaxWidth(0.80f)
-                            .fillMaxHeight(0.10f)
                         ) {
                             repeat(listPhotos?.size ?: 0) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                                    .fillMaxWidth(0.50f)
+                                    .fillMaxWidth(0.49f)
                                     .padding(5.dp)) {
 
                                         GlideImage(

@@ -125,7 +125,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                                         val realEstateImage: StorageReference = storageRef.child(
                                             "realEstates/$id/$newId"
                                         )
-
+                                        Log.e("uri", photoWithText.photoSource)
                                         val urlFinal = withContext(Dispatchers.IO) {
                                             realEstateImage.putFile(Uri.parse(photoWithText.photoSource))
                                                 .await().storage.downloadUrl.await()

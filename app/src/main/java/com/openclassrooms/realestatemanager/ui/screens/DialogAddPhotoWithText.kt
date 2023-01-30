@@ -52,7 +52,7 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean,addPhotoWithText 
     )
 
     val externalStoragePermissionState = rememberPermissionState(
-        Manifest.permission.READ_EXTERNAL_STORAGE
+        Manifest.permission.READ_EXTERNAL_STORAGE,
     )
 
     if (openDialogAddPhotoWithText) {
@@ -107,7 +107,7 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean,addPhotoWithText 
                         onClick = {
                             if (externalStoragePermissionState.status.isGranted) {
                                 val i = Intent(
-                                    Intent.ACTION_PICK,
+                                    Intent.ACTION_OPEN_DOCUMENT,
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                                 )
                                 someActivityResultLauncher.launch(i)
