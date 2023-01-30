@@ -83,7 +83,7 @@ fun RealEstateDetailScreen(
 
                         TopBar(
                             title = "Estate",
-                            backNavigate = true,
+                            backNavigate = !isExpanded,
                             filterScreen = false,
                             drawerButton = false,
                             navigateToFilterScreen = { /*TODO*/ },

@@ -92,7 +92,7 @@ fun MapScreen(
             title = "Map",
             backNavigate = false,
             filterScreen = false,
-            drawerButton = true,
+            drawerButton = !isExpanded,
             navigateToFilterScreen = {
 
             },
