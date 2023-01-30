@@ -22,8 +22,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.adaptive.FoldAwareConfiguration
@@ -54,10 +56,14 @@ fun MainScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    var selectedItem = realEstateViewModel.selectedItem.collectAsState()
+
     val items = listOf(Screen.ListScreen, Screen.MapScreen)
 
     val navController = rememberNavController()
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
     val context = LocalContext.current
 
     ModalNavigationDrawer(
@@ -112,7 +118,7 @@ fun MainScreen(
                                 NavigationBarItem(
                                     icon = { Icon(item.icon, contentDescription = null) },
                                     label = { Text(item.title) },
-                                    selected = selectedItem.value == index,
+                                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                                     onClick = {
                                         realEstateViewModel.selectedItem.value = index
                                         navController.navigate(item.route)
@@ -159,7 +165,7 @@ fun MainScreen(
                         NavigationRail {
                             NavigationRailItem(
                                 icon = { Icon(Icons.Default.Menu, contentDescription = null) },
-                                selected = selectedItem.value == 3,
+                                selected = false,
                                 onClick = {
                                     scope.launch { drawerState.open() }
                                 }
@@ -169,7 +175,7 @@ fun MainScreen(
                                 NavigationRailItem(
                                     icon = { Icon(item.icon, contentDescription = null) },
                                     label = { Text(item.title) },
-                                    selected = selectedItem.value == index,
+                                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                                     onClick = {
                                         realEstateViewModel.selectedItem.value = index
                                         navController.navigate(item.route)
