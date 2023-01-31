@@ -62,7 +62,7 @@ fun MapScreen(
     val realEstates by realEstateViewModel.realEstates.collectAsState()
 
     var userPosition by remember {
-        mutableStateOf(LatLng(40.815959, -73.8192879))
+        mutableStateOf(LatLng(0.0, 0.0))
     }
 
 
@@ -106,50 +106,52 @@ fun MapScreen(
         if (locationPermissionState.status.isGranted) {
             startLocationUpdates()
 
-            if (userPosition == LatLng(40.815959, -73.8192879)) {
-                Spacer(modifier = Modifier.fillMaxSize(0.025f))
-                Text(text = "This location is the default please check google plays services for the real location")
-                Spacer(modifier = Modifier.fillMaxSize(0.025f))
-            }
+            if (userPosition != LatLng(0.0, 0.0)) {
 
-            val cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(userPosition, 10f)
-            }
+                val cameraPositionState = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(userPosition, 10f)
+                }
 
-            val mapProperties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
-            val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
+                val mapProperties by remember { mutableStateOf(MapProperties(isMyLocationEnabled = true)) }
+                val uiSettings by remember { mutableStateOf(MapUiSettings(myLocationButtonEnabled = true)) }
 
-            GoogleMap(
-                cameraPositionState = cameraPositionState,
-                properties = mapProperties,
-                uiSettings = uiSettings,
-            ) {
-                realEstates.let { items ->
-                    items.forEach {
+                GoogleMap(
+                    cameraPositionState = cameraPositionState,
+                    properties = mapProperties,
+                    uiSettings = uiSettings,
+                ) {
+                    realEstates.let { items ->
+                        items.forEach {
 
-                        val realEstate: RealEstateDatabase = it
+                            val realEstate: RealEstateDatabase = it
 
 
-                        if (it.lat != null && it.lng != null) {
+                            if (it.lat != null && it.lng != null) {
 
-                            val latLng = LatLng(
-                                it.lat!!, it.lng!!
-                            )
-                            Marker(
-                                state = MarkerState(position = latLng),
-                                title = "${realEstate.numberAndStreet} ${realEstate.city} ${realEstate.postalCode} ${realEstate.region} ${realEstate.country}",
-                                onInfoWindowClick = {
-                                    realEstateViewModel.realEstateIdDetail.value = realEstate.id
-                                    if (!isExpanded) {
-                                        boolean = true
+                                val latLng = LatLng(
+                                    it.lat!!, it.lng!!
+                                )
+                                Marker(
+                                    state = MarkerState(position = latLng),
+                                    title = "${realEstate.numberAndStreet} ${realEstate.city} ${realEstate.postalCode} ${realEstate.region} ${realEstate.country}",
+                                    onInfoWindowClick = {
+                                        realEstateViewModel.realEstateIdDetail.value = realEstate.id
+                                        if (!isExpanded) {
+                                            boolean = true
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
+
                     }
 
                 }
 
+            }else {
+                Spacer(modifier = Modifier.fillMaxSize(0.025f))
+                Text(text = "Google play location history is empty")
+                Spacer(modifier = Modifier.fillMaxSize(0.025f))
             }
 
         } else {
