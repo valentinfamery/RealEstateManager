@@ -98,7 +98,10 @@ class MainActivity : ComponentActivity() {
                                 auth = auth,
                                 userViewModel,
                                 realEstateViewModel,
-                                isExpanded
+                                isExpanded,
+                                navigateToNewScreen = {
+                                    navControllerMainActivity.navigate("newScreen")
+                                }
                             )
                         }
                         composable("settingsScreen") { SettingsScreen(navigateToBack = {navControllerMainActivity.popBackStack()}) }
@@ -117,6 +120,12 @@ class MainActivity : ComponentActivity() {
                                 }) {
                                 navControllerMainActivity.navigate("registerScreen")
                             }
+                        }
+
+                        composable("newScreen"){
+                            NewRealEstateScreen(isExpanded,realEstateViewModel,userViewModel, navigateToBack = {
+                                navControllerMainActivity.popBackStack()
+                            })
                         }
 
 

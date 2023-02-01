@@ -35,7 +35,6 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
@@ -50,7 +49,8 @@ fun MainScreen(
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
     realEstateViewModel: RealEstateViewModel,
-    isExpanded: Boolean
+    isExpanded: Boolean,
+    navigateToNewScreen : () -> Unit
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -134,11 +134,9 @@ fun MainScreen(
                                         val isInternetAvailable = Utils.isInternetAvailable(context)
 
                                         if(isInternetAvailable){
-                                            context.startActivity(
-                                                Intent(context, NewRealEstateActivity::class.java)
-                                            )
+                                            navigateToNewScreen()
                                         }else{
-                                            Toast.makeText(context,"Impossible il n'y a pas de connexion Internet",Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context,"Impossible there is no internet connection",Toast.LENGTH_LONG).show()
                                         }
 
 
@@ -221,12 +219,7 @@ fun MainScreen(
                                         floatingActionButton = {
                                             FloatingActionButton(
                                                 onClick = { /* do something */
-                                                    context.startActivity(
-                                                        Intent(
-                                                            context,
-                                                            NewRealEstateActivity::class.java
-                                                        )
-                                                    )
+                                                    navigateToNewScreen()
                                                 },
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(15.dp))

@@ -39,7 +39,7 @@ import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.notifications.NotificationHelper
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
-import com.openclassrooms.realestatemanager.ui.NewRealEstateActivity
+import com.openclassrooms.realestatemanager.ui.MainActivity
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -53,7 +53,8 @@ import org.joda.time.chrono.ISOChronology
 fun NewRealEstateScreen(
     isExpanded: Boolean,
     realEstateViewModel: RealEstateViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    navigateToBack : () -> Unit
 ) {
 
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
@@ -133,7 +134,7 @@ fun NewRealEstateScreen(
                 filterScreen = false,
                 drawerButton = false,
                 navigateToFilterScreen = { /*TODO*/ },
-                navigateToBack = {activity.finish()},
+                navigateToBack = {navigateToBack()},
                 openDrawer = { /*TODO*/ },
                 modifier = Modifier.constrainAs(centerAlignedTopAppBar) {
                     top.linkTo(parent.top, margin = 0.dp)
@@ -758,10 +759,10 @@ fun NewRealEstateScreen(
                 context = context,
                 title = "Real Estate Manager",
                 message = "Succefully added new Estate",
-                intent = Intent(context, NewRealEstateActivity::class.java),
+                intent = Intent(context, MainActivity::class.java),
                 reqCode = 10001
             )
-            activity.finish()
+            navigateToBack()
         }
         else -> {}
     }
