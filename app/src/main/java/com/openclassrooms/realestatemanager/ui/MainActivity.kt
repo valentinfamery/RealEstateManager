@@ -104,17 +104,19 @@ class MainActivity : ComponentActivity() {
                         composable("settingsScreen") { SettingsScreen(navigateToBack = {navControllerMainActivity.popBackStack()}) }
                         composable("registerScreen") {
                             RegisterScreen(
+                                isExpanded,
                                 navController = navControllerMainActivity,
                                 userViewModel = userViewModel
                             )
                         }
                         composable("signInScreen") {
                             SignInScreen(
+                                isExpanded,
                                 navigateToMainScreen = {
                                     navControllerMainActivity.navigate("mainScreen")
-                                }, navigateToRegisterScreen = {
-                                    navControllerMainActivity.navigate("registerScreen")
-                                })
+                                }) {
+                                navControllerMainActivity.navigate("registerScreen")
+                            }
                         }
 
 

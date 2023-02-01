@@ -18,13 +18,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterEmailUsernamePassword(userViewModel: UserViewModel, navController: NavController) {
+fun RegisterEmailUsernamePassword(
+    isExpanded: Boolean,
+    userViewModel: UserViewModel,
+    navController: NavController
+) {
     var email by rememberSaveable { mutableStateOf("") }
     var username by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
@@ -76,6 +81,8 @@ fun RegisterEmailUsernamePassword(userViewModel: UserViewModel, navController: N
                 top.linkTo(parent.top, margin = 250.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
+                width = if(!isExpanded) Dimension.percent(0.8f) else Dimension.percent(0.3f)
+                height = Dimension.wrapContent
             }
 
         )
@@ -89,6 +96,8 @@ fun RegisterEmailUsernamePassword(userViewModel: UserViewModel, navController: N
                 top.linkTo(entryEmail.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
+                width = if(!isExpanded) Dimension.percent(0.8f) else Dimension.percent(0.3f)
+                height = Dimension.wrapContent
             }
 
         )
@@ -102,6 +111,8 @@ fun RegisterEmailUsernamePassword(userViewModel: UserViewModel, navController: N
                 top.linkTo(entryUsername.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
+                width = if(!isExpanded) Dimension.percent(0.8f) else Dimension.percent(0.3f)
+                height = Dimension.wrapContent
             },
             visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = { IconButton(onClick = {
@@ -122,6 +133,8 @@ fun RegisterEmailUsernamePassword(userViewModel: UserViewModel, navController: N
                 top.linkTo(entryPassword.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
+                width = if(!isExpanded) Dimension.percent(0.8f) else Dimension.percent(0.3f)
+                height = Dimension.wrapContent
             },
             visualTransformation = if(passwordVisible2) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = { IconButton(onClick = {
@@ -138,7 +151,7 @@ fun RegisterEmailUsernamePassword(userViewModel: UserViewModel, navController: N
                 if(password == password2)
                     userViewModel.registerUser(username, email, password)
                 else
-                    Toast.makeText(context, "les mots de passe ne corespondent pas ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Passwords Not matched", Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier
                 .size(width = 275.dp, height = 50.dp)

@@ -16,20 +16,20 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController, userViewModel: UserViewModel){
+fun RegisterScreen(isExpanded: Boolean, navController: NavController, userViewModel: UserViewModel){
 
     val context = LocalContext.current
 
 
     when(val responseRegisterUser = userViewModel.registerUserResponse) {
         is Response.Empty -> {
-            RegisterEmailUsernamePassword(userViewModel,navController)
+            RegisterEmailUsernamePassword(isExpanded,userViewModel,navController)
         }
         is Response.Failure -> {
             Log.i("responseRegisterUser", "Failure")
             Toast.makeText(context, responseRegisterUser.e.toString(), Toast.LENGTH_SHORT).show()
             Log.i("responseRegisterUser", responseRegisterUser.e.toString())
-            RegisterEmailUsernamePassword(userViewModel,navController)
+            RegisterEmailUsernamePassword(isExpanded, userViewModel, navController)
         }
         is Response.Loading -> {
             Column(

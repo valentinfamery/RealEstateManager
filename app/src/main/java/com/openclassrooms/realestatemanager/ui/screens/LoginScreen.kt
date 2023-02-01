@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.auth.AuthResult
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
@@ -17,8 +16,9 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewMode
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    navigateToMainScreen : () -> Unit,
-    navigateToRegisterScreen : () -> Unit
+    isExpanded: Boolean,
+    navigateToMainScreen: () -> Unit,
+    navigateToRegisterScreen: () -> Unit
 ){
 
     val userViewModel = hiltViewModel<UserViewModel>()
@@ -30,15 +30,15 @@ fun SignInScreen(
 
         when (val loginResponse = userViewModel.loginUserResponse) {
             is Response.Empty -> {
-                LoginEmailAndPassword(userViewModel,navigateToRegisterScreen = {
+                LoginEmailAndPassword(isExpanded,userViewModel) {
                     navigateToRegisterScreen()
-                })
+                }
             }
             is Response.Failure -> {
                 Toast.makeText(context, loginResponse.e.toString(), Toast.LENGTH_SHORT).show()
-                LoginEmailAndPassword(userViewModel,navigateToRegisterScreen = {
+                LoginEmailAndPassword(isExpanded, userViewModel) {
                     navigateToRegisterScreen()
-                })
+                }
             }
             is Response.Loading -> {
                 Column(

@@ -13,12 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.Response
@@ -52,6 +51,7 @@ import org.joda.time.chrono.ISOChronology
 @ExperimentalMaterial3Api
 @Composable
 fun NewRealEstateScreen(
+    isExpanded: Boolean,
     realEstateViewModel: RealEstateViewModel,
     userViewModel: UserViewModel
 ) {
@@ -115,8 +115,13 @@ fun NewRealEstateScreen(
         ConstraintLayout(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .fillMaxHeight()
+                .fillMaxSize()
         ) {
+
+            val startGuideline = createGuidelineFromStart(0.1f)
+            val endGuideline = createGuidelineFromEnd(0.1f)
+            val topGuideline = createGuidelineFromTop(0.1f)
+            val bottomGuideline = createGuidelineFromBottom(0.1f)
 
             val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
 
@@ -157,17 +162,32 @@ fun NewRealEstateScreen(
                 value = entryType,
                 onValueChange = { entryType = it },
                 label = { Text("Type") },
-                modifier = Modifier
-                    .constrainAs(fieldType) {
-                        top.linkTo(centerAlignedTopAppBar.bottom, margin = 10.dp)
-                        start.linkTo(parent.start, margin = 50.dp)
-                        end.linkTo(parent.end, margin = 50.dp)
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldType) {
+                        top.linkTo(topGuideline)
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        width = Dimension.percent(0.8f)
+                        height = Dimension.wrapContent
                     }
                     .onGloballyPositioned { coordinates ->
                         // This value is used to assign to
                         // the DropDown the same width
                         mTextFieldSize = coordinates.size.toSize()
-                    },
+                    }
+                else Modifier.constrainAs(fieldType) {
+                    top.linkTo(topGuideline)
+                    start.linkTo(startGuideline)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
+                }
+                    .onGloballyPositioned { coordinates ->
+                        // This value is used to assign to
+                        // the DropDown the same width
+                        mTextFieldSize = coordinates.size.toSize()
+                    }
+
+                ,
+
                 trailingIcon = {
                     Icon(icon, "contentDescription",
                         Modifier.clickable { expanded = !expanded })
@@ -206,12 +226,19 @@ fun NewRealEstateScreen(
                 value = entryPrice,
                 onValueChange = { entryPrice = it },
                 label = { Text("Price") },
-                singleLine = true,
+                singleLine = false,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.constrainAs(fieldPrice) {
+                modifier = if(!isExpanded)Modifier.constrainAs(fieldPrice) {
                     top.linkTo(fieldType.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldPrice) {
+                    top.linkTo(fieldType.bottom, margin = 25.dp)
+                    start.linkTo(startGuideline)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
@@ -219,12 +246,19 @@ fun NewRealEstateScreen(
                 value = entryArea ,
                 onValueChange = { entryArea = it },
                 label = { Text("Area") },
-                singleLine = true,
+                singleLine = false,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.constrainAs(fieldArea) {
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldArea) {
                     top.linkTo(fieldPrice.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                } else Modifier.constrainAs(fieldArea) {
+                    top.linkTo(fieldPrice.bottom, margin = 25.dp)
+                    start.linkTo(startGuideline)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
@@ -232,12 +266,19 @@ fun NewRealEstateScreen(
                 value = entryNumberRoom,
                 onValueChange = { entryNumberRoom = it },
                 label = { Text("Number of rooms") },
-                singleLine = true,
+                singleLine = false,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.constrainAs(fieldNumberRoom) {
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberRoom) {
                     top.linkTo(fieldArea.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldNumberRoom) {
+                    top.linkTo(fieldArea.bottom, margin = 25.dp)
+                    start.linkTo(startGuideline)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
@@ -245,11 +286,18 @@ fun NewRealEstateScreen(
                 value = entryDescription,
                 onValueChange = { entryDescription = it },
                 label = { Text("Description") },
-                singleLine = true,
-                modifier = Modifier.constrainAs(fieldDescription) {
+                singleLine = false,
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldDescription) {
                     top.linkTo(fieldNumberRoom.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldDescription) {
+                    top.linkTo(fieldNumberRoom.bottom, margin = 25.dp)
+                    start.linkTo(startGuideline)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
@@ -259,11 +307,18 @@ fun NewRealEstateScreen(
                 value = entryNumberAndStreet,
                 onValueChange = { entryNumberAndStreet = it },
                 label = { Text("NumberAndStreet") },
-                singleLine = true,
-                modifier = Modifier.constrainAs(fieldNumberAndStreet) {
+                singleLine = false,
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberAndStreet) {
                     top.linkTo(fieldDescription.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldNumberAndStreet) {
+                    top.linkTo(fieldDescription.bottom, margin = 25.dp)
+                    start.linkTo(startGuideline)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
@@ -271,11 +326,19 @@ fun NewRealEstateScreen(
                 value = entryNumberApartement,
                 onValueChange = { entryNumberApartement = it },
                 label = { Text("NumberApartement") },
-                singleLine = true,
-                modifier = Modifier.constrainAs(fieldNumberApartement) {
-                    top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                singleLine = false,
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberApartement) {
+                    top.linkTo(topGuideline)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                } else Modifier.constrainAs(fieldNumberApartement) {
+                    top.linkTo(topGuideline)
+                    start.linkTo(fieldType.end, margin = 25.dp)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
+
                 }
             )
 
@@ -283,23 +346,39 @@ fun NewRealEstateScreen(
                 value = entryCity,
                 onValueChange = { entryCity = it },
                 label = { Text("City") },
-                singleLine = true,
-                modifier = Modifier.constrainAs(fieldCity) {
+                singleLine = false,
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldCity) {
                     top.linkTo(fieldNumberApartement.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldCity) {
+                    top.linkTo(fieldNumberApartement.bottom, margin = 25.dp)
+                    start.linkTo(fieldType.end, margin = 25.dp)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
+
+
             )
 
             TextField(
                 value = entryRegion,
                 onValueChange = { entryRegion = it },
                 label = { Text("Region") },
-                singleLine = true,
-                modifier = Modifier.constrainAs(fieldRegion) {
+                singleLine = false,
+                modifier = if(!isExpanded)Modifier.constrainAs(fieldRegion) {
                     top.linkTo(fieldCity.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldRegion) {
+                    top.linkTo(fieldCity.bottom, margin = 25.dp)
+                    start.linkTo(fieldType.end, margin = 25.dp)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
@@ -307,11 +386,18 @@ fun NewRealEstateScreen(
                 value = entryPostalCode,
                 onValueChange = { entryPostalCode = it },
                 label = { Text("Postal Code") },
-                singleLine = true,
-                modifier = Modifier.constrainAs(fieldPostalCode) {
+                singleLine = false,
+                modifier = if(!isExpanded)Modifier.constrainAs(fieldPostalCode) {
                     top.linkTo(fieldRegion.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldPostalCode) {
+                    top.linkTo(fieldRegion.bottom, margin = 25.dp)
+                    start.linkTo(fieldType.end, margin = 25.dp)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
@@ -319,22 +405,34 @@ fun NewRealEstateScreen(
                 value = entryCountry,
                 onValueChange = { entryCountry = it },
                 label = { Text("Country") },
-                singleLine = true,
-                modifier = Modifier.constrainAs(fieldCountry) {
+                singleLine = false,
+                modifier = if(!isExpanded)Modifier.constrainAs(fieldCountry) {
                     top.linkTo(fieldPostalCode.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(startGuideline)
+                    end.linkTo(endGuideline)
+                    width = Dimension.percent(0.8f)
+                    height = Dimension.wrapContent
+                }else Modifier.constrainAs(fieldCountry) {
+                    top.linkTo(fieldPostalCode.bottom, margin = 25.dp)
+                    start.linkTo(fieldType.end, margin = 25.dp)
+                    width = Dimension.percent(0.2f)
+                    height = Dimension.wrapContent
                 }
             )
 
 
             Row(
-                modifier = Modifier
+                modifier = if(!isExpanded) Modifier
                     .constrainAs(rowHopital) {
                         top.linkTo(fieldCountry.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    },
+                    }else Modifier
+                        .constrainAs(rowHopital) {
+                    top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
+                    start.linkTo(startGuideline)
+
+                },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
 
@@ -348,12 +446,14 @@ fun NewRealEstateScreen(
             }
 
             Row(
-                modifier = Modifier
-                    .constrainAs(rowSchool) {
+                modifier = if(!isExpanded) Modifier.constrainAs(rowSchool) {
                         top.linkTo(rowHopital.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
-                    },
+                    }else Modifier.constrainAs(rowSchool) {
+                    top.linkTo(rowHopital.bottom, margin = 25.dp)
+                    start.linkTo(startGuideline)
+                },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
 
@@ -366,11 +466,15 @@ fun NewRealEstateScreen(
             }
 
             Row(
-                modifier = Modifier
+                modifier = if(!isExpanded) Modifier
                     .constrainAs(rowShops) {
                         top.linkTo(rowSchool.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
+                    }else Modifier
+                    .constrainAs(rowShops) {
+                        top.linkTo(rowSchool.bottom, margin = 25.dp)
+                        start.linkTo(startGuideline)
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
@@ -383,11 +487,15 @@ fun NewRealEstateScreen(
             }
 
             Row(
-                modifier = Modifier
+                modifier = if(!isExpanded)Modifier
                     .constrainAs(rowParks) {
                         top.linkTo(rowShops.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
+                    }else Modifier
+                    .constrainAs(rowParks) {
+                        top.linkTo(rowShops.bottom, margin = 5.dp)
+                        start.linkTo(startGuideline)
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
@@ -410,11 +518,24 @@ fun NewRealEstateScreen(
                 onValueChange = { entryStatus = it },
                 label = { Text("Status") },
                 singleLine = true,
-                modifier = Modifier
+                modifier = if(!isExpanded) Modifier
                     .constrainAs(fieldStatus) {
                         top.linkTo(rowParks.bottom, margin = 25.dp)
-                        start.linkTo(parent.start, margin = 50.dp)
-                        end.linkTo(parent.end, margin = 50.dp)
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                        width = Dimension.percent(0.8f)
+                        height = Dimension.wrapContent
+                    }
+                    .onGloballyPositioned { coordinates ->
+                        // This value is used to assign to
+                        // the DropDown the same width
+                        mTextFieldSizeStatus = coordinates.size.toSize()
+                    } else Modifier
+                    .constrainAs(fieldStatus) {
+                        top.linkTo(fieldCountry.bottom, margin = 25.dp)
+                        start.linkTo(fieldType.end, margin = 25.dp)
+                        width = Dimension.percent(0.2f)
+                        height = Dimension.wrapContent
                     }
                     .onGloballyPositioned { coordinates ->
                         // This value is used to assign to
@@ -478,8 +599,8 @@ fun NewRealEstateScreen(
 
                 Column(modifier = Modifier.constrainAs(rowDateSaleButtonAndText) {
                     top.linkTo(fieldStatus.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 50.dp)
-                    end.linkTo(parent.end, margin = 50.dp)
+                    start.linkTo(fieldStatus.start)
+                    end.linkTo(fieldStatus.end)
                 }) {
                     Text(textDateOfEntry)
                     if (entryStatus == "Sold") {
@@ -501,11 +622,20 @@ fun NewRealEstateScreen(
 
 
 
-            FlowRow(modifier = Modifier.constrainAs(lazyColumnPhoto) {
-                top.linkTo(fieldStatus.bottom, margin = 75.dp)
-                start.linkTo(parent.start, margin = 25.dp)
+            FlowRow(modifier = if(!isExpanded) Modifier.constrainAs(lazyColumnPhoto) {
+                top.linkTo(topGuideline)
+                start.linkTo(fieldNumberApartement.end, margin = 25.dp)
                 end.linkTo(parent.end, margin = 25.dp)
-            }) {
+                width = Dimension.percent(0.40f)
+                height = Dimension.wrapContent
+            }else Modifier.constrainAs(lazyColumnPhoto) {
+                top.linkTo(topGuideline)
+                start.linkTo(fieldNumberApartement.end, margin = 25.dp)
+                end.linkTo(parent.end, margin = 25.dp)
+                width = Dimension.percent(0.40f)
+                height = Dimension.wrapContent
+            }
+            ) {
                 listPhotos.value?.forEach {photo->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
@@ -543,10 +673,14 @@ fun NewRealEstateScreen(
 
                     openDialogAddPhotoWithText = true
                 },
-                modifier = Modifier.constrainAs(buttonAddPhoto) {
+                modifier = if(!isExpanded)Modifier.constrainAs(buttonAddPhoto) {
                     top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
                     start.linkTo(parent.start, margin = 0.dp)
                     end.linkTo(parent.end, margin = 0.dp)
+                }else Modifier.constrainAs(buttonAddPhoto) {
+                    top.linkTo(lazyColumnPhoto.bottom, margin = 25.dp)
+                    start.linkTo(lazyColumnPhoto.start)
+                    end.linkTo(lazyColumnPhoto.end)
                 }
             ) {
                 Text("Add Photo")
@@ -603,9 +737,9 @@ fun NewRealEstateScreen(
 
                 },
                 modifier = Modifier.constrainAs(confirmAddButton) {
-                    top.linkTo(buttonAddPhoto.bottom, margin = 25.dp)
-                    start.linkTo(parent.start, margin = 0.dp)
-                    end.linkTo(parent.end, margin = 0.dp)
+                    bottom.linkTo(bottomGuideline)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
                 },
             ) {
                 Text("Confirm")
@@ -620,12 +754,6 @@ fun NewRealEstateScreen(
 
     when(realEstateViewModel.createRealEstateResponse){
         is Response.Success ->{
-            Toast.makeText(
-                context,
-                "Ajout reussi",
-                Toast.LENGTH_SHORT
-            ).show()
-
             NotificationHelper.sendSimpleNotification(
                 context = context,
                 title = "Real Estate Manager",
@@ -633,7 +761,6 @@ fun NewRealEstateScreen(
                 intent = Intent(context, NewRealEstateActivity::class.java),
                 reqCode = 10001
             )
-
             activity.finish()
         }
         else -> {}

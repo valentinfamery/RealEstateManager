@@ -3,12 +3,10 @@ package com.openclassrooms.realestatemanager.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,16 +21,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginEmailAndPassword(userViewModel: UserViewModel,
-                          navigateToRegisterScreen : () -> Unit,
+fun LoginEmailAndPassword(
+    isExpanded: Boolean,
+    userViewModel: UserViewModel,
+    navigateToRegisterScreen: () -> Unit,
 
-                          ) {
+    ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
@@ -52,7 +53,9 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
                 top.linkTo(parent.top, margin = 250.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
-            }.fillMaxWidth(0.8f)
+                width = if(!isExpanded) Dimension.percent(0.8f) else Dimension.percent(0.3f)
+                height = Dimension.wrapContent
+            }
         )
 
         val icon = if(passwordVisible)
@@ -70,7 +73,9 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
                 top.linkTo(entryEmail.bottom, margin = 25.dp)
                 start.linkTo(parent.start, margin = 0.dp)
                 end.linkTo(parent.end, margin = 0.dp)
-            }.fillMaxWidth(0.8f),
+                width = if(!isExpanded) Dimension.percent(0.8f) else Dimension.percent(0.3f)
+                height = Dimension.wrapContent
+            },
             visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = { IconButton(onClick = {
@@ -134,7 +139,7 @@ fun LoginEmailAndPassword(userViewModel: UserViewModel,
             Toast.makeText(context, resetPasswordResponse.e.toString(), Toast.LENGTH_SHORT).show()
         }
         is Response.Success -> {
-            Toast.makeText(context, "reussi , consulter vos email", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "success , check email", Toast.LENGTH_SHORT).show()
         }
         Response.Empty -> {}
         Response.Loading -> {}

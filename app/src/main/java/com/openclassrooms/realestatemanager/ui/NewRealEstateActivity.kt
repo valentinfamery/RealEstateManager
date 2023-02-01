@@ -5,6 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.openclassrooms.realestatemanager.ui.screens.NewRealEstateScreen
@@ -12,12 +15,11 @@ import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateMa
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class NewRealEstateActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,7 +33,11 @@ class NewRealEstateActivity : ComponentActivity() {
                     val realEstateViewModel: RealEstateViewModel = hiltViewModel()
                     val userViewModel : UserViewModel = hiltViewModel()
 
-                        NewRealEstateScreen(realEstateViewModel,userViewModel)
+                    val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
+
+                    var isExpanded = widthSizeClass == WindowWidthSizeClass.Expanded
+
+                        NewRealEstateScreen(isExpanded,realEstateViewModel,userViewModel)
 
                 }
             }

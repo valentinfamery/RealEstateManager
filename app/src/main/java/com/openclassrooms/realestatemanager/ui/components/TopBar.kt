@@ -44,5 +44,6 @@ fun TopBar(title : String,backNavigate : Boolean,filterScreen : Boolean , drawer
                 }
             }
         },
+        modifier = modifier
     )
 }
