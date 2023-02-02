@@ -8,20 +8,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
-import com.openclassrooms.realestatemanager.ui.FilterActivity
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -40,8 +35,70 @@ fun ListScreen(
 ) {
     val context = LocalContext.current
     val realEstates by realEstateViewModel.realEstates.collectAsState()
+    var dialogState by remember {
+        mutableStateOf(false)
+    }
     var filterState by remember { mutableStateOf(false) }
     var realEstatesFilter by remember { mutableStateOf(listOf<RealEstateDatabase>()) }
+
+
+    var type by remember{ mutableStateOf("") }
+    var city by remember{ mutableStateOf("") }
+    var minSurface by remember {
+        mutableStateOf(0)
+    }
+    var maxSurface by remember {
+        mutableStateOf(0)
+    }
+    var minPrice by remember {
+        mutableStateOf(0)
+    }
+    var maxPrice by remember {
+        mutableStateOf(0)
+    }
+    var onTheMarketLessALastWeek by remember {
+        mutableStateOf(false)
+    }
+    var soldOn3LastMonth by remember {
+        mutableStateOf(false)
+    }
+    var min3photos by remember {
+        mutableStateOf(false)
+    }
+    var schools by remember {
+        mutableStateOf(false)
+    }
+    var shops by remember {
+        mutableStateOf(false)
+    }
+    
+    FilterScreen(dialogState, editFilterProperty = {filterState1, entryType1, entryCity1, entryMinSurface1, entryMaxSurface1, entryMinPrice1, entryMaxPrice1, onTheMarketLessALastWeek1, soldOn3LastMonth1, min3photos1, schools1, shops1 ->
+        filterState = filterState1
+        type = entryType1
+        city = entryCity1
+        minSurface = entryMinSurface1
+        maxSurface = entryMaxSurface1
+        minPrice = entryMinPrice1
+        maxPrice = entryMaxPrice1
+        onTheMarketLessALastWeek = onTheMarketLessALastWeek1
+        soldOn3LastMonth = soldOn3LastMonth1
+        min3photos = min3photos1
+        schools = schools1
+        shops = shops1
+
+    }, closeDialog = {
+        dialogState = false
+    },
+        resetFilter = {
+            filterState = false
+        }
+    )
+
+    if(filterState){
+        realEstateViewModel.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops).observeForever {
+            realEstatesFilter = it
+        }
+    }
 
     val launcherActivityResult =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -56,25 +113,11 @@ fun ListScreen(
                 val maxSurface = activityResult.data?.getIntExtra("maxSurface", 0)!!
                 val minPrice = activityResult.data?.getIntExtra("minPrice", 0)!!
                 val maxPrice = activityResult.data?.getIntExtra("maxPrice", 0)!!
-                val onTheMarketLessALastWeek =
-                    activityResult.data?.getBooleanExtra("onTheMarketLessALastWeek", false)!!
-                val soldOn3LastMonth =
-                    activityResult.data?.getBooleanExtra("soldOn3LastMonth", false)!!
+                val onTheMarketLessALastWeek = activityResult.data?.getBooleanExtra("onTheMarketLessALastWeek", false)!!
+                val soldOn3LastMonth = activityResult.data?.getBooleanExtra("soldOn3LastMonth", false)!!
                 val min3photos = activityResult.data?.getBooleanExtra("min3photos", false)!!
                 val schools = activityResult.data?.getBooleanExtra("schools", false)!!
                 val shops = activityResult.data?.getBooleanExtra("shops", false)!!
-
-
-
-
-
-
-
-
-
-                realEstateViewModel.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops).observeForever {
-                    realEstatesFilter = it
-                }
 
             }
         }
@@ -101,11 +144,7 @@ fun ListScreen(
                     filterScreen = true,
                     drawerButton = true,
                     navigateToFilterScreen = {
-                        launcherActivityResult.launch(
-                            Intent(
-                                context,
-                                FilterActivity::class.java
-                            ))
+                        dialogState = true
                     },
                     navigateToBack = { /*TODO*/ },
                     modifier = Modifier,
@@ -173,11 +212,7 @@ fun ListScreen(
                     filterScreen = true,
                     drawerButton = false,
                     navigateToFilterScreen = {
-                        launcherActivityResult.launch(
-                        Intent(
-                            context,
-                            FilterActivity::class.java
-                        ))
+                        dialogState = true
                                              },
                     navigateToBack = { /*TODO*/ },
                     modifier = Modifier,
