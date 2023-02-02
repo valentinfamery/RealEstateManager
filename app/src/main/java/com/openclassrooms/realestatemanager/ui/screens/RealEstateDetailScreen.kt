@@ -55,7 +55,7 @@ fun RealEstateDetailScreen(
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            val isInternetAvailable = Utils.isInternetAvailable(context)
+                            val isInternetAvailable = Utils.isInternetAvailable()
 
                             if(isInternetAvailable) {
                                 navigateToEditScreen()

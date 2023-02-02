@@ -40,7 +40,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
     override suspend fun refreshRealEstatesFromFirestore() {
 
-            val isNetWorkAvailable = Utils.isInternetAvailable(context)
+            val isNetWorkAvailable = Utils.isInternetAvailable()
 
             val firebaseAuth = FirebaseAuth.getInstance()
 

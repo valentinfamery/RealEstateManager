@@ -12,7 +12,7 @@ class ConnectionReceiver(var realEstateViewModel: RealEstateViewModel) : Broadca
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.e("onReceive()","onReceive()")
-            val isDeviceConnected: Boolean = Utils.isInternetAvailable(context)
+            val isDeviceConnected: Boolean = Utils.isInternetAvailable()
 
             if (!isDeviceConnected && !offlineMode) {
                 offlineMode = true

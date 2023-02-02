@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -114,7 +116,7 @@ fun MainScreen(
                     },
                     bottomBar = {
                         NavigationBar {
-                            items.forEachIndexed { index, item ->
+                            items.forEach { item ->
                                 NavigationBarItem(
                                     icon = { Icon(item.icon, contentDescription = null) },
                                     label = { Text(item.title) },
@@ -131,7 +133,7 @@ fun MainScreen(
 
                                 FloatingActionButton(
                                     onClick = {
-                                        val isInternetAvailable = Utils.isInternetAvailable(context)
+                                        val isInternetAvailable = Utils.isInternetAvailable()
 
                                         if(isInternetAvailable){
                                             navigateToNewScreen()
@@ -168,7 +170,7 @@ fun MainScreen(
                                 }
                             )
 
-                            items.forEachIndexed { index, item ->
+                            items.forEach { item ->
                                 NavigationRailItem(
                                     icon = { Icon(item.icon, contentDescription = null) },
                                     label = { Text(item.title) },
@@ -273,8 +275,7 @@ fun MainScreen(
                                             )
                                         ) { backStackEntry ->
 
-                                            val item =
-                                                backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
+                                            val item = backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
 
                                             realEstateViewModel.fillMyUiState(item?.listPhotoWithText!!)
 
