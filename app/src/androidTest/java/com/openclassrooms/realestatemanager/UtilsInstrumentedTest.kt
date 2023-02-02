@@ -5,8 +5,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.openclassrooms.realestatemanager.utils.Utils
-import junit.framework.Assert.assertEquals
+import junit.framework.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
@@ -67,15 +68,19 @@ class UtilsInstrumentedTest {
     }
 
     @Test
-    @Throws(Exception::class)
-    fun isInternetAvailable() {
-
-        val appContext: Context = ApplicationProvider.getApplicationContext()
-
-        val cm = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val nInfo: NetworkInfo? = cm.activeNetworkInfo
-        
-        assertEquals(nInfo?.isConnected, Utils.isInternetAvailable(appContext))
-
+    fun checkNotInternet() {
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi disable")
+        Thread.sleep(5000)
+        assertFalse(Utils.isInternetAvailable())
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi enable")
     }
+
+    @Test
+    fun checkInternet() {
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi enable")
+        Thread.sleep(5000)
+        assertTrue(Utils.isInternetAvailable())
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi disable")
+    }
+
 }
