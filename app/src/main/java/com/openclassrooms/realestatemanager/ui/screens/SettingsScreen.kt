@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
+import com.openclassrooms.realestatemanager.utils.Screen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -26,7 +27,7 @@ fun SettingsScreen(navigateToBack : () -> Unit) {
             Column() {
 
                 TopBar(
-                    title = "Settings",
+                    title = Screen.SettingsScreen.title,
                     backNavigate = true,
                     filterScreen = false,
                     drawerButton = false,

@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +17,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
+import com.openclassrooms.realestatemanager.utils.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -139,7 +139,7 @@ fun ListScreen(
             modifier = Modifier.padding(innerPadding),
             topBar = {
                 TopBar(
-                    title = "RealEstateManager",
+                    title = Screen.ListScreen.title,
                     backNavigate = false,
                     filterScreen = true,
                     drawerButton = true,
@@ -207,7 +207,7 @@ fun ListScreen(
             modifier = Modifier.padding(innerPadding),
             topBar = {
                 TopBar(
-                    title = "RealEstateManager",
+                    title = Screen.ListScreen.title,
                     backNavigate = false,
                     filterScreen = true,
                     drawerButton = false,

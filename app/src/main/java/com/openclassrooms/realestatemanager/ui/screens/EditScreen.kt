@@ -12,12 +12,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +40,7 @@ import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
+import com.openclassrooms.realestatemanager.utils.Screen
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import org.joda.time.LocalDate
@@ -144,7 +143,7 @@ fun EditScreenRealEstate(
                 val (rowHopital, rowSchool, rowShops, rowParks, dropdownMenuStatus, fieldNumberAndStreet, fieldNumberApartement, fieldCity, fieldRegion, fieldPostalCode, fieldCountry) = createRefs()
 
                 TopBar(
-                    title = "Edit Estate",
+                    title = Screen.EditScreen.title,
                     backNavigate = true,
                     drawerButton = false,
                     filterScreen = false,

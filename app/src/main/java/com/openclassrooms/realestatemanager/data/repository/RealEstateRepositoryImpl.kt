@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.internal.LiveLiteralFileInfo
 import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.gms.maps.model.LatLng
@@ -113,7 +112,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                         val latLng = LatLng(lat, lng)
                         Log.e("result", latLng.toString())
 
-                        val listPhotoWithTextFirebaseFinal: MutableList<PhotoWithTextFirebase> =
+                        val listPhotoFinal: MutableList<PhotoWithTextFirebase> =
                             mutableListOf()
 
                         if (listPhotos != null) {
@@ -133,13 +132,13 @@ open class RealEstateRepositoryImpl @Inject constructor(
                                         Log.e("urlFinal", urlFinal)
                                         photoWithText.photoSource = urlFinal
                                         photoWithText.id = newId
-                                        listPhotoWithTextFirebaseFinal.add(photoWithText)
+                                        listPhotoFinal.add(photoWithText)
                                     }
                                 }
                             }
                         }
 
-                        val realEstateDatabase  = RealEstateDatabase(
+                        val realEstate  = RealEstateDatabase(
                             id,
                             type,
                             price.toInt(),
@@ -162,14 +161,14 @@ open class RealEstateRepositoryImpl @Inject constructor(
                             checkedStateSchool,
                             checkedStateShops,
                             checkedStateParks,
-                            listPhotoWithTextFirebaseFinal,
+                            listPhotoFinal,
                         )
 
-                        firebaseFirestore.collection("real_estates").document(id).set(realEstateDatabase)
+                        firebaseFirestore.collection("real_estates").document(id).set(realEstate)
 
                         runBlocking {
                             launch {
-                                realEstateDao.insertRealEstate(realEstateDatabase)
+                                realEstateDao.insertRealEstate(realEstate)
                             }
                         }
 
@@ -221,7 +220,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         Log.e("dateMinusThreeMonth",dateMinusThreeMonth.toString())
         Log.e("dateMinus1Week",dateMinus1Week.toString())
 
-        val query = """SELECT * FROM RealEstateDatabase WHERE 
+        val query = """SELECT * FROM RealEstate WHERE 
                         ('$type' ='' OR type LIKE '%$type%' ) AND 
                         ('$city' ='' OR city LIKE '%$city%' ) AND
                         ($schoolsInt = 0 OR schoolsNear = $schoolsInt ) AND 

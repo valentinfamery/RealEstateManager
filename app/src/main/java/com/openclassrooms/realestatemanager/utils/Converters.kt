@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.utils
 
-import android.net.Uri
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase

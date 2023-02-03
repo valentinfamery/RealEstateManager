@@ -32,6 +32,7 @@ import com.openclassrooms.realestatemanager.ui.screens.*
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
 
 import com.openclassrooms.realestatemanager.utils.ConnectionReceiver
+import com.openclassrooms.realestatemanager.utils.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -39,7 +40,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var startScreen : String
     private var receiver: ConnectionReceiver? = null
     private val filter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
 
@@ -55,25 +55,11 @@ class MainActivity : ComponentActivity() {
         receiver = ConnectionReceiver(realEstateViewModel)
         registerReceiver(receiver,filter)
 
-
         setContent {
             Projet_9_OC_RealEstateManagerTheme {
                 val userViewModel: UserViewModel = hiltViewModel()
 
-
-
-
-
-
-                        val currentUser = auth.currentUser
-
-                        startScreen = if (currentUser == null) {
-                            "signInScreen"
-                        } else {
-                            "mainScreen"
-                        }
-
-
+                val currentUser = auth.currentUser
 
                 val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
 
@@ -90,9 +76,12 @@ class MainActivity : ComponentActivity() {
                     val navControllerMainActivity = rememberNavController()
 
 
-                    NavHost(navController = navControllerMainActivity, startDestination = startScreen) {
+                    NavHost(navController = navControllerMainActivity, startDestination = if (currentUser == null)
+                        Screen.SignInScreen.route
+                    else
+                        Screen.MainScreen.route) {
 
-                        composable("mainScreen") {
+                        composable(Screen.MainScreen.route) {
                             MainScreen(
                                 navControllerDrawer = navControllerMainActivity,
                                 auth = auth,
@@ -100,29 +89,29 @@ class MainActivity : ComponentActivity() {
                                 realEstateViewModel,
                                 isExpanded,
                                 navigateToNewScreen = {
-                                    navControllerMainActivity.navigate("newScreen")
+                                    navControllerMainActivity.navigate(Screen.NewScreen.route)
                                 }
                             )
                         }
-                        composable("settingsScreen") { SettingsScreen(navigateToBack = {navControllerMainActivity.popBackStack()}) }
-                        composable("registerScreen") {
+                        composable(Screen.SettingsScreen.route) { SettingsScreen(navigateToBack = {navControllerMainActivity.popBackStack()}) }
+                        composable(Screen.RegisterScreen.route) {
                             RegisterScreen(
                                 isExpanded,
                                 navController = navControllerMainActivity,
                                 userViewModel = userViewModel
                             )
                         }
-                        composable("signInScreen") {
+                        composable(Screen.SignInScreen.route) {
                             SignInScreen(
                                 isExpanded,
                                 navigateToMainScreen = {
-                                    navControllerMainActivity.navigate("mainScreen")
+                                    navControllerMainActivity.navigate(Screen.MainScreen.route)
                                 }) {
-                                navControllerMainActivity.navigate("registerScreen")
+                                navControllerMainActivity.navigate(Screen.RegisterScreen.route)
                             }
                         }
 
-                        composable("newScreen"){
+                        composable(Screen.NewScreen.route){
                             NewRealEstateScreen(isExpanded,realEstateViewModel,userViewModel, navigateToBack = {
                                 navControllerMainActivity.popBackStack()
                             })
@@ -133,7 +122,7 @@ class MainActivity : ComponentActivity() {
 
 
                             composable(
-                                route = "detailScreen"
+                                route = Screen.DetailScreen.route
                             ) {
 
                                 if (id.value != "") {
@@ -145,7 +134,7 @@ class MainActivity : ComponentActivity() {
                                     RealEstateDetailScreen(
                                         navigateToEditScreen = {
                                             val item = Uri.encode(Gson().toJson(itemRealEstate))
-                                            navControllerMainActivity.navigate("editScreen/$item")
+                                            navControllerMainActivity.navigate("${Screen.EditScreen.route}/$item")
                                         },
                                         navigateToEditScreenExpanded = {
 
@@ -163,7 +152,7 @@ class MainActivity : ComponentActivity() {
 
                             }
 
-                            composable("editScreen/{item}",
+                            composable("${Screen.EditScreen.route}/{item}",
                                 arguments = listOf(
                                     navArgument("item") {
                                         type = RealEstateDatabase.NavigationType
@@ -188,7 +177,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                        composable("currencyConverterScreen"){
+                        composable(Screen.CurrencyConverterScreen.route){
                             CurrencyConverterScreen(navigateToBack = {navControllerMainActivity.popBackStack()})
                         }
 

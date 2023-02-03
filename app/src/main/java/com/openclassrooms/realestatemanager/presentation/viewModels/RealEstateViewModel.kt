@@ -39,12 +39,12 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
 
 
 
-    fun addListPhotoNewScreenState(photoWithTextFirebase: PhotoWithTextFirebase){
-        _listPhotoNewScreenState.value = listPhotoNewScreenState.value + photoWithTextFirebase
+    fun addListPhotoNewScreenState(photo: PhotoWithTextFirebase){
+        _listPhotoNewScreenState.value = listPhotoNewScreenState.value + photo
     }
 
-    fun deleteListPhotoNewScreenState(photoWithTextFirebase: PhotoWithTextFirebase){
-        _listPhotoNewScreenState.value = listPhotoNewScreenState.value - photoWithTextFirebase
+    fun deleteListPhotoNewScreenState(photo: PhotoWithTextFirebase){
+        _listPhotoNewScreenState.value = listPhotoNewScreenState.value - photo
     }
 
     fun updatePhotoSourceElementNewScreen(id: String,photoSource : String) {
@@ -63,8 +63,8 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         _listPhotoEditScreenState.value = list
     }
 
-    fun addPhoto(photoWithTextFirebase: PhotoWithTextFirebase){
-        _listPhotoEditScreenState.value = listPhotoEditScreenState.value + photoWithTextFirebase
+    fun addPhoto(photo: PhotoWithTextFirebase){
+        _listPhotoEditScreenState.value = listPhotoEditScreenState.value + photo
     }
 
 

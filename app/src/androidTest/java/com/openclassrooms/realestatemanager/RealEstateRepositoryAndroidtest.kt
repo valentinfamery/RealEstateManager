@@ -1,9 +1,7 @@
 package com.openclassrooms.realestatemanager
 
 import android.content.Context
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -12,8 +10,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.data.repository.RealEstateRepositoryImpl
 import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Photo
+import com.openclassrooms.realestatemanager.domain.models.RealEstate
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import junit.framework.Assert.assertEquals
@@ -69,7 +67,7 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val realEstate1 = RealEstateDatabase(
+        val realEstate1 = RealEstate(
             id = "1",
             type = "Maison",
             price = 200000,
@@ -82,12 +80,12 @@ class RealEstateRepositoryAndroidtest {
             shopsNear = true,
             parksNear = false,
             listPhotoWithText = listOf(
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo1.jpg",
                     text = "Description de la photo 1",
                     id = "photo1"
                 ),
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo2.jpg",
                     text = "Description de la photo 2",
                     id = "photo2"
@@ -119,7 +117,7 @@ class RealEstateRepositoryAndroidtest {
         val viewModel = RealEstateViewModel(repository)
 
 
-        val realEstate1 = RealEstateDatabase(
+        val realEstate1 = RealEstate(
             id = "1",
             type = "Maison",
             price = 200000,
@@ -132,12 +130,12 @@ class RealEstateRepositoryAndroidtest {
             shopsNear = true,
             parksNear = false,
             listPhotoWithText = listOf(
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo1.jpg",
                     text = "Description de la photo 1",
                     id = "photo1"
                 ),
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo2.jpg",
                     text = "Description de la photo 2",
                     id = "photo2"
@@ -153,7 +151,7 @@ class RealEstateRepositoryAndroidtest {
         viewModel.realEstates.test {
             delay(250)
             val list = expectMostRecentItem()
-            assert(list == listOf<RealEstateDatabase>())
+            assert(list == listOf<RealEstate>())
         }
 
     }
@@ -173,7 +171,7 @@ class RealEstateRepositoryAndroidtest {
         val viewModel = RealEstateViewModel(repository)
 
 
-        val realEstate1 = RealEstateDatabase(
+        val realEstate1 = RealEstate(
             id = "1",
             type = "Maison",
             price = 200000,
@@ -186,12 +184,12 @@ class RealEstateRepositoryAndroidtest {
             shopsNear = true,
             parksNear = false,
             listPhotoWithText = listOf(
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo1.jpg",
                     text = "Description de la photo 1",
                     id = "photo1"
                 ),
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo2.jpg",
                     text = "Description de la photo 2",
                     id = "photo2"
@@ -199,7 +197,7 @@ class RealEstateRepositoryAndroidtest {
             )
         )
 
-        val realEstate2 = RealEstateDatabase(
+        val realEstate2 = RealEstate(
             id = "2",
             type = "Appartement",
             price = 100000,
@@ -212,12 +210,12 @@ class RealEstateRepositoryAndroidtest {
             shopsNear = false,
             parksNear = true,
             listPhotoWithText = listOf(
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo3.jpg",
                     text = "Description de la photo 3",
                     id = "photo3"
                 ),
-                PhotoWithTextFirebase(
+                Photo(
                     photoSource = "photo4.jpg",
                     text = "Description de la photo 4",
                     id = "photo4"
@@ -261,7 +259,7 @@ class RealEstateRepositoryAndroidtest {
         val viewModel = RealEstateViewModel(repository)
 
 
-        val listing1 = RealEstateDatabase(
+        val listing1 = RealEstate(
             id = "123",
             type = "House",
             price = 500000,
@@ -284,12 +282,12 @@ class RealEstateRepositoryAndroidtest {
             schoolsNear = true,
             shopsNear = true,
             parksNear = true,
-            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image1.jpg","This is a photo of the living room","1"),
-                PhotoWithTextFirebase("https://example.com/image2.jpg","This is a photo of the kitchen","2")),
+            listPhotoWithText = listOf(Photo("https://example.com/image1.jpg","This is a photo of the living room","1"),
+                Photo("https://example.com/image2.jpg","This is a photo of the kitchen","2")),
             count_photo = 2
         )
 
-        val listing2 = RealEstateDatabase(
+        val listing2 = RealEstate(
             id = "456",
             type = "Apartment",
             price = 200000,
@@ -313,9 +311,9 @@ class RealEstateRepositoryAndroidtest {
             shopsNear = true,
             parksNear = true,
             listPhotoWithText = listOf(
-                PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
-                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4"),
-                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")
+                Photo("https://example.com/image3.jpg","This is a photo of the living room","3"),
+                Photo("https://example.com/image4.jpg","This is a photo of the kitchen","4"),
+                Photo("https://example.com/image4.jpg","This is a photo of the kitchen","4")
             ),
             count_photo = 3
         )
@@ -349,7 +347,7 @@ class RealEstateRepositoryAndroidtest {
         val viewModel = RealEstateViewModel(repository)
 
 
-        val listing1 = RealEstateDatabase(
+        val listing1 = RealEstate(
             id = "123",
             type = "House",
             price = 500000,
@@ -372,12 +370,12 @@ class RealEstateRepositoryAndroidtest {
             schoolsNear = true,
             shopsNear = true,
             parksNear = true,
-            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image1.jpg","This is a photo of the living room","1"),
-                PhotoWithTextFirebase("https://example.com/image2.jpg","This is a photo of the kitchen","2")),
+            listPhotoWithText = listOf(Photo("https://example.com/image1.jpg","This is a photo of the living room","1"),
+                Photo("https://example.com/image2.jpg","This is a photo of the kitchen","2")),
             count_photo = 2
         )
 
-        val listing2 = RealEstateDatabase(
+        val listing2 = RealEstate(
             id = "456",
             type = "Apartment",
             price = 200000,
@@ -400,8 +398,8 @@ class RealEstateRepositoryAndroidtest {
             schoolsNear = true,
             shopsNear = true,
             parksNear = true,
-            listPhotoWithText = listOf(PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
-                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")),
+            listPhotoWithText = listOf(Photo("https://example.com/image3.jpg","This is a photo of the living room","3"),
+                Photo("https://example.com/image4.jpg","This is a photo of the kitchen","4")),
             count_photo = 2
         )
 
@@ -443,8 +441,8 @@ class RealEstateRepositoryAndroidtest {
             assert(list[0].schoolsNear == true)
             assert(list[0].shopsNear == true)
             assert(list[0].parksNear == true)
-            assert(list[0].listPhotoWithText == listOf(PhotoWithTextFirebase("https://example.com/image3.jpg","This is a photo of the living room","3"),
-                PhotoWithTextFirebase("https://example.com/image4.jpg","This is a photo of the kitchen","4")))
+            assert(list[0].listPhotoWithText == listOf(Photo("https://example.com/image3.jpg","This is a photo of the living room","3"),
+                Photo("https://example.com/image4.jpg","This is a photo of the kitchen","4")))
 
         }
 
@@ -466,11 +464,11 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoNewScreenState.value = list
-        viewModel.addListPhotoNewScreenState(photoWithTextFirebase)
-        assertEquals(list + photoWithTextFirebase, viewModel.listPhotoNewScreenState.value)
+        viewModel.addListPhotoNewScreenState(photo)
+        assertEquals(list + photo, viewModel.listPhotoNewScreenState.value)
     }
 
     @Test
@@ -488,11 +486,11 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoNewScreenState.value = list
-        viewModel.deleteListPhotoNewScreenState(photoWithTextFirebase)
-        assertEquals(emptyList<PhotoWithTextFirebase>(), viewModel.listPhotoNewScreenState.value)
+        viewModel.deleteListPhotoNewScreenState(photo)
+        assertEquals(emptyList<Photo>(), viewModel.listPhotoNewScreenState.value)
     }
 
     @Test
@@ -508,8 +506,8 @@ class RealEstateRepositoryAndroidtest {
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
         val viewModel = RealEstateViewModel(repository)
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoNewScreenState.value = list
         viewModel.updatePhotoSourceElementNewScreen("1", "photo2.jpg")
         assertEquals("photo2.jpg", viewModel.listPhotoNewScreenState.value[0].photoSource)
@@ -528,8 +526,8 @@ class RealEstateRepositoryAndroidtest {
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
         val viewModel = RealEstateViewModel(repository)
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoNewScreenState.value = list
         viewModel.updatePhotoTextElementNewScreen("1", "text2")
         assertEquals("text2", viewModel.listPhotoNewScreenState.value[0].text)
@@ -550,8 +548,8 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel.fillMyUiState(list)
         assertEquals(list, viewModel.listPhotoEditScreenState.value)
     }
@@ -571,11 +569,11 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoEditScreenState.value = list
-        viewModel.addPhoto(photoWithTextFirebase)
-        assertEquals(list + photoWithTextFirebase, viewModel.listPhotoEditScreenState.value)
+        viewModel.addPhoto(photo)
+        assertEquals(list + photo, viewModel.listPhotoEditScreenState.value)
     }
 
     @Test
@@ -593,8 +591,8 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoEditScreenState.value = list
         viewModel.updatePhotoWithTextInListEditScreenToDeleteLatterToTrue("1")
         assertEquals(true, viewModel.listPhotoEditScreenState.value[0].toDeleteLatter)
@@ -615,8 +613,8 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1",toUpdateLatter = false)
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1",toUpdateLatter = false)
+        val list = listOf(photo)
         viewModel._listPhotoEditScreenState.value = list
         viewModel.updateAttributeToUpdate("1")
         assertEquals(true, viewModel.listPhotoEditScreenState.value[0].toUpdateLatter)
@@ -637,8 +635,8 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoEditScreenState.value = list
         viewModel.updateAttributePhotoSource("1","photo2.jpg")
         assertEquals("photo2.jpg", viewModel.listPhotoEditScreenState.value[0].photoSource)
@@ -659,8 +657,8 @@ class RealEstateRepositoryAndroidtest {
 
         val viewModel = RealEstateViewModel(repository)
 
-        val photoWithTextFirebase = PhotoWithTextFirebase( "photo1.jpg", "text1","1")
-        val list = listOf(photoWithTextFirebase)
+        val photo = Photo( "photo1.jpg", "text1","1")
+        val list = listOf(photo)
         viewModel._listPhotoEditScreenState.value = list
         viewModel.updateAttributePhotoText("1","text2")
         assertEquals("text2", viewModel.listPhotoEditScreenState.value[0].text)

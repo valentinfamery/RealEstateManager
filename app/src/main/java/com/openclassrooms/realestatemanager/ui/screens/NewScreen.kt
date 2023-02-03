@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.widget.DatePicker
@@ -47,7 +46,7 @@ import org.joda.time.LocalDate
 import org.joda.time.chrono.ISOChronology
 
 
-@SuppressLint("LongLogTag", "UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("LongLogTag", "UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @ExperimentalMaterial3Api
 @Composable
 fun NewRealEstateScreen(
@@ -62,7 +61,7 @@ fun NewRealEstateScreen(
     val user by userViewModel.userData.collectAsState()
 
     val listPhotos = realEstateViewModel.listPhotoNewScreenState.collectAsState()
-    val activity = LocalContext.current as Activity
+
     val context = LocalContext.current
 
     var openDialogUpdatePhotoWithText by remember { mutableStateOf(false) }

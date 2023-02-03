@@ -27,7 +27,8 @@ interface RealEstateDao {
     @Query("SELECT * FROM RealEstateDatabase")
     fun getRealEstatesWithCursor(): Cursor
 
-    @Query("UPDATE  RealEstateDatabase SET " +
+    @Query(
+        "UPDATE  RealEstateDatabase SET " +
             "type = (CASE WHEN type NOT LIKE :entryType THEN (:entryType) ELSE type END)," +
             "price = (CASE WHEN price NOT LIKE :entryPrice THEN (:entryPrice) ELSE price END)," +
             "area = (CASE WHEN area NOT LIKE :entryArea THEN (:entryArea) ELSE area END)," +
@@ -69,7 +70,8 @@ interface RealEstateDao {
         listPhotoWithText: kotlin.collections.List<com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase>?
     )
 
-    @Query("UPDATE  RealEstateDatabase SET " +
+    @Query(
+        "UPDATE  RealEstateDatabase SET " +
             "lat = (CASE WHEN lat NOT LIKE :lat THEN (:lat) ELSE lat END)," +
             "lng = (CASE WHEN lng NOT LIKE :lng THEN (:lng) ELSE lng END)"+
             "WHERE id = :id ")
@@ -79,8 +81,8 @@ interface RealEstateDao {
         lng: Double?,
     )
 
-    //"UPDATE  RealEstateDatabase SET type = :entryType WHERE id = :id AND type NOT LIKE :entryType "
-    //"UPDATE  RealEstateDatabase SET " +
+    //"UPDATE  RealEstate SET type = :entryType WHERE id = :id AND type NOT LIKE :entryType "
+    //"UPDATE  RealEstate SET " +
     //            "type = (CASE WHEN type NOT LIKE :entryType THEN (:entryType) ELSE type END) ," +
     //            "price = (CASE WHEN price NOT LIKE :entryPrice THEN (:entryPrice) ELSE price END) " +
     //            "WHERE id =:id"

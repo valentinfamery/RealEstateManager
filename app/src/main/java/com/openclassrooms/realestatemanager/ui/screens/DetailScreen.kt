@@ -8,11 +8,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +26,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.ui.components.TopBar
+import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -68,7 +66,7 @@ fun RealEstateDetailScreen(
 
 
                         },
-                        icon = { Icon(Icons.Filled.Edit, "Localized description") },
+                        icon = { Icon(Screen.EditScreen.icon, "Localized description") },
                         text = { Text(text = "Edit") },
                         modifier = Modifier.clip(RoundedCornerShape(15.dp))
                     )
@@ -83,7 +81,7 @@ fun RealEstateDetailScreen(
                     ) {
 
                         TopBar(
-                            title = "Estate",
+                            title = Screen.DetailScreen.title,
                             backNavigate = !isExpanded,
                             filterScreen = false,
                             drawerButton = false,

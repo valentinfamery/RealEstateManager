@@ -30,7 +30,7 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
-fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean,addPhotoWithText : (photoWithText : PhotoWithTextFirebase)-> Unit,closeDialogAddPhoto : () -> Unit) {
+fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean, addPhotoWithText : (photoWithText : PhotoWithTextFirebase)-> Unit, closeDialogAddPhoto : () -> Unit) {
     var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
     var titlePhoto by remember { mutableStateOf("") }
 

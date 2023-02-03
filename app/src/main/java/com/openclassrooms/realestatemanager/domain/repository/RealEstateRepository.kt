@@ -1,9 +1,7 @@
 package com.openclassrooms.realestatemanager.domain.repository
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.domain.models.*
 import kotlinx.coroutines.flow.Flow
 

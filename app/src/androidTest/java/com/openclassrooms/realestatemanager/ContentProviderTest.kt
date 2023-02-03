@@ -8,7 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.RealEstate
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Before
@@ -24,7 +24,7 @@ class ContentProviderTest
 
     val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
 
-    val TABLE_NAME = RealEstateDatabase::class.java.simpleName
+    val TABLE_NAME = RealEstate::class.java.simpleName
 
     val URI_REAL_ESTATE = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
 

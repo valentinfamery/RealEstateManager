@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.openclassrooms.realestatemanager.ui.components.TopBar
+import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.Utils
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,7 +27,7 @@ fun CurrencyConverterScreen(navigateToBack : () -> Unit){
 
 
         TopBar(
-            title = "CurrencyConverter",
+            title = Screen.CurrencyConverterScreen.title,
             backNavigate = true,
             filterScreen = false,
             drawerButton = false,

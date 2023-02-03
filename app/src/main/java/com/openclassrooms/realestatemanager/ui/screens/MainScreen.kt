@@ -2,16 +2,12 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 
 import androidx.compose.material3.*
@@ -90,7 +86,7 @@ fun MainScreen(
 
                         NavHost(
                             navController = navController,
-                            startDestination = "listScreen"
+                            startDestination = Screen.ListScreen.route
                         ) {
                             composable(Screen.ListScreen.route) {
                                 ListScreen(
@@ -146,7 +142,7 @@ fun MainScreen(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(15.dp))
                                 ) {
-                                    Icon(Icons.Filled.Add, "Localized description")
+                                    Icon(Screen.NewScreen.icon, "Localized description")
                                 }
 
 
@@ -194,7 +190,7 @@ fun MainScreen(
 
                                             NavHost(
                                                 navController = navController,
-                                                startDestination = "listScreen"
+                                                startDestination = Screen.ListScreen.route
                                             ) {
                                                 composable(Screen.ListScreen.route) {
                                                     ListScreen(
@@ -226,7 +222,7 @@ fun MainScreen(
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(15.dp))
                                             ) {
-                                                Icon(Icons.Filled.Add, "Localized description")
+                                                Icon(Screen.NewScreen.icon, "Localized description")
                                             }
                                         }
 
@@ -239,9 +235,9 @@ fun MainScreen(
 
                                     NavHost(
                                         navController = navControllerTwoPane,
-                                        startDestination = "detailScreen"
+                                        startDestination = Screen.DetailScreen.route
                                     ) {
-                                        composable("detailScreen") {
+                                        composable(Screen.DetailScreen.route) {
                                             if (id.value != "") {
 
                                                 val itemRealEstate by realEstateViewModel.realEstateById(
@@ -254,7 +250,7 @@ fun MainScreen(
                                                     },
                                                     navigateToEditScreenExpanded = {
                                                         val item = Uri.encode(Gson().toJson(itemRealEstate))
-                                                        navControllerTwoPane.navigate("editScreen/$item")
+                                                        navControllerTwoPane.navigate("${Screen.EditScreen.route}/$item")
                                                     },
                                                     isExpanded,
                                                     itemRealEstate,
@@ -267,7 +263,7 @@ fun MainScreen(
                                             }
                                         }
 
-                                        composable("editScreen/{item}",
+                                        composable("${Screen.EditScreen.route}/{item}",
                                             arguments = listOf(
                                                 navArgument("item") {
                                                     type = RealEstateDatabase

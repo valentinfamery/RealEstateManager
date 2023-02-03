@@ -20,6 +20,7 @@ import com.google.maps.android.compose.*
 import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
 import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
+import com.openclassrooms.realestatemanager.utils.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -77,7 +78,7 @@ fun MapScreen(
     ) {
 
         TopBar(
-            title = "Map",
+            title = Screen.MapScreen.title,
             backNavigate = false,
             filterScreen = false,
             drawerButton = !isExpanded,
