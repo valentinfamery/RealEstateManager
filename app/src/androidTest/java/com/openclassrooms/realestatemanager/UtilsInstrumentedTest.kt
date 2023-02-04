@@ -70,17 +70,21 @@ class UtilsInstrumentedTest {
     @Test
     fun checkNotInternet() {
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi disable")
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc data disable")
         Thread.sleep(5000)
         assertFalse(Utils.isInternetAvailable())
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi enable")
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc data enable")
     }
 
     @Test
     fun checkInternet() {
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi enable")
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc data enable")
         Thread.sleep(5000)
         assertTrue(Utils.isInternetAvailable())
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc wifi disable")
+        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc data disable")
     }
 
 }
