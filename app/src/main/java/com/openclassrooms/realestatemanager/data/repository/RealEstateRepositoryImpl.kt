@@ -220,7 +220,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         Log.e("dateMinusThreeMonth",dateMinusThreeMonth.toString())
         Log.e("dateMinus1Week",dateMinus1Week.toString())
 
-        val query = """SELECT * FROM RealEstate WHERE 
+        val query = """SELECT * FROM RealEstateDatabase WHERE 
                         ('$type' ='' OR type LIKE '%$type%' ) AND 
                         ('$city' ='' OR city LIKE '%$city%' ) AND
                         ($schoolsInt = 0 OR schoolsNear = $schoolsInt ) AND 
