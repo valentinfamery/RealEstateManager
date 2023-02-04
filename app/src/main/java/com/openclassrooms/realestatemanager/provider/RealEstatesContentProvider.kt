@@ -4,15 +4,15 @@ import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.database.EstateRoomDatabase
+import com.openclassrooms.realestatemanager.domain.models.Estate
 
 
 class RealEstatesContentProvider : ContentProvider() {
 
     val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
 
-    val TABLE_NAME = RealEstateDatabase::class.java.simpleName
+    val TABLE_NAME = Estate::class.java.simpleName
 
     val URI_REAL_ESTATE = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
 
@@ -30,7 +30,7 @@ class RealEstatesContentProvider : ContentProvider() {
     ): Cursor {
 
         if (context != null) {
-            val cursor : Cursor = RealEstateRoomDatabase.getInstance(context!!).realEstateDao().getRealEstatesWithCursor()
+            val cursor : Cursor = EstateRoomDatabase.getInstance(context!!).realEstateDao().getRealEstatesWithCursor()
             cursor.setNotificationUri(context!!.contentResolver, p0);
             return cursor
         }

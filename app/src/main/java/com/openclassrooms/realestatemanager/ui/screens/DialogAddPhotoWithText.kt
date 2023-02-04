@@ -24,13 +24,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase
+import com.openclassrooms.realestatemanager.domain.models.Photo
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
-fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean, addPhotoWithText : (photoWithText : PhotoWithTextFirebase)-> Unit, closeDialogAddPhoto : () -> Unit) {
+fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean, addPhotoWithText : (photoWithText : Photo)-> Unit, closeDialogAddPhoto : () -> Unit) {
     var photoSelect by rememberSaveable { mutableStateOf<Uri>(Uri.EMPTY) }
     var titlePhoto by remember { mutableStateOf("") }
 
@@ -142,7 +142,7 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean, addPhotoWithText
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = PhotoWithTextFirebase(photoSelect.toString(),titlePhoto,"",
+                            val photoWithText = Photo(photoSelect.toString(),titlePhoto,"",
                                 toAddLatter = false,
                                 toDeleteLatter = false,
                                 toUpdateLatter = false

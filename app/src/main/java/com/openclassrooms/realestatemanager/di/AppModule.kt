@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.di
 
 import android.content.Context
-import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,6 +8,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.data.repository.RealEstateRepositoryImpl
 import com.openclassrooms.realestatemanager.data.repository.UserRepositoryImpl
+import com.openclassrooms.realestatemanager.database.EstateRoomDatabase
 import com.openclassrooms.realestatemanager.database.dao.RealEstateDao
 import com.openclassrooms.realestatemanager.domain.repository.RealEstateRepository
 import com.openclassrooms.realestatemanager.domain.repository.UserRepository
@@ -42,10 +42,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRealEstateRoomDatabase(@ApplicationContext context: Context) = RealEstateRoomDatabase.getInstance(context)
+    fun provideRealEstateRoomDatabase(@ApplicationContext context: Context) = EstateRoomDatabase.getInstance(context)
 
     @Provides
-    fun provideRealEstateDao(roomDatabase: RealEstateRoomDatabase): RealEstateDao {
+    fun provideRealEstateDao(roomDatabase: EstateRoomDatabase): RealEstateDao {
         return roomDatabase.realEstateDao()
     }
 

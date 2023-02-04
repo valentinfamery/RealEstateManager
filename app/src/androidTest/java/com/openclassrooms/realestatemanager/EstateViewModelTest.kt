@@ -9,11 +9,11 @@ import app.cash.turbine.test
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.realestatemanager.data.repository.RealEstateRepositoryImpl
-import com.openclassrooms.realestatemanager.database.RealEstateRoomDatabase
+import com.openclassrooms.realestatemanager.database.EstateRoomDatabase
 import com.openclassrooms.realestatemanager.domain.models.Photo
-import com.openclassrooms.realestatemanager.domain.models.RealEstate
+import com.openclassrooms.realestatemanager.domain.models.Estate
 import com.openclassrooms.realestatemanager.domain.models.Response
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +31,7 @@ import org.mockito.Mockito.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
-class RealEstateRepositoryAndroidtest {
+class EstateViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -59,15 +59,15 @@ class RealEstateRepositoryAndroidtest {
         val storageReference = mock(StorageReference::class.java)
         // Arrange
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
 
         val dao = db.realEstateDao()
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
-        val realEstate1 = RealEstate(
+        val realEstate1 = Estate(
             id = "1",
             type = "Maison",
             price = 200000,
@@ -108,16 +108,16 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
 
-        val realEstate1 = RealEstate(
+        val realEstate1 = Estate(
             id = "1",
             type = "Maison",
             price = 200000,
@@ -151,7 +151,7 @@ class RealEstateRepositoryAndroidtest {
         viewModel.realEstates.test {
             delay(250)
             val list = expectMostRecentItem()
-            assert(list == listOf<RealEstate>())
+            assert(list == listOf<Estate>())
         }
 
     }
@@ -162,16 +162,16 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
 
-        val realEstate1 = RealEstate(
+        val realEstate1 = Estate(
             id = "1",
             type = "Maison",
             price = 200000,
@@ -197,7 +197,7 @@ class RealEstateRepositoryAndroidtest {
             )
         )
 
-        val realEstate2 = RealEstate(
+        val realEstate2 = Estate(
             id = "2",
             type = "Appartement",
             price = 100000,
@@ -250,16 +250,16 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
 
-        val listing1 = RealEstate(
+        val listing1 = Estate(
             id = "123",
             type = "House",
             price = 500000,
@@ -287,7 +287,7 @@ class RealEstateRepositoryAndroidtest {
             count_photo = 2
         )
 
-        val listing2 = RealEstate(
+        val listing2 = Estate(
             id = "456",
             type = "Apartment",
             price = 200000,
@@ -338,16 +338,16 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
 
-        val listing1 = RealEstate(
+        val listing1 = Estate(
             id = "123",
             type = "House",
             price = 500000,
@@ -375,7 +375,7 @@ class RealEstateRepositoryAndroidtest {
             count_photo = 2
         )
 
-        val listing2 = RealEstate(
+        val listing2 = Estate(
             id = "456",
             type = "Apartment",
             price = 200000,
@@ -456,13 +456,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
@@ -478,13 +478,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
@@ -499,13 +499,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
         viewModel._listPhotoNewScreenState.value = list
@@ -519,13 +519,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
         viewModel._listPhotoNewScreenState.value = list
@@ -540,13 +540,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
@@ -561,13 +561,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
@@ -583,13 +583,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
@@ -605,13 +605,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1",toUpdateLatter = false)
         val list = listOf(photo)
@@ -627,13 +627,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
@@ -649,13 +649,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         val photo = Photo( "photo1.jpg", "text1","1")
         val list = listOf(photo)
@@ -670,13 +670,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
         viewModel.createRealEstateResponse = Response.Success(true)
         assertTrue((viewModel.createRealEstateResponse as Response.Success<Boolean>).data)
 
@@ -691,13 +691,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         viewModel.updateRealEstateResponse = Response.Success(true)
         assertTrue((viewModel.updateRealEstateResponse as Response.Success<Boolean>).data == true)
@@ -713,13 +713,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
 
         viewModel.list = Response.Success(true)
@@ -736,13 +736,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         viewModel._isRefreshing.value = true
         assertTrue(viewModel.isRefreshing.value == true)
@@ -758,13 +758,13 @@ class RealEstateRepositoryAndroidtest {
 
         val storageReference = mock(StorageReference::class.java)
 
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, RealEstateRoomDatabase::class.java).build()
+        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
 
         val dao = db.realEstateDao()
 
         val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
 
-        val viewModel = RealEstateViewModel(repository)
+        val viewModel = EstateViewModel(repository)
 
         viewModel.realEstateIdDetail.value = "123"
         assertTrue(viewModel.realEstateIdDetail.value == "123")

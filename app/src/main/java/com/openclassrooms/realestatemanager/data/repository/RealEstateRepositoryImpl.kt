@@ -35,7 +35,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
     val realEstateDao: RealEstateDao): RealEstateRepository {
 
 
-    override fun realEstates() : Flow<List<RealEstateDatabase>> = realEstateDao.realEstates()
+    override fun realEstates() : Flow<List<Estate>> = realEstateDao.realEstates()
 
     override suspend fun refreshRealEstatesFromFirestore() {
 
@@ -47,7 +47,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                 Log.e("items", "repo1")
 
                 val realEstates = firebaseFirestore.collection("real_estates").get().await().map {
-                    it.toObject(RealEstateDatabase::class.java)
+                    it.toObject(Estate::class.java)
                 }
 
                 writeAndClearRoomDatabase(realEstates)
@@ -57,7 +57,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
     }
 
-    suspend fun writeAndClearRoomDatabase(list : List<RealEstateDatabase>) {
+    suspend fun writeAndClearRoomDatabase(list : List<Estate>) {
         realEstateDao.clear()
 
         for (realEstate in list) {
@@ -78,7 +78,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         postalCode: String,
         country: String,
         status: String,
-        listPhotos: MutableList<PhotoWithTextFirebase>?,
+        listPhotos: MutableList<Photo>?,
         dateEntry: String,
         dateSale: String,
         realEstateAgent: String,
@@ -112,7 +112,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                         val latLng = LatLng(lat, lng)
                         Log.e("result", latLng.toString())
 
-                        val listPhotoFinal: MutableList<PhotoWithTextFirebase> =
+                        val listPhotoFinal: MutableList<Photo> =
                             mutableListOf()
 
                         if (listPhotos != null) {
@@ -138,7 +138,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                             }
                         }
 
-                        val realEstate  = RealEstateDatabase(
+                        val realEstate  = Estate(
                             id,
                             type,
                             price.toInt(),
@@ -200,7 +200,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         min3photos: Boolean,
         schools: Boolean,
         shops: Boolean
-    ): LiveData<List<RealEstateDatabase>> {
+    ): LiveData<List<Estate>> {
 
         val onTheMarketLessALastWeekInt = if(onTheMarketLessALastWeek) 1 else 0
         val soldOn3LastMonthInt = if(soldOn3LastMonth) 1 else 0
@@ -220,7 +220,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         Log.e("dateMinusThreeMonth",dateMinusThreeMonth.toString())
         Log.e("dateMinus1Week",dateMinus1Week.toString())
 
-        val query = """SELECT * FROM RealEstateDatabase WHERE 
+        val query = """SELECT * FROM Estate WHERE 
                         ('$type' ='' OR type LIKE '%$type%' ) AND 
                         ('$city' ='' OR city LIKE '%$city%' ) AND
                         ($schoolsInt = 0 OR schoolsNear = $schoolsInt ) AND 
@@ -237,7 +237,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         return realEstateDao.getPropertyBySearch(SimpleSQLiteQuery(query))
     }
 
-    override fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?> {
+    override fun realEstateById(realEstateId: String): LiveData<Estate?> {
         Log.e("realEstateById()","repo")
         return realEstateDao.realEstateById(realEstateId)
     }
@@ -265,8 +265,8 @@ open class RealEstateRepositoryImpl @Inject constructor(
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: MutableList<PhotoWithTextFirebase>,
-        itemRealEstate: RealEstateDatabase
+        listPhotoWithText: MutableList<Photo>,
+        itemRealEstate: Estate
     ): Response<Boolean> {
         return try {
             Response.Loading

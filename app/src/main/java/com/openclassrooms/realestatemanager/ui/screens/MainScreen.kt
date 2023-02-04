@@ -32,9 +32,9 @@ import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Estate
 import com.openclassrooms.realestatemanager.utils.Screen
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ fun MainScreen(
     navControllerDrawer: NavController,
     auth: FirebaseAuth,
     userViewModel: UserViewModel,
-    realEstateViewModel: RealEstateViewModel,
+    estateViewModel: EstateViewModel,
     isExpanded: Boolean,
     navigateToNewScreen : () -> Unit
 ) {
@@ -92,7 +92,7 @@ fun MainScreen(
                                 ListScreen(
                                     drawerState,
                                     scope,
-                                    realEstateViewModel,
+                                    estateViewModel,
                                     innerPadding,
                                     navControllerDrawer,
                                     isExpanded
@@ -102,7 +102,7 @@ fun MainScreen(
                                 MapScreen(
                                     drawerState,
                                     scope,
-                                    realEstateViewModel,
+                                    estateViewModel,
                                     navControllerDrawer,
                                     isExpanded
                                 )
@@ -196,7 +196,7 @@ fun MainScreen(
                                                     ListScreen(
                                                         drawerState,
                                                         scope,
-                                                        realEstateViewModel,
+                                                        estateViewModel,
                                                         innerPadding,
                                                         navControllerDrawer,
                                                         isExpanded
@@ -206,7 +206,7 @@ fun MainScreen(
                                                     MapScreen(
                                                         drawerState,
                                                         scope,
-                                                        realEstateViewModel,
+                                                        estateViewModel,
                                                         navControllerDrawer,
                                                         isExpanded
                                                     )
@@ -231,7 +231,7 @@ fun MainScreen(
                                 second = {
                                     val navControllerTwoPane = rememberNavController()
 
-                                    val id = realEstateViewModel.realEstateIdDetail.collectAsState()
+                                    val id = estateViewModel.realEstateIdDetail.collectAsState()
 
                                     NavHost(
                                         navController = navControllerTwoPane,
@@ -240,7 +240,7 @@ fun MainScreen(
                                         composable(Screen.DetailScreen.route) {
                                             if (id.value != "") {
 
-                                                val itemRealEstate by realEstateViewModel.realEstateById(
+                                                val itemRealEstate by estateViewModel.realEstateById(
                                                     id.value
                                                 ).observeAsState()
 
@@ -266,18 +266,18 @@ fun MainScreen(
                                         composable("${Screen.EditScreen.route}/{item}",
                                             arguments = listOf(
                                                 navArgument("item") {
-                                                    type = RealEstateDatabase
+                                                    type = Estate
                                                 }
                                             )
                                         ) { backStackEntry ->
 
-                                            val item = backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
+                                            val item = backStackEntry.arguments?.getParcelable<Estate>("item")
 
-                                            realEstateViewModel.fillMyUiState(item?.listPhotoWithText!!)
+                                            estateViewModel.fillMyUiState(item?.listPhotoWithText!!)
 
 
                                             EditScreenRealEstate(
-                                                realEstateViewModel,
+                                                estateViewModel,
                                                 item,
                                                 navControllerTwoPane,
                                                 setPhotoUrl = {

@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 
-class ConnectionReceiver(var realEstateViewModel: RealEstateViewModel) : BroadcastReceiver() {
+class ConnectionReceiver(var estateViewModel: EstateViewModel) : BroadcastReceiver() {
 
     var offlineMode = false
 
@@ -20,7 +20,7 @@ class ConnectionReceiver(var realEstateViewModel: RealEstateViewModel) : Broadca
             } else if (isDeviceConnected && offlineMode) {
                 offlineMode = false
                 Log.e("passage", "vers-en-ligne")
-                realEstateViewModel.refreshRealEstates()
+                estateViewModel.refreshRealEstates()
             }
     }
 }

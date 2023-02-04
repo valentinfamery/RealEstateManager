@@ -9,7 +9,7 @@ interface RealEstateRepository {
 
     suspend fun refreshRealEstatesFromFirestore()
 
-    fun realEstates() : Flow<List<RealEstateDatabase>>
+    fun realEstates() : Flow<List<Estate>>
 
     suspend fun createRealEstate(
         type: String,
@@ -24,7 +24,7 @@ interface RealEstateRepository {
         postalCode: String,
         country: String,
         status: String,
-        listPhotos: MutableList<PhotoWithTextFirebase>?,
+        listPhotos: MutableList<Photo>?,
         dateEntry: String,
         dateSale: String,
         realEstateAgent: String,
@@ -46,9 +46,9 @@ interface RealEstateRepository {
         min3photos: Boolean,
         schools: Boolean,
         shops: Boolean
-    ): LiveData<List<RealEstateDatabase>>
+    ): LiveData<List<Estate>>
 
-    fun realEstateById(realEstateId: String): LiveData<RealEstateDatabase?>
+    fun realEstateById(realEstateId: String): LiveData<Estate?>
 
     suspend fun updateRealEstate(
         id: String,
@@ -73,8 +73,8 @@ interface RealEstateRepository {
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText: MutableList<PhotoWithTextFirebase>,
-        itemRealEstate: RealEstateDatabase
+        listPhotoWithText: MutableList<Photo>,
+        itemRealEstate: Estate
     ): Response<Boolean>
 
 

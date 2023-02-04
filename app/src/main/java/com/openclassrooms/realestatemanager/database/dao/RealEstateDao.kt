@@ -4,31 +4,31 @@ import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Estate
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RealEstateDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertRealEstate(realEstate: RealEstateDatabase)
+    suspend fun insertRealEstate(realEstate: Estate)
 
-    @Query("SELECT * FROM RealEstateDatabase")
-    fun realEstates(): Flow<List<RealEstateDatabase>>
+    @Query("SELECT * FROM Estate")
+    fun realEstates(): Flow<List<Estate>>
 
-    @Query("DELETE FROM RealEstateDatabase")
+    @Query("DELETE FROM Estate")
     suspend fun clear()
 
 
 
-    @Query("SELECT * FROM RealEstateDatabase WHERE id = :realEstateId")
-    fun realEstateById(realEstateId : String):LiveData<RealEstateDatabase?>
+    @Query("SELECT * FROM Estate WHERE id = :realEstateId")
+    fun realEstateById(realEstateId : String):LiveData<Estate?>
 
-    @Query("SELECT * FROM RealEstateDatabase")
+    @Query("SELECT * FROM Estate")
     fun getRealEstatesWithCursor(): Cursor
 
     @Query(
-        "UPDATE  RealEstateDatabase SET " +
+        "UPDATE  Estate SET " +
             "type = (CASE WHEN type NOT LIKE :entryType THEN (:entryType) ELSE type END)," +
             "price = (CASE WHEN price NOT LIKE :entryPrice THEN (:entryPrice) ELSE price END)," +
             "area = (CASE WHEN area NOT LIKE :entryArea THEN (:entryArea) ELSE area END)," +
@@ -67,11 +67,11 @@ interface RealEstateDao {
         entryRegion: kotlin.String,
         entryPostalCode: kotlin.String,
         entryCountry: kotlin.String,
-        listPhotoWithText: kotlin.collections.List<com.openclassrooms.realestatemanager.domain.models.PhotoWithTextFirebase>?
+        listPhotoWithText: kotlin.collections.List<com.openclassrooms.realestatemanager.domain.models.Photo>?
     )
 
     @Query(
-        "UPDATE  RealEstateDatabase SET " +
+        "UPDATE  Estate SET " +
             "lat = (CASE WHEN lat NOT LIKE :lat THEN (:lat) ELSE lat END)," +
             "lng = (CASE WHEN lng NOT LIKE :lng THEN (:lng) ELSE lng END)"+
             "WHERE id = :id ")
@@ -87,7 +87,7 @@ interface RealEstateDao {
     //            "price = (CASE WHEN price NOT LIKE :entryPrice THEN (:entryPrice) ELSE price END) " +
     //            "WHERE id =:id"
 
-    @RawQuery(observedEntities = [RealEstateDatabase::class])
-    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<RealEstateDatabase>>
+    @RawQuery(observedEntities = [Estate::class])
+    fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<Estate>>
 
 }

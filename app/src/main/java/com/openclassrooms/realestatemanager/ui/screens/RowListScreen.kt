@@ -15,18 +15,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.domain.models.Estate
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun RowList(
-    item: RealEstateDatabase,
+    item: Estate,
     navController: NavController,
     isExpanded : Boolean,
-    realEstateViewModel: RealEstateViewModel
+    estateViewModel: EstateViewModel
 ) {
 
 
@@ -40,7 +40,7 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                realEstateViewModel.realEstateIdDetail.value = item.id
+                estateViewModel.realEstateIdDetail.value = item.id
                 navController.navigate(Screen.DetailScreen.route)
 
             }) {
@@ -94,7 +94,7 @@ fun RowList(
             shape = RoundedCornerShape(corner = CornerSize(16.dp))
         ) {
             Row(Modifier.clickable {
-                realEstateViewModel.realEstateIdDetail.value = item.id
+                estateViewModel.realEstateIdDetail.value = item.id
             }) {
 
                 Box(

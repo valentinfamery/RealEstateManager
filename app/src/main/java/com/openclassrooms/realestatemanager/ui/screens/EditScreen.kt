@@ -37,7 +37,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.*
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Screen
@@ -52,8 +52,8 @@ import org.joda.time.chrono.ISOChronology
 @ExperimentalMaterial3Api
 @Composable
 fun EditScreenRealEstate(
-    realEstateViewModel: RealEstateViewModel,
-    itemRealEstate: RealEstateDatabase?,
+    estateViewModel: EstateViewModel,
+    itemRealEstate: Estate?,
     navController: NavHostController,
     userViewModel: UserViewModel = hiltViewModel(),
     setPhotoUrl : (photoUrl : String) -> Unit
@@ -62,7 +62,7 @@ fun EditScreenRealEstate(
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
 
     var openDialogUpdatePhotoWithText by remember { mutableStateOf(false) }
-    val listPhotos = realEstateViewModel.listPhotoEditScreenState.collectAsState()
+    val listPhotos = estateViewModel.listPhotoEditScreenState.collectAsState()
 
     val context = LocalContext.current
 
@@ -75,7 +75,7 @@ fun EditScreenRealEstate(
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText = openDialogAddPhotoWithText, addPhotoWithText ={
         it.toAddLatter = true
-        realEstateViewModel.addPhoto(it)
+        estateViewModel.addPhoto(it)
     }, closeDialogAddPhoto = {
         openDialogAddPhotoWithText = false
     })
@@ -87,15 +87,15 @@ fun EditScreenRealEstate(
         photoSourceEditPhoto,
         textEditPhoto,
         updatePhotoWithTextFirebase = { s: String, s1: String, s2: String ->
-            realEstateViewModel.updateAttributePhotoSource(
+            estateViewModel.updateAttributePhotoSource(
                 s,
                 s1
             )
-            realEstateViewModel.updateAttributePhotoText(
+            estateViewModel.updateAttributePhotoText(
                 s,
                 s2
             )
-            realEstateViewModel.updateAttributeToUpdate(
+            estateViewModel.updateAttributeToUpdate(
                 s
             )
         }
@@ -570,7 +570,7 @@ fun EditScreenRealEstate(
                                 )
                                 Text(text = photoWithText.text)
                                 Button(onClick = {
-                                    realEstateViewModel.updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(photoWithText.id)
+                                    estateViewModel.updatePhotoWithTextInListEditScreenToDeleteLatterToTrue(photoWithText.id)
                                     val gson = Gson()
                                     Log.e("1", gson.toJson(listPhotos))
                                     Log.e("2", gson.toJson(photoWithText))
@@ -610,7 +610,7 @@ fun EditScreenRealEstate(
 
 
 
-                            realEstateViewModel.updateRealEstate(
+                            estateViewModel.updateRealEstate(
                                 itemRealEstate.id,
                                 entryType ,
                                 entryPrice,

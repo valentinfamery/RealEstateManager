@@ -14,8 +14,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.domain.models.Estate
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Screen
 import kotlinx.coroutines.CoroutineScope
@@ -28,18 +28,18 @@ import kotlinx.coroutines.launch
 fun ListScreen(
     drawerState: DrawerState,
     scope: CoroutineScope,
-    realEstateViewModel: RealEstateViewModel,
+    estateViewModel: EstateViewModel,
     innerPadding: PaddingValues,
     navController: NavController,
     isExpanded: Boolean
 ) {
     val context = LocalContext.current
-    val realEstates by realEstateViewModel.realEstates.collectAsState()
+    val realEstates by estateViewModel.realEstates.collectAsState()
     var dialogState by remember {
         mutableStateOf(false)
     }
     var filterState by remember { mutableStateOf(false) }
-    var realEstatesFilter by remember { mutableStateOf(listOf<RealEstateDatabase>()) }
+    var realEstatesFilter by remember { mutableStateOf(listOf<Estate>()) }
 
 
     var type by remember{ mutableStateOf("") }
@@ -95,7 +95,7 @@ fun ListScreen(
     )
 
     if(filterState){
-        realEstateViewModel.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops).observeForever {
+        estateViewModel.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops).observeForever {
             realEstatesFilter = it
         }
     }
@@ -157,7 +157,7 @@ fun ListScreen(
 
                 Log.e("realEstatesResponse", "Success")
 
-                val isRefreshing by realEstateViewModel.isRefreshing.collectAsState()
+                val isRefreshing by estateViewModel.isRefreshing.collectAsState()
 
 
 
@@ -165,7 +165,7 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                     state = rememberSwipeRefreshState(isRefreshing),
                     onRefresh = {
-                        realEstateViewModel.refreshRealEstates()
+                        estateViewModel.refreshRealEstates()
                     },
                 ) {
 
@@ -178,7 +178,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     isExpanded,
-                                    realEstateViewModel
+                                    estateViewModel
                                 )
                             }
 
@@ -191,7 +191,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     isExpanded,
-                                    realEstateViewModel
+                                    estateViewModel
                                 )
                             }
 
@@ -225,7 +225,7 @@ fun ListScreen(
 
                 Log.e("realEstatesResponse", "Success")
 
-                val isRefreshing by realEstateViewModel.isRefreshing.collectAsState()
+                val isRefreshing by estateViewModel.isRefreshing.collectAsState()
 
 
 
@@ -233,7 +233,7 @@ fun ListScreen(
                     modifier = Modifier.padding(it),
                     state = rememberSwipeRefreshState(isRefreshing),
                     onRefresh = {
-                        realEstateViewModel.refreshRealEstates()
+                        estateViewModel.refreshRealEstates()
                     },
                 ) {
 
@@ -246,7 +246,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     isExpanded,
-                                    realEstateViewModel
+                                    estateViewModel
                                 )
                             }
 
@@ -259,7 +259,7 @@ fun ListScreen(
                                     item,
                                     navController,
                                     isExpanded,
-                                    realEstateViewModel,
+                                    estateViewModel,
                                 )
                             }
 

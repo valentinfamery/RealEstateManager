@@ -10,13 +10,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RealEstateViewModel @Inject constructor(private val realEstateRepository: RealEstateRepository) : ViewModel() {
+class EstateViewModel @Inject constructor(private val realEstateRepository: RealEstateRepository) : ViewModel() {
 
     var createRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
     var updateRealEstateResponse by mutableStateOf<Response<Boolean>>(Response.Empty)
 
-    private val _realEstates = MutableStateFlow<List<RealEstateDatabase>>(listOf())
-    val realEstates: StateFlow<List<RealEstateDatabase>> = _realEstates
+    private val _realEstates = MutableStateFlow<List<Estate>>(listOf())
+    val realEstates: StateFlow<List<Estate>> = _realEstates
 
     init {
         fetchRealEstates()
@@ -31,19 +31,19 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
 
 
 
-    val _listPhotoEditScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
-    val listPhotoEditScreenState: StateFlow<List<PhotoWithTextFirebase>> = _listPhotoEditScreenState
+    val _listPhotoEditScreenState = MutableStateFlow<List<Photo>>(listOf())
+    val listPhotoEditScreenState: StateFlow<List<Photo>> = _listPhotoEditScreenState
 
-    val _listPhotoNewScreenState = MutableStateFlow<List<PhotoWithTextFirebase>>(listOf())
-    val listPhotoNewScreenState: StateFlow<List<PhotoWithTextFirebase>> = _listPhotoNewScreenState
+    val _listPhotoNewScreenState = MutableStateFlow<List<Photo>>(listOf())
+    val listPhotoNewScreenState: StateFlow<List<Photo>> = _listPhotoNewScreenState
 
 
 
-    fun addListPhotoNewScreenState(photo: PhotoWithTextFirebase){
+    fun addListPhotoNewScreenState(photo: Photo){
         _listPhotoNewScreenState.value = listPhotoNewScreenState.value + photo
     }
 
-    fun deleteListPhotoNewScreenState(photo: PhotoWithTextFirebase){
+    fun deleteListPhotoNewScreenState(photo: Photo){
         _listPhotoNewScreenState.value = listPhotoNewScreenState.value - photo
     }
 
@@ -59,17 +59,17 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         })
     }
 
-    fun fillMyUiState(list : List<PhotoWithTextFirebase>){
+    fun fillMyUiState(list : List<Photo>){
         _listPhotoEditScreenState.value = list
     }
 
-    fun addPhoto(photo: PhotoWithTextFirebase){
+    fun addPhoto(photo: Photo){
         _listPhotoEditScreenState.value = listPhotoEditScreenState.value + photo
     }
 
 
 
-    fun fetchRealEstates() {
+    private fun fetchRealEstates() {
         viewModelScope.launch {
             realEstateRepository.realEstates().collect{
                 _realEstates.value = it
@@ -103,9 +103,9 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
     }
 
 
-    fun <T> MutableStateFlow<List<T>>.updateElement(predicate: (T) -> Boolean, update: (T) -> T) {
+    private fun <T> MutableStateFlow<List<T>>.updateElement(predicate: (T) -> Boolean, update: (T) -> T) {
         // Récupérer la valeur actuelle de la liste
-        val currentValue = this.value ?: return
+        val currentValue = this.value
 
         // Appliquer la fonction update à tous les éléments de la liste qui satisfont le prédicat
         val updatedList = currentValue.map { element ->
@@ -120,7 +120,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         realEstateRepository.refreshRealEstatesFromFirestore()
     }
 
-    fun realEstateById(realEstateId : String): LiveData<RealEstateDatabase?> {
+    fun realEstateById(realEstateId : String): LiveData<Estate?> {
         return realEstateRepository.realEstateById(realEstateId)
     }
 
@@ -138,7 +138,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         postalCode: String,
         country: String,
         status: String,
-        listPhotosUri: List<PhotoWithTextFirebase>,
+        listPhotosUri: List<Photo>,
         dateEntry: String,
         dateSale: String,
         realEstateAgent:String,
@@ -171,7 +171,7 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         min3photos: Boolean,
         schools: Boolean,
         shops: Boolean
-    ): LiveData<List<RealEstateDatabase>> {
+    ): LiveData<List<Estate>> {
         return realEstateRepository.getPropertyBySearch(type,city,minSurface,maxSurface,minPrice,maxPrice,onTheMarketLessALastWeek,soldOn3LastMonth,min3photos,schools,shops)
     }
 
@@ -198,8 +198,8 @@ class RealEstateViewModel @Inject constructor(private val realEstateRepository: 
         checkedStateSchool: MutableState<Boolean>,
         checkedStateShops: MutableState<Boolean>,
         checkedStateParks: MutableState<Boolean>,
-        listPhotoWithText:MutableList<PhotoWithTextFirebase>,
-        itemRealEstate: RealEstateDatabase
+        listPhotoWithText:MutableList<Photo>,
+        itemRealEstate: Estate
     ) = viewModelScope.launch {
         updateRealEstateResponse = realEstateRepository.updateRealEstate(id,
             entryType,

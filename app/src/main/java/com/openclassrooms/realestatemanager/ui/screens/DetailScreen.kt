@@ -24,7 +24,7 @@ import com.google.maps.android.compose.Marker
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
+import com.openclassrooms.realestatemanager.domain.models.Estate
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.Utils
@@ -38,7 +38,7 @@ fun RealEstateDetailScreen(
     navigateToEditScreen: () -> Unit,
     navigateToEditScreenExpanded: () -> Unit,
     isExpanded: Boolean,
-    itemRealEstate: RealEstateDatabase?,
+    itemRealEstate: Estate?,
     navigateToBack : () -> Unit,
     modifier: Modifier
 ) {

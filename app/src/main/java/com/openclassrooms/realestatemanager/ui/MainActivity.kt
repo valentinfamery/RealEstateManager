@@ -25,8 +25,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.domain.models.Estate
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.screens.*
 import com.openclassrooms.realestatemanager.ui.ui.theme.Projet_9_OC_RealEstateManagerTheme
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
     private var receiver: ConnectionReceiver? = null
     private val filter = IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
 
-    private val realEstateViewModel: RealEstateViewModel by viewModels()
+    private val estateViewModel: EstateViewModel by viewModels()
 
     @SuppressLint("UnrememberedMutableState")
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
 
-        receiver = ConnectionReceiver(realEstateViewModel)
+        receiver = ConnectionReceiver(estateViewModel)
         registerReceiver(receiver,filter)
 
         setContent {
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                 var isExpanded = widthSizeClass == WindowWidthSizeClass.Expanded
 
 
-                val id = realEstateViewModel.realEstateIdDetail.collectAsState()
+                val id = estateViewModel.realEstateIdDetail.collectAsState()
 
 
                 var photoUrl by remember {mutableStateOf("")}
@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
                                 navControllerDrawer = navControllerMainActivity,
                                 auth = auth,
                                 userViewModel,
-                                realEstateViewModel,
+                                estateViewModel,
                                 isExpanded,
                                 navigateToNewScreen = {
                                     navControllerMainActivity.navigate(Screen.NewScreen.route)
@@ -112,7 +112,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Screen.NewScreen.route){
-                            NewRealEstateScreen(isExpanded,realEstateViewModel,userViewModel, navigateToBack = {
+                            NewRealEstateScreen(isExpanded,estateViewModel,userViewModel, navigateToBack = {
                                 navControllerMainActivity.popBackStack()
                             })
                         }
@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
 
                                 if (id.value != "") {
 
-                                    val itemRealEstate by realEstateViewModel.realEstateById(
+                                    val itemRealEstate by estateViewModel.realEstateById(
                                         id.value
                                     ).observeAsState()
 
@@ -155,19 +155,19 @@ class MainActivity : ComponentActivity() {
                             composable("${Screen.EditScreen.route}/{item}",
                                 arguments = listOf(
                                     navArgument("item") {
-                                        type = RealEstateDatabase.NavigationType
+                                        type = Estate.NavigationType
                                     }
                                 )
                             ) { backStackEntry ->
 
                                 val item =
-                                    backStackEntry.arguments?.getParcelable<RealEstateDatabase>("item")
+                                    backStackEntry.arguments?.getParcelable<Estate>("item")
 
-                                realEstateViewModel.fillMyUiState(item?.listPhotoWithText!!)
+                                estateViewModel.fillMyUiState(item?.listPhotoWithText!!)
 
 
                                 EditScreenRealEstate(
-                                    realEstateViewModel,
+                                    estateViewModel,
                                     item,
                                     navControllerMainActivity,
                                     setPhotoUrl = {

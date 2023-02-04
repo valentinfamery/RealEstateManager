@@ -17,8 +17,8 @@ import com.google.android.gms.location.LocationServices.getFusedLocationProvider
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import com.openclassrooms.realestatemanager.domain.models.RealEstateDatabase
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.domain.models.Estate
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Screen
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 fun MapScreen(
     drawerState: DrawerState,
     scope: CoroutineScope,
-    realEstateViewModel: RealEstateViewModel,
+    estateViewModel: EstateViewModel,
     navControllerDrawer: NavController,
     isExpanded: Boolean
 ) {
@@ -48,7 +48,7 @@ fun MapScreen(
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     val activity = LocalContext.current as Activity
 
-    val realEstates by realEstateViewModel.realEstates.collectAsState()
+    val realEstates by estateViewModel.realEstates.collectAsState()
 
     var userPosition by remember {
         mutableStateOf(LatLng(0.0, 0.0))
@@ -112,7 +112,7 @@ fun MapScreen(
                     realEstates.let { items ->
                         items.forEach {
 
-                            val realEstate: RealEstateDatabase = it
+                            val realEstate: Estate = it
 
 
                             if (it.lat != null && it.lng != null) {
@@ -124,7 +124,7 @@ fun MapScreen(
                                     state = MarkerState(position = latLng),
                                     title = "${realEstate.numberAndStreet} ${realEstate.city} ${realEstate.postalCode} ${realEstate.region} ${realEstate.country}",
                                     onInfoWindowClick = {
-                                        realEstateViewModel.realEstateIdDetail.value = realEstate.id
+                                        estateViewModel.realEstateIdDetail.value = realEstate.id
                                         if (!isExpanded) {
                                             boolean = true
                                         }

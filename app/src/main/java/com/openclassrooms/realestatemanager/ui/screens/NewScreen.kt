@@ -36,7 +36,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.notifications.NotificationHelper
-import com.openclassrooms.realestatemanager.presentation.viewModels.RealEstateViewModel
+import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.MainActivity
 import com.openclassrooms.realestatemanager.ui.components.TopBar
@@ -51,7 +51,7 @@ import org.joda.time.chrono.ISOChronology
 @Composable
 fun NewRealEstateScreen(
     isExpanded: Boolean,
-    realEstateViewModel: RealEstateViewModel,
+    estateViewModel: EstateViewModel,
     userViewModel: UserViewModel,
     navigateToBack : () -> Unit
 ) {
@@ -60,7 +60,7 @@ fun NewRealEstateScreen(
 
     val user by userViewModel.userData.collectAsState()
 
-    val listPhotos = realEstateViewModel.listPhotoNewScreenState.collectAsState()
+    val listPhotos = estateViewModel.listPhotoNewScreenState.collectAsState()
 
     val context = LocalContext.current
 
@@ -70,7 +70,7 @@ fun NewRealEstateScreen(
     val textEditPhoto = remember{ mutableStateOf("")}
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText, addPhotoWithText = {
-        realEstateViewModel.addListPhotoNewScreenState(it)
+        estateViewModel.addListPhotoNewScreenState(it)
     }, closeDialogAddPhoto = {openDialogAddPhotoWithText = false})
 
     DialogUpdatePhotoWithText(
@@ -80,8 +80,8 @@ fun NewRealEstateScreen(
         photoSourceEditPhoto,
         textEditPhoto,
         updatePhotoWithTextFirebase = { s: String, s1: String, s2: String ->
-            realEstateViewModel.updatePhotoSourceElementNewScreen(s,s1)
-            realEstateViewModel.updatePhotoTextElementNewScreen(s,s2)
+            estateViewModel.updatePhotoSourceElementNewScreen(s,s1)
+            estateViewModel.updatePhotoTextElementNewScreen(s,s2)
         }
     )
 
@@ -657,7 +657,7 @@ fun NewRealEstateScreen(
                         )
                         Text(text = photo.text)
                         Button(onClick = {
-                            realEstateViewModel.deleteListPhotoNewScreenState(photo)
+                            estateViewModel.deleteListPhotoNewScreenState(photo)
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_baseline_delete_24),
@@ -696,7 +696,7 @@ fun NewRealEstateScreen(
                                     listPhotos.value?.size!! >= 1
 
 
-                                    realEstateViewModel.createRealEstate(
+                                    estateViewModel.createRealEstate(
                                         entryType,
                                         entryPrice,
                                         entryArea,
@@ -752,7 +752,7 @@ fun NewRealEstateScreen(
 
     }
 
-    when(realEstateViewModel.createRealEstateResponse){
+    when(estateViewModel.createRealEstateResponse){
         is Response.Success ->{
             NotificationHelper.sendSimpleNotification(
                 context = context,
