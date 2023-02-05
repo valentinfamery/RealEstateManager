@@ -330,7 +330,7 @@ fun NewRealEstateScreen(
                 label = { Text(stringResource(R.string.editInfoNumberApartment)) },
                 singleLine = false,
                 modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberApartment) {
-                    top.linkTo(topGuideline)
+                    top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
                     start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     width = Dimension.percent(0.8f)
@@ -426,7 +426,7 @@ fun NewRealEstateScreen(
             Row(
                 modifier = if(!isExpanded) Modifier
                     .constrainAs(rowHospital) {
-                        top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
+                        top.linkTo(fieldCountry.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
                     }else Modifier
