@@ -27,65 +27,9 @@ interface RealEstateDao {
     @Query("SELECT * FROM Estate")
     fun getRealEstatesWithCursor(): Cursor
 
-    @Query(
-        "UPDATE  Estate SET " +
-            "type = (CASE WHEN type NOT LIKE :entryType THEN (:entryType) ELSE type END)," +
-            "price = (CASE WHEN price NOT LIKE :entryPrice THEN (:entryPrice) ELSE price END)," +
-            "area = (CASE WHEN area NOT LIKE :entryArea THEN (:entryArea) ELSE area END)," +
-            "numberRoom =(CASE WHEN numberRoom NOT LIKE :entryNumberRoom THEN(:entryNumberRoom)ELSE numberRoom END)," +
-            "description =(CASE WHEN description NOT LIKE :entryDescription THEN(:entryDescription)ELSE description END)," +
-            "hospitalsNear =(CASE WHEN hospitalsNear NOT LIKE :hospitalsNear THEN(:hospitalsNear)ELSE hospitalsNear END)," +
-            "schoolsNear = (CASE WHEN schoolsNear NOT LIKE :schoolsNear THEN (:schoolsNear)ELSE schoolsNear END)," +
-            "shopsNear = (CASE WHEN shopsNear NOT LIKE :shopsNear THEN (:shopsNear)ELSE shopsNear END)," +
-            "parksNear = (CASE WHEN parksNear NOT LIKE :parksNear THEn (:parksNear)ELSE parksNear END)," +
-            "status = (CASE WHEN status NOT LIKE :entryStatus THEN (:entryStatus)ELSE status END)," +
-            "dateOfSale = (CASE WHEN dateOfSale NOT LIKE :textDateOfSale THEN (:textDateOfSale)ELSE dateOfSale END)," +
-            "numberApartment = (CASE WHEN numberApartment NOT LIKE :entryNumberApartement THEN (:entryNumberApartement)ELSE numberApartment END),"+
-            "numberAndStreet = (CASE WHEN numberAndStreet NOT LIKE :entryNumberAndStreet THEN (:entryNumberAndStreet)ELSE numberAndStreet END),"+
-            "city = (CASE WHEN city NOT LIKE :entryCity THEN (:entryCity)ELSE city END),"+
-            "region = (CASE WHEN region NOT LIKE :entryRegion THEN (:entryRegion)ELSE region END),"+
-            "postalCode = (CASE WHEN postalCode NOT LIKE :entryPostalCode THEN (:entryPostalCode)ELSE postalCode END),"+
-            "country = (CASE WHEN country NOT LIKE :entryCountry THEN (:entryCountry)ELSE country END),"+
-            "listPhotoWithText = (CASE WHEN listPhotoWithText NOT LIKE :listPhotoWithText THEN (:listPhotoWithText)ELSE listPhotoWithText END)"+
-            "WHERE id = :id ")
-    suspend fun updateRealEstate(
-        entryType: kotlin.String,
-        id: kotlin.String,
-        entryPrice: kotlin.Int,
-        entryArea: kotlin.Int,
-        entryNumberRoom: kotlin.String,
-        entryDescription: kotlin.String,
-        hospitalsNear: kotlin.Boolean,
-        schoolsNear: kotlin.Boolean,
-        shopsNear: kotlin.Boolean,
-        parksNear: kotlin.Boolean,
-        entryStatus: kotlin.String,
-        textDateOfSale: kotlin.String,
-        entryNumberApartement: kotlin.String,
-        entryNumberAndStreet: kotlin.String,
-        entryCity: kotlin.String,
-        entryRegion: kotlin.String,
-        entryPostalCode: kotlin.String,
-        entryCountry: kotlin.String,
-        listPhotoWithText: kotlin.collections.List<com.openclassrooms.realestatemanager.domain.models.Photo>?
-    )
+    @Update
+    suspend fun updateEstate(estate: Estate)
 
-    @Query(
-        "UPDATE  Estate SET " +
-            "lat = (CASE WHEN lat NOT LIKE :lat THEN (:lat) ELSE lat END)," +
-            "lng = (CASE WHEN lng NOT LIKE :lng THEN (:lng) ELSE lng END)"+
-            "WHERE id = :id ")
-    suspend fun updateRealEstateLatLng(
-        id: String,
-        lat: Double?,
-        lng: Double?,
-    )
-
-    //"UPDATE  RealEstate SET type = :entryType WHERE id = :id AND type NOT LIKE :entryType "
-    //"UPDATE  RealEstate SET " +
-    //            "type = (CASE WHEN type NOT LIKE :entryType THEN (:entryType) ELSE type END) ," +
-    //            "price = (CASE WHEN price NOT LIKE :entryPrice THEN (:entryPrice) ELSE price END) " +
-    //            "WHERE id =:id"
 
     @RawQuery(observedEntities = [Estate::class])
     fun getPropertyBySearch(supportSQLiteQuery: SupportSQLiteQuery): LiveData<List<Estate>>

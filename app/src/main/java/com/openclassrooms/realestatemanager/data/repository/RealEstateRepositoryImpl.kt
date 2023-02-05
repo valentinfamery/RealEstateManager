@@ -337,15 +337,8 @@ open class RealEstateRepositoryImpl @Inject constructor(
                         val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
                         val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
 
-                        runBlocking {
-                            launch {
-                                realEstateDao.updateRealEstateLatLng(id,lat,lng)
-                            }
-                        }
-
                         rEcollection.document(id).update("lat",lat)
                         rEcollection.document(id).update("lng",lng)
-
 
                     }
 
@@ -420,14 +413,14 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
             rEcollection.document(id).update("listPhotoWithText",listPhotoWithText)
 
-
-            realEstateDao.updateRealEstate(
-                entryType,id,entryPrice.toInt(),entryArea.toInt(),entryNumberRoom,entryDescription,
-                checkedStateHopital.value,checkedStateSchool.value,checkedStateShops.value,
-                checkedStateParks.value,entryStatus,textDateOfSale,entryNumberApartement,
-                entryNumberAndStreet,entryCity,entryRegion,entryPostalCode,entryCountry,
-                listPhotoWithText
-            )
+            val estate = rEcollection.document(id).get().await().toObject(Estate::class.java)
+            runBlocking {
+                launch {
+                    if(estate != null) {
+                        realEstateDao.updateEstate(estate)
+                    }
+                }
+            }
 
             Response.Success(true)
         }catch (e: Exception) {
