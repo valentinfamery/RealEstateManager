@@ -41,7 +41,9 @@ fun DrawerScreen(
             Spacer(modifier = Modifier.fillMaxSize(0.025f))
             Text(text = user?.username.toString())
             Spacer(modifier = Modifier.fillMaxSize(0.025f))
-            Divider(modifier = Modifier.fillMaxHeight(0.001f).fillMaxWidth())
+            Divider(modifier = Modifier
+                .fillMaxHeight(0.001f)
+                .fillMaxWidth())
             NavigationDrawerItem(
                 icon = { Icon(Screen.SettingsScreen.icon, contentDescription = null) },
                 label = { Text(Screen.SettingsScreen.title) },
@@ -63,7 +65,7 @@ fun DrawerScreen(
                         contentDescription = null
                     )
                 },
-                label = { Screen.CurrencyConverterScreen.title },
+                label = { Text(Screen.CurrencyConverterScreen.title) },
                 selected = false,
                 onClick = {
                     scope.launch { drawerState.close() }
