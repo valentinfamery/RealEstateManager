@@ -376,7 +376,7 @@ class EstateViewModelTest {
         )
 
         val listing2 = Estate(
-            id = "456",
+            id = "123",
             type = "Apartment",
             price = 200000,
             area = 500,
@@ -405,16 +405,7 @@ class EstateViewModelTest {
 
         dao.insertRealEstate(listing1)
 
-        dao.updateRealEstate(
-            listing2.type!!, listing1.id, listing2.price!!,
-            listing2.area!!,listing2.numberRoom!!,listing2.description!!,
-            listing2.hospitalsNear,listing2.schoolsNear,listing2.shopsNear,
-            listing2.parksNear, listing2.status!!,listing2.dateOfSale!!,
-            listing2.numberApartment!!,
-            listing2.numberAndStreet!!, listing2.city!!,
-            listing2.region!!,
-            listing2.postalCode!!, listing2.country!!,listing2.listPhotoWithText)
-        dao.updateRealEstateLatLng(listing1.id,listing2.lat,listing2.lng)
+        dao.updateEstate(listing2)
 
 
 
