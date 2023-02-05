@@ -426,7 +426,7 @@ fun NewRealEstateScreen(
             Row(
                 modifier = if(!isExpanded) Modifier
                     .constrainAs(rowHospital) {
-                        top.linkTo(fieldCountry.bottom, margin = 5.dp)
+                        top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
                     }else Modifier
@@ -625,7 +625,7 @@ fun NewRealEstateScreen(
 
 
             FlowRow(modifier = if(!isExpanded) Modifier.constrainAs(lazyColumnPhoto) {
-                top.linkTo(topGuideline)
+                top.linkTo(rowDateSaleButtonAndText.bottom, margin = 25.dp)
                 start.linkTo(fieldNumberApartment.end, margin = 25.dp)
                 end.linkTo(parent.end, margin = 25.dp)
                 width = Dimension.percent(0.40f)
@@ -738,9 +738,15 @@ fun NewRealEstateScreen(
 
                 },
                 modifier = Modifier.constrainAs(confirmAddButton) {
-                    bottom.linkTo(bottomGuideline)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                    if(!isExpanded){
+                        top.linkTo(buttonAddPhoto.bottom,25.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }else {
+                        bottom.linkTo(bottomGuideline)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
                 },
             ) {
                 Text(stringResource(R.string.buttonConfirmEdit))
