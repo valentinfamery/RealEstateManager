@@ -61,7 +61,17 @@ open class RealEstateRepositoryImpl @Inject constructor(
         realEstateDao.clear()
 
         for (realEstate in list) {
-            realEstateDao.insertRealEstate(realEstate)
+            val photos = firebaseFirestore.collection("real_estates").document(realEstate.id).collection("listPhotoWithText").get().await().map {
+                it.toObject(Photo::class.java)
+            }
+            val estate = Estate(
+                realEstate.id,realEstate.type,realEstate.price,realEstate.area,realEstate.numberRoom,realEstate.description,
+                realEstate.numberAndStreet,realEstate.numberApartment,realEstate.city,realEstate.region,realEstate.postalCode,
+                realEstate.country,realEstate.status,realEstate.dateOfEntry,realEstate.dateOfSale,realEstate.realEstateAgent,
+                realEstate.lat,realEstate.lng,realEstate.hospitalsNear,realEstate.schoolsNear,realEstate.shopsNear,realEstate.parksNear,
+                photos
+            )
+            realEstateDao.insertRealEstate(estate)
         }
     }
 
@@ -166,8 +176,13 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
                         firebaseFirestore.collection("real_estates").document(id).set(realEstate)
 
+                        listPhotoFinal.forEach {
+                            firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(it.id).set(it)
+                        }
+
                         runBlocking {
                             launch {
+
                                 realEstateDao.insertRealEstate(realEstate)
                             }
                         }
@@ -376,7 +391,13 @@ open class RealEstateRepositoryImpl @Inject constructor(
                             Log.e("urlFinal", urlFinal)
                             photoWithText.photoSource = urlFinal
                             photoWithText.id = newId
+
+
                             photoWithText.toAddLatter = false
+
+                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).set(photoWithText)
+
+
 
 
                 }
@@ -398,6 +419,10 @@ open class RealEstateRepositoryImpl @Inject constructor(
                     Log.e("urlFinal", urlFinal)
                     photoWithText.photoSource = urlFinal
                     photoWithText.toUpdateLatter = false
+
+                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("photoSource",photoWithText.photoSource)
+                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("text",photoWithText.text)
+
                 }
                 if(photoWithText.toDeleteLatter){
                     val realEstateImage2: StorageReference = storageRef.child(
@@ -406,19 +431,27 @@ open class RealEstateRepositoryImpl @Inject constructor(
                     realEstateImage2.delete().await()
                     photoWithText.toDeleteLatter = false
 
-                    listPhotoWithText.remove(photoWithText)
+                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).delete()
                 }
 
             }
 
-            rEcollection.document(id).update("listPhotoWithText",listPhotoWithText)
 
-            val estate = rEcollection.document(id).get().await().toObject(Estate::class.java)
+            val realEstate = rEcollection.document(id).get().await().toObject(Estate::class.java)
             runBlocking {
                 launch {
-                    if(estate != null) {
-                        realEstateDao.updateEstate(estate)
+                    val photos = firebaseFirestore.collection("real_estates").document(realEstate!!.id).collection("listPhotoWithText").get().await().map {
+                        it.toObject(Photo::class.java)
                     }
+                    val estate1 = Estate(
+                        realEstate.id,realEstate.type,realEstate.price,realEstate.area,realEstate.numberRoom,realEstate.description,
+                        realEstate.numberAndStreet,realEstate.numberApartment,realEstate.city,realEstate.region,realEstate.postalCode,
+                        realEstate.country,realEstate.status,realEstate.dateOfEntry,realEstate.dateOfSale,realEstate.realEstateAgent,
+                        realEstate.lat,realEstate.lng,realEstate.hospitalsNear,realEstate.schoolsNear,realEstate.shopsNear,realEstate.parksNear,
+                        photos
+                    )
+
+                    realEstateDao.updateEstate(estate1)
                 }
             }
 

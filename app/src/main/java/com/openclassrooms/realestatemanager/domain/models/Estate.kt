@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.firebase.firestore.Exclude
 import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 
@@ -36,6 +37,7 @@ data class Estate(
     var shopsNear : Boolean = false,
     var parksNear : Boolean = false,
     @ColumnInfo(name = "listPhotoWithText")
+    @Exclude
     var listPhotoWithText : List<Photo> ?=null,
     var count_photo : Int? = listPhotoWithText?.size,
 ): Parcelable {
