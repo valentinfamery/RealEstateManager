@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -32,6 +33,7 @@ import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.Estate
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
@@ -39,7 +41,9 @@ import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewMode
 import com.openclassrooms.realestatemanager.utils.Utils
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter",
+    "SuspiciousIndentation"
+)
 @Composable
 @ExperimentalMaterial3Api
 fun MainScreen(
@@ -126,6 +130,7 @@ fun MainScreen(
                     },
                     floatingActionButton = {
 
+                        val errorInternetNotAvailable = stringResource(R.string.ErrorInternetNotAvailable)
 
                                 FloatingActionButton(
                                     onClick = {
@@ -134,7 +139,7 @@ fun MainScreen(
                                         if(isInternetAvailable){
                                             navigateToNewScreen()
                                         }else{
-                                            Toast.makeText(context,"Impossible there is no internet connection",Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context,errorInternetNotAvailable,Toast.LENGTH_LONG).show()
                                         }
 
 
@@ -142,7 +147,7 @@ fun MainScreen(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(15.dp))
                                 ) {
-                                    Icon(Screen.NewScreen.icon, "Localized description")
+                                    Icon(Screen.NewScreen.icon, "")
                                 }
 
 
@@ -222,7 +227,7 @@ fun MainScreen(
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(15.dp))
                                             ) {
-                                                Icon(Screen.NewScreen.icon, "Localized description")
+                                                Icon(Screen.NewScreen.icon, "")
                                             }
                                         }
 
@@ -280,10 +285,6 @@ fun MainScreen(
                                                 estateViewModel,
                                                 item,
                                                 navControllerTwoPane,
-                                                setPhotoUrl = {
-
-                                                },
-
                                                 )
                                         }
                                     }

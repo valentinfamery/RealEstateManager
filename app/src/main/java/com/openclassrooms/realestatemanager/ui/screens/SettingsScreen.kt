@@ -14,7 +14,7 @@ import com.openclassrooms.realestatemanager.utils.Screen
 fun SettingsScreen(navigateToBack : () -> Unit) {
     Scaffold(
         content = {
-            Column() {
+            Column {
 
                 TopBar(
                     title = Screen.SettingsScreen.title,

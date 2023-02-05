@@ -2,15 +2,12 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -33,7 +30,7 @@ fun ListScreen(
     navController: NavController,
     isExpanded: Boolean
 ) {
-    val context = LocalContext.current
+
     val realEstates by estateViewModel.realEstates.collectAsState()
     var dialogState by remember {
         mutableStateOf(false)
@@ -99,38 +96,6 @@ fun ListScreen(
             realEstatesFilter = it
         }
     }
-
-    val launcherActivityResult =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            if (activityResult.resultCode == 0) {
-                filterState = activityResult.data?.getBooleanExtra("filterState", false)!!
-            }
-            if (activityResult.resultCode == 1) {
-                filterState = activityResult.data?.getBooleanExtra("filterState", true)!!
-                val type = activityResult.data?.getStringExtra("type")!!
-                val city = activityResult.data?.getStringExtra("city")!!
-                val minSurface = activityResult.data?.getIntExtra("minSurface", 0)!!
-                val maxSurface = activityResult.data?.getIntExtra("maxSurface", 0)!!
-                val minPrice = activityResult.data?.getIntExtra("minPrice", 0)!!
-                val maxPrice = activityResult.data?.getIntExtra("maxPrice", 0)!!
-                val onTheMarketLessALastWeek = activityResult.data?.getBooleanExtra("onTheMarketLessALastWeek", false)!!
-                val soldOn3LastMonth = activityResult.data?.getBooleanExtra("soldOn3LastMonth", false)!!
-                val min3photos = activityResult.data?.getBooleanExtra("min3photos", false)!!
-                val schools = activityResult.data?.getBooleanExtra("schools", false)!!
-                val shops = activityResult.data?.getBooleanExtra("shops", false)!!
-
-            }
-        }
-
-
-
-
-
-
-
-
-
-
 
     if (!isExpanded) {
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.android.gms.maps.model.CameraPosition
@@ -24,6 +25,7 @@ import com.google.maps.android.compose.Marker
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.Estate
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Screen
@@ -44,12 +46,15 @@ fun RealEstateDetailScreen(
 ) {
 
     val context = LocalContext.current
-        itemRealEstate?.let {itemRealEstate->
+        itemRealEstate?.let {estate->
 
-            val listPhotos = itemRealEstate.listPhotoWithText
+            val listPhotos = estate.listPhotoWithText
 
+            val errorInternetNotAvailable = stringResource(R.string.ErrorInternetNotAvailable)
+            val floatingActionButtonEdit = stringResource(R.string.FloatingActionButtonEdit)
 
             Scaffold(
+                modifier = modifier,
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
@@ -60,14 +65,13 @@ fun RealEstateDetailScreen(
                                 navigateToEditScreenExpanded()
 
                             }else{
-                                Toast.makeText(context,"Impossible il n'y a pas de connexion Internet",
-                                    Toast.LENGTH_LONG).show()
+                                Toast.makeText(context,errorInternetNotAvailable, Toast.LENGTH_LONG).show()
                             }
 
 
                         },
-                        icon = { Icon(Screen.EditScreen.icon, "Localized description") },
-                        text = { Text(text = "Edit") },
+                        icon = { Icon(Screen.EditScreen.icon, "") },
+                        text = { Text(text = floatingActionButtonEdit) },
                         modifier = Modifier.clip(RoundedCornerShape(15.dp))
                     )
                 },
@@ -120,13 +124,13 @@ fun RealEstateDetailScreen(
                                 .fillMaxWidth(0.8f)
                         ) {
                             Column(modifier = Modifier.fillMaxWidth(0.4f)) {
-                                Text(text = "Type : "+itemRealEstate.type.toString())
-                                Text(text = "Price : "+itemRealEstate.price.toString() + " $")
+                                Text(text = stringResource(R.string.beforeType) + estate.type.toString())
+                                Text(text = stringResource(R.string.beforePrice) + estate.price.toString() + stringResource(R.string.dollarSymbol))
                             }
                             Spacer(modifier = Modifier.fillMaxWidth(0.2f))
                             Column(modifier = Modifier.fillMaxWidth(0.4f)) {
-                                Text(text = "Surface : "+itemRealEstate.area.toString() + " m2")
-                                Text(text = "Number Rooms : "+itemRealEstate.numberRoom.toString())
+                                Text(text = stringResource(R.string.beforeSurface) + estate.area.toString() + stringResource(R.string.surfaceUnity))
+                                Text(text = stringResource(R.string.beforeNumberRooms) + estate.numberRoom.toString())
                             }
                         }
 
@@ -138,9 +142,9 @@ fun RealEstateDetailScreen(
                             .clip(RoundedCornerShape(10.dp))
                             .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp))) {
                             Column(modifier = Modifier.padding(20.dp)) {
-                                Text(text = "Description : ")
+                                Text(text = stringResource(R.string.beforeDescription))
                                 Spacer(modifier = Modifier.size(10.dp))
-                                Text(text = itemRealEstate.description.toString())
+                                Text(text = estate.description.toString())
                             }
                         }
 
@@ -153,11 +157,11 @@ fun RealEstateDetailScreen(
                                 .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
                         ) {
                             Column(modifier = Modifier.padding(20.dp)) {
-                                Row() {
+                                Row {
                                     Icon(Icons.Filled.LocationOn, contentDescription = "")
-                                    Text(text = " Address : ")
+                                    Text(text = stringResource(R.string.beforeAddress))
                                 }
-                                Text(text = itemRealEstate.numberAndStreet + " " + itemRealEstate.city + " " + itemRealEstate.postalCode + " " + itemRealEstate.region + " " + itemRealEstate.country)
+                                Text(text = "${estate.numberAndStreet.toString()}\n${estate.city}\n${estate.postalCode}\n${estate.region}\n${estate.country}")
                             }
                         }
 
@@ -169,28 +173,28 @@ fun RealEstateDetailScreen(
                         ) {
                             Column(modifier = Modifier.fillMaxWidth(0.4f)) {
                                 Checkbox(
-                                    checked = itemRealEstate.hospitalsNear,
-                                    onCheckedChange = { itemRealEstate.hospitalsNear = it },
+                                    checked = estate.hospitalsNear,
+                                    onCheckedChange = { estate.hospitalsNear = it },
                                 )
-                                Text(text = "Near Hospital")
+                                Text(text = stringResource(R.string.beforeHospital))
                                 Checkbox(
-                                    checked = itemRealEstate.schoolsNear,
-                                    onCheckedChange = { itemRealEstate.schoolsNear = it }
+                                    checked = estate.schoolsNear,
+                                    onCheckedChange = { estate.schoolsNear = it }
                                 )
-                                Text(text = "Near School")
+                                Text(text = stringResource(R.string.beforeSchool))
                             }
                             Spacer(modifier = Modifier.fillMaxWidth(0.2f))
                             Column(modifier = Modifier.fillMaxWidth(0.4f)) {
                                 Checkbox(
-                                    checked = itemRealEstate.shopsNear,
-                                    onCheckedChange = { itemRealEstate.shopsNear = it }
+                                    checked = estate.shopsNear,
+                                    onCheckedChange = { estate.shopsNear = it }
                                 )
-                                Text(text = "Near Shops")
+                                Text(text = stringResource(R.string.beforeShops))
                                 Checkbox(
-                                    checked = itemRealEstate.parksNear,
-                                    onCheckedChange = { itemRealEstate.parksNear = it }
+                                    checked = estate.parksNear,
+                                    onCheckedChange = { estate.parksNear = it }
                                 )
-                                Text(text = "Near Parks")
+                                Text(text = stringResource(R.string.beforeParks))
                             }
                         }
 
@@ -201,38 +205,38 @@ fun RealEstateDetailScreen(
                                 .fillMaxWidth(0.8f),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text(text = "Status : " + itemRealEstate.status.toString())
+                            Text(text = stringResource(R.string.beforeStatus) + estate.status.toString())
                         }
 
                         Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         Row(modifier = Modifier
                             .fillMaxWidth(0.8f)) {
-                            Text(text = "Date of Entry : " + itemRealEstate.dateOfEntry.toString())
+                            Text(text = stringResource(R.string.beforeDateOfEntry) + estate.dateOfEntry.toString())
                         }
 
                         Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
                         Row(modifier = Modifier
                             .fillMaxWidth(0.8f)) {
-                            if(itemRealEstate.status == "Sold") {
-                                Text(text = "Date of Sale : " + itemRealEstate.dateOfSale.toString())
+                            if(estate.status == "Sold") {
+                                Text(text = stringResource(R.string.beforeDateOfSale) + estate.dateOfSale.toString())
                             }
                         }
 
                         Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
-                        Row() {
-                            Text(text = "Agent : "+itemRealEstate.realEstateAgent.toString())
+                        Row {
+                            Text(text = stringResource(R.string.beforeAgent) + estate.realEstateAgent.toString())
                         }
 
                         Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
 
-                        if (itemRealEstate.lat != null && itemRealEstate.lng != null) {
+                        if (estate.lat != null && estate.lng != null) {
 
                             val latLng = LatLng(
-                                itemRealEstate.lat!!, itemRealEstate.lng!!
+                                estate.lat!!, estate.lng!!
                             )
 
                             val cameraPositionState = rememberCameraPositionState {

@@ -63,17 +63,11 @@ class MainActivity : ComponentActivity() {
 
                 val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
 
-                var isExpanded = widthSizeClass == WindowWidthSizeClass.Expanded
-
+                val isExpanded = widthSizeClass == WindowWidthSizeClass.Expanded
 
                 val id = estateViewModel.realEstateIdDetail.collectAsState()
 
-
-                var photoUrl by remember {mutableStateOf("")}
-
-
-
-                    val navControllerMainActivity = rememberNavController()
+                val navControllerMainActivity = rememberNavController()
 
 
                     NavHost(navController = navControllerMainActivity, startDestination = if (currentUser == null)
@@ -169,11 +163,7 @@ class MainActivity : ComponentActivity() {
                                 EditScreenRealEstate(
                                     estateViewModel,
                                     item,
-                                    navControllerMainActivity,
-                                    setPhotoUrl = {
-                                        photoUrl = it
-                                    },
-
+                                    navControllerMainActivity
                                 )
                             }
 

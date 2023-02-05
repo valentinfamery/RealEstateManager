@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -25,6 +26,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.openclassrooms.realestatemanager.R
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -36,8 +38,8 @@ fun DialogUpdatePhotoWithText(
     photoSourceEditPhoto: MutableState<String>,
     textEditPhoto: MutableState<String>,
     updatePhotoWithTextFirebase: (idEditPhoto: String,photoSourceEditPhoto:String,textEditPhoto: String) -> Unit) {
-        var photoSelect = remember{ photoSourceEditPhoto }
-        var titlePhoto = remember { textEditPhoto}
+        val photoSelect = remember{ photoSourceEditPhoto }
+        val titlePhoto = remember { textEditPhoto}
 
         val someActivityResultLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.StartActivityForResult(),
@@ -74,7 +76,7 @@ fun DialogUpdatePhotoWithText(
                         TextField(
                             value = titlePhoto.value,
                             onValueChange = { titlePhoto.value = it },
-                            label = { Text("Enter Title Photo") },
+                            label = { Text(stringResource(R.string.labelTitlePhotoEdit)) },
                             maxLines = 2,
                             modifier = Modifier.constrainAs(titleEntry) {
                                 top.linkTo(parent.top, margin = 15.dp)
@@ -126,7 +128,7 @@ fun DialogUpdatePhotoWithText(
 
 
                         ) {
-                            Text(text = "Update Photo")
+                            Text(text = stringResource(R.string.labelButtonEdit))
                         }
 
 
@@ -142,7 +144,7 @@ fun DialogUpdatePhotoWithText(
                                 /*TODO*/
                             }
                         ) {
-                            Text(text = "Cancel")
+                            Text(text = stringResource(R.string.labelButtonCancelEdit))
                         }
                         TextButton(
                             modifier = Modifier.constrainAs(buttonConfirm) {
@@ -162,7 +164,7 @@ fun DialogUpdatePhotoWithText(
                                 closeDialogUpdatePhoto()
                             }
                         ) {
-                            Text(text = "Confirm")
+                            Text(text = stringResource(R.string.labelButtonConfirmEdit))
                         }
 
 

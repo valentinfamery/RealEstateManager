@@ -1,20 +1,16 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.openclassrooms.realestatemanager.utils.Utils
@@ -40,6 +36,7 @@ fun CurrencyConverterScreen(navigateToBack : () -> Unit){
         var euro by remember { mutableStateOf("") }
         var dollar by remember { mutableStateOf("") }
 
+        val errorEuroValue = stringResource(R.string.ErrorEuroValue)
         OutlinedTextField(
             value = euro,
             onValueChange = {
@@ -48,12 +45,12 @@ fun CurrencyConverterScreen(navigateToBack : () -> Unit){
                 dollar = if (result != null)
                     Utils.convertEuroToDollar(result).toString()
                 else
-                    "Incorrect Euro Value"
+                    errorEuroValue
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
             ),
-            label = { Text("Euro") },
+            label = { Text(stringResource(R.string.Euro)) },
             modifier = Modifier
                 .onFocusChanged {
                     if (it.isFocused)
@@ -61,6 +58,7 @@ fun CurrencyConverterScreen(navigateToBack : () -> Unit){
                 }
                 .padding(8.dp)
         )
+        val errorDollarValue = stringResource(R.string.ErrorDollarValue)
         OutlinedTextField(
             value = dollar,
             onValueChange = {
@@ -69,12 +67,12 @@ fun CurrencyConverterScreen(navigateToBack : () -> Unit){
                 euro = if (result != null)
                     Utils.convertDollarToEuro(result).toString()
                 else
-                    "Incorrect Dollar Value"
+                    errorDollarValue
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
             ),
-            label = { Text("Dollar") },
+            label = { Text(stringResource(R.string.Dollar)) },
             modifier = Modifier
                 .onFocusChanged {
                     if (it.isFocused)

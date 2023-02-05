@@ -94,7 +94,7 @@ fun NewRealEstateScreen(
         var entryNumberRoom by rememberSaveable { mutableStateOf("") }
         var entryDescription by rememberSaveable { mutableStateOf("") }
         var entryNumberAndStreet by rememberSaveable { mutableStateOf("") }
-        var entryNumberApartement by rememberSaveable { mutableStateOf("") }
+        var entryNumberApartment by rememberSaveable { mutableStateOf("") }
         var entryCity by rememberSaveable { mutableStateOf("") }
         var entryRegion by rememberSaveable { mutableStateOf("") }
         var entryPostalCode by rememberSaveable { mutableStateOf("") }
@@ -104,7 +104,7 @@ fun NewRealEstateScreen(
         var textDateOfEntry by rememberSaveable { mutableStateOf("") }
         var textDateOfSale by rememberSaveable { mutableStateOf("") }
 
-        val checkedStateHopital = remember { mutableStateOf(false) }
+        val checkedStateHospital = remember { mutableStateOf(false) }
         val checkedStateSchool = remember { mutableStateOf(false) }
         val checkedStateShops = remember { mutableStateOf(false) }
         val checkedStateParks = remember { mutableStateOf(false) }
@@ -123,9 +123,9 @@ fun NewRealEstateScreen(
             val topGuideline = createGuidelineFromTop(0.1f)
             val bottomGuideline = createGuidelineFromBottom(0.1f)
 
-            val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldAddress, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
+            val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, _, fieldStatus, rowDateSaleButtonAndText, centerAlignedTopAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
 
-            val (rowHopital, rowSchool, rowShops, rowParks ,dropdownMenuStatus,fieldNumberAndStreet,fieldNumberApartement,fieldCity,fieldRegion,fieldPostalCode,fieldCountry) = createRefs()
+            val (rowHospital, rowSchool, rowShops, rowParks ,dropdownMenuStatus,fieldNumberAndStreet,fieldNumberApartment,fieldCity,fieldRegion,fieldPostalCode,fieldCountry) = createRefs()
 
             TopBar(
                 title = stringResource(R.string.TitleNewEstateScreen),
@@ -161,8 +161,9 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryType,
                 onValueChange = { entryType = it },
-                label = { Text("Type") },
-                modifier = if(!isExpanded) Modifier.constrainAs(fieldType) {
+                label = { Text(stringResource(R.string.editInfoType)) },
+                modifier = if(!isExpanded) Modifier
+                    .constrainAs(fieldType) {
                         top.linkTo(topGuideline)
                         start.linkTo(startGuideline)
                         end.linkTo(endGuideline)
@@ -174,12 +175,13 @@ fun NewRealEstateScreen(
                         // the DropDown the same width
                         mTextFieldSize = coordinates.size.toSize()
                     }
-                else Modifier.constrainAs(fieldType) {
-                    top.linkTo(topGuideline)
-                    start.linkTo(startGuideline)
-                    width = Dimension.percent(0.2f)
-                    height = Dimension.wrapContent
-                }
+                else Modifier
+                    .constrainAs(fieldType) {
+                        top.linkTo(topGuideline)
+                        start.linkTo(startGuideline)
+                        width = Dimension.percent(0.2f)
+                        height = Dimension.wrapContent
+                    }
                     .onGloballyPositioned { coordinates ->
                         // This value is used to assign to
                         // the DropDown the same width
@@ -189,7 +191,7 @@ fun NewRealEstateScreen(
                 ,
 
                 trailingIcon = {
-                    Icon(icon, "contentDescription",
+                    Icon(icon, "",
                         Modifier.clickable { expanded = !expanded })
                 }
 
@@ -225,7 +227,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryPrice,
                 onValueChange = { entryPrice = it },
-                label = { Text("Price") },
+                label = { Text(stringResource(R.string.editInfoPrice)) },
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = if(!isExpanded)Modifier.constrainAs(fieldPrice) {
@@ -245,7 +247,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryArea ,
                 onValueChange = { entryArea = it },
-                label = { Text("Area") },
+                label = { Text(stringResource(R.string.editInfoArea)) },
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = if(!isExpanded) Modifier.constrainAs(fieldArea) {
@@ -265,7 +267,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryNumberRoom,
                 onValueChange = { entryNumberRoom = it },
-                label = { Text("Number of rooms") },
+                label = { Text(stringResource(R.string.editInfoNumberOfRooms)) },
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberRoom) {
@@ -285,7 +287,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryDescription,
                 onValueChange = { entryDescription = it },
-                label = { Text("Description") },
+                label = { Text(stringResource(R.string.editInfoDescription)) },
                 singleLine = false,
                 modifier = if(!isExpanded) Modifier.constrainAs(fieldDescription) {
                     top.linkTo(fieldNumberRoom.bottom, margin = 25.dp)
@@ -306,7 +308,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryNumberAndStreet,
                 onValueChange = { entryNumberAndStreet = it },
-                label = { Text("NumberAndStreet") },
+                label = { Text(stringResource(R.string.editInfoNumberAndStreet)) },
                 singleLine = false,
                 modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberAndStreet) {
                     top.linkTo(fieldDescription.bottom, margin = 25.dp)
@@ -323,17 +325,17 @@ fun NewRealEstateScreen(
             )
 
             TextField(
-                value = entryNumberApartement,
-                onValueChange = { entryNumberApartement = it },
-                label = { Text("NumberApartement") },
+                value = entryNumberApartment,
+                onValueChange = { entryNumberApartment = it },
+                label = { Text(stringResource(R.string.editInfoNumberApartment)) },
                 singleLine = false,
-                modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberApartement) {
+                modifier = if(!isExpanded) Modifier.constrainAs(fieldNumberApartment) {
                     top.linkTo(topGuideline)
                     start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     width = Dimension.percent(0.8f)
                     height = Dimension.wrapContent
-                } else Modifier.constrainAs(fieldNumberApartement) {
+                } else Modifier.constrainAs(fieldNumberApartment) {
                     top.linkTo(topGuideline)
                     start.linkTo(fieldType.end, margin = 25.dp)
                     width = Dimension.percent(0.2f)
@@ -345,16 +347,16 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryCity,
                 onValueChange = { entryCity = it },
-                label = { Text("City") },
+                label = { Text(stringResource(R.string.editInfoCity)) },
                 singleLine = false,
                 modifier = if(!isExpanded) Modifier.constrainAs(fieldCity) {
-                    top.linkTo(fieldNumberApartement.bottom, margin = 25.dp)
+                    top.linkTo(fieldNumberApartment.bottom, margin = 25.dp)
                     start.linkTo(startGuideline)
                     end.linkTo(endGuideline)
                     width = Dimension.percent(0.8f)
                     height = Dimension.wrapContent
                 }else Modifier.constrainAs(fieldCity) {
-                    top.linkTo(fieldNumberApartement.bottom, margin = 25.dp)
+                    top.linkTo(fieldNumberApartment.bottom, margin = 25.dp)
                     start.linkTo(fieldType.end, margin = 25.dp)
                     width = Dimension.percent(0.2f)
                     height = Dimension.wrapContent
@@ -366,7 +368,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryRegion,
                 onValueChange = { entryRegion = it },
-                label = { Text("Region") },
+                label = { Text(stringResource(R.string.editInfoRegion)) },
                 singleLine = false,
                 modifier = if(!isExpanded)Modifier.constrainAs(fieldRegion) {
                     top.linkTo(fieldCity.bottom, margin = 25.dp)
@@ -385,7 +387,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryPostalCode,
                 onValueChange = { entryPostalCode = it },
-                label = { Text("Postal Code") },
+                label = { Text(stringResource(R.string.editInfoPostalCode)) },
                 singleLine = false,
                 modifier = if(!isExpanded)Modifier.constrainAs(fieldPostalCode) {
                     top.linkTo(fieldRegion.bottom, margin = 25.dp)
@@ -404,7 +406,7 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryCountry,
                 onValueChange = { entryCountry = it },
-                label = { Text("Country") },
+                label = { Text(stringResource(R.string.editInfoCountry)) },
                 singleLine = false,
                 modifier = if(!isExpanded)Modifier.constrainAs(fieldCountry) {
                     top.linkTo(fieldPostalCode.bottom, margin = 25.dp)
@@ -423,12 +425,12 @@ fun NewRealEstateScreen(
 
             Row(
                 modifier = if(!isExpanded) Modifier
-                    .constrainAs(rowHopital) {
+                    .constrainAs(rowHospital) {
                         top.linkTo(fieldCountry.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
                     }else Modifier
-                        .constrainAs(rowHopital) {
+                        .constrainAs(rowHospital) {
                     top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
                     start.linkTo(startGuideline)
 
@@ -439,19 +441,19 @@ fun NewRealEstateScreen(
                 ) {
 
                 Checkbox(
-                    checked = checkedStateHopital.value,
-                    onCheckedChange = { checkedStateHopital.value = it },
+                    checked = checkedStateHospital.value,
+                    onCheckedChange = { checkedStateHospital.value = it },
                 )
-                Text(text = "Near Hopital")
+                Text(text = stringResource(R.string.editInfoHospital))
             }
 
             Row(
                 modifier = if(!isExpanded) Modifier.constrainAs(rowSchool) {
-                        top.linkTo(rowHopital.bottom, margin = 5.dp)
+                        top.linkTo(rowHospital.bottom, margin = 5.dp)
                         start.linkTo(parent.start, margin = 50.dp)
                         end.linkTo(parent.end, margin = 50.dp)
                     }else Modifier.constrainAs(rowSchool) {
-                    top.linkTo(rowHopital.bottom, margin = 25.dp)
+                    top.linkTo(rowHospital.bottom, margin = 25.dp)
                     start.linkTo(startGuideline)
                 },
                 verticalAlignment = Alignment.CenterVertically,
@@ -462,7 +464,7 @@ fun NewRealEstateScreen(
                     checked = checkedStateSchool.value,
                     onCheckedChange = { checkedStateSchool.value = it }
                 )
-                Text(text = "Near School")
+                Text(text = stringResource(R.string.editInfoSchool))
             }
 
             Row(
@@ -483,7 +485,7 @@ fun NewRealEstateScreen(
                     checked = checkedStateShops.value,
                     onCheckedChange = { checkedStateShops.value = it }
                 )
-                Text(text = "Near Shops")
+                Text(text = stringResource(R.string.editInfoShops))
             }
 
             Row(
@@ -504,7 +506,7 @@ fun NewRealEstateScreen(
                     checked = checkedStateParks.value,
                     onCheckedChange = { checkedStateParks.value = it }
                 )
-                Text(text = "Near Parks")
+                Text(text = stringResource(R.string.editInfoParks))
             }
 
 
@@ -516,8 +518,8 @@ fun NewRealEstateScreen(
             TextField(
                 value = entryStatus,
                 onValueChange = { entryStatus = it },
-                label = { Text("Status") },
-                singleLine = true,
+                label = { Text(stringResource(R.string.editInfoStatus)) },
+                singleLine = false,
                 modifier = if(!isExpanded) Modifier
                     .constrainAs(fieldStatus) {
                         top.linkTo(rowParks.bottom, margin = 25.dp)
@@ -543,7 +545,7 @@ fun NewRealEstateScreen(
                         mTextFieldSizeStatus = coordinates.size.toSize()
                     },
                 trailingIcon = {
-                    Icon(iconStatus, "contentDescription",
+                    Icon(iconStatus, "",
                         Modifier.clickable { expandedStatus = !expandedStatus })
                 }
             )
@@ -587,7 +589,7 @@ fun NewRealEstateScreen(
 
             val dateOfSalePickerDialog = DatePickerDialog(
                 context,
-                { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                { _: DatePicker, _: Int, _: Int, _: Int ->
 
                     textDateOfSale = today.toString()
 
@@ -611,7 +613,7 @@ fun NewRealEstateScreen(
                             },
                         )
                         {
-                            Text("Set Date Of Sale")
+                            Text(stringResource(R.string.editInfoSetDateOfSale))
                         }
                     }
                 }
@@ -624,19 +626,19 @@ fun NewRealEstateScreen(
 
             FlowRow(modifier = if(!isExpanded) Modifier.constrainAs(lazyColumnPhoto) {
                 top.linkTo(topGuideline)
-                start.linkTo(fieldNumberApartement.end, margin = 25.dp)
+                start.linkTo(fieldNumberApartment.end, margin = 25.dp)
                 end.linkTo(parent.end, margin = 25.dp)
                 width = Dimension.percent(0.40f)
                 height = Dimension.wrapContent
             }else Modifier.constrainAs(lazyColumnPhoto) {
                 top.linkTo(topGuideline)
-                start.linkTo(fieldNumberApartement.end, margin = 25.dp)
+                start.linkTo(fieldNumberApartment.end, margin = 25.dp)
                 end.linkTo(parent.end, margin = 25.dp)
                 width = Dimension.percent(0.40f)
                 height = Dimension.wrapContent
             }
             ) {
-                listPhotos.value?.forEach {photo->
+                listPhotos.value.forEach { photo->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                             .fillMaxWidth(0.50f)
@@ -683,17 +685,16 @@ fun NewRealEstateScreen(
                     end.linkTo(lazyColumnPhoto.end)
                 }
             ) {
-                Text("Add Photo")
+                Text(stringResource(R.string.editButtonAddPhoto))
             }
-
+            val errorNew = stringResource(R.string.errorEdit)
             Button(
                 onClick = {
 
                     try {
 
 
-
-                                    listPhotos.value?.size!! >= 1
+                        listPhotos.value.isNotEmpty()
 
 
                                     estateViewModel.createRealEstate(
@@ -703,17 +704,17 @@ fun NewRealEstateScreen(
                                         entryNumberRoom,
                                         entryDescription,
                                         entryNumberAndStreet,
-                                        entryNumberApartement,
+                                        entryNumberApartment,
                                         entryCity,
                                         entryRegion,
                                         entryPostalCode,
                                         entryCountry,
                                         entryStatus,
-                                        listPhotos.value!!,
+                                        listPhotos.value,
                                         textDateOfEntry,
                                         textDateOfSale,
                                         user?.username.toString(),
-                                        checkedStateHopital.value,
+                                        checkedStateHospital.value,
                                         checkedStateSchool.value,
                                         checkedStateShops.value,
                                         checkedStateParks.value
@@ -730,7 +731,7 @@ fun NewRealEstateScreen(
                     } catch (e: Exception) {
                         Toast.makeText(
                             context,
-                            "Please enter a valid number for price , area and number of room",
+                            errorNew,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -742,7 +743,7 @@ fun NewRealEstateScreen(
                     end.linkTo(parent.end)
                 },
             ) {
-                Text("Confirm")
+                Text(stringResource(R.string.buttonConfirmEdit))
             }
 
 
@@ -756,8 +757,8 @@ fun NewRealEstateScreen(
         is Response.Success ->{
             NotificationHelper.sendSimpleNotification(
                 context = context,
-                title = "Real Estate Manager",
-                message = "Succefully added new Estate",
+                title = stringResource(R.string.app_name),
+                message = stringResource(R.string.notificationMessage),
                 intent = Intent(context, MainActivity::class.java),
                 reqCode = 10001
             )

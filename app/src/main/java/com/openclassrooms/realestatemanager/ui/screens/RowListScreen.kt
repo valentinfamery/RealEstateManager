@@ -13,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.Estate
 import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
 import com.openclassrooms.realestatemanager.utils.Screen
@@ -73,7 +75,7 @@ fun RowList(
                         style = MaterialTheme.typography.headlineLarge
                     )
                     Text(
-                        text = "$"+ item.price.toString(),
+                        text = stringResource(R.string.dollarSymbol) + item.price.toString(),
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }
@@ -123,7 +125,7 @@ fun RowList(
                         style = MaterialTheme.typography.headlineLarge
                     )
                     Text(
-                        text = "$" + item.price.toString(),
+                        text = stringResource(R.string.dollarSymbol) + item.price.toString(),
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }

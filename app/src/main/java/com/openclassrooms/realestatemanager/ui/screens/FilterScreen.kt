@@ -1,8 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
-import android.app.Activity
-import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,9 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -60,8 +56,6 @@ fun FilterScreen(
             var schools by rememberSaveable { mutableStateOf(false) }
             var shops by rememberSaveable { mutableStateOf(false) }
 
-            var filterState by remember { mutableStateOf(false) }
-
             val icon = if (expanded)
                 Icons.Filled.KeyboardArrowUp
             else
@@ -73,7 +67,7 @@ fun FilterScreen(
                     .verticalScroll(rememberScrollState())
             ) {
 
-                val (buttonClose, buttonReset, column, buttonFilter) = createRefs()
+                val (buttonClose, buttonReset, column, _) = createRefs()
 
                 Button(
                     onClick = {
@@ -85,7 +79,7 @@ fun FilterScreen(
                         end.linkTo(parent.end, margin = 10.dp)
                     }
                 ) {
-                    Text("Reset")
+                    Text(stringResource(R.string.buttonFilterReset))
                 }
 
                 Column(modifier = Modifier
@@ -100,7 +94,7 @@ fun FilterScreen(
                     TextField(
                         value = entryType,
                         onValueChange = { entryType = it },
-                        label = { Text("Type") },
+                        label = { Text(stringResource(R.string.filterFieldType)) },
                         trailingIcon = {
                             Icon(icon, "contentDescription",
                                 Modifier.clickable { expanded = !expanded })
@@ -128,7 +122,7 @@ fun FilterScreen(
                     TextField(
                         value = entryCity,
                         onValueChange = { entryCity = it },
-                        label = { Text("City") }
+                        label = { Text(stringResource(R.string.filterFieldCity)) }
                     )
 
                     Spacer(modifier = Modifier.size(10.dp))
@@ -137,7 +131,7 @@ fun FilterScreen(
                     TextField(
                         value = entryMinSurface,
                         onValueChange = { entryMinSurface = it },
-                        label = { Text("MinSurface") },
+                        label = { Text(stringResource(R.string.filterFieldMinSurface)) },
                     )
 
                     Spacer(modifier = Modifier.size(10.dp))
@@ -145,7 +139,7 @@ fun FilterScreen(
                     TextField(
                         value = entryMaxSurface,
                         onValueChange = { entryMaxSurface = it },
-                        label = { Text("MaxSurface") },
+                        label = { Text(stringResource(R.string.filterFieldMaxSurface)) },
                     )
 
 
@@ -154,7 +148,7 @@ fun FilterScreen(
                     TextField(
                         value = entryMinPrice,
                         onValueChange = { entryMinPrice = it },
-                        label = { Text("MinPrice") },
+                        label = { Text(stringResource(R.string.filterFieldMinPrice)) },
                         modifier = Modifier.fillMaxWidth(0.5f)
                     )
 
@@ -163,7 +157,7 @@ fun FilterScreen(
                     TextField(
                         value = entryMaxPrice,
                         onValueChange = { entryMaxPrice = it },
-                        label = { Text("MaxPrice") },
+                        label = { Text(stringResource(R.string.filterFieldMaxPrice)) },
                         modifier = Modifier.fillMaxWidth(0.5f)
                     )
 
@@ -171,19 +165,19 @@ fun FilterScreen(
                     Spacer(modifier = Modifier.size(10.dp))
 
                     Column(horizontalAlignment = Alignment.Start) {
-                        Text(text = "The property was put on the market less than a week ago")
+                        Text(text = stringResource(R.string.filterCheckBoxInfoWeekAgo))
                         Checkbox(
                             checked = onTheMarketLessALastWeek,
                             onCheckedChange = { onTheMarketLessALastWeek = it })
-                        Text(text = "The property has been sold in the last three months")
+                        Text(text = stringResource(R.string.filterCheckBoxInfoThreeMonth))
                         Checkbox(
                             checked = soldOn3LastMonth,
                             onCheckedChange = { soldOn3LastMonth = it })
-                        Text(text = "The property has at least three photos")
+                        Text(text = stringResource(R.string.filterCheckBoxInfoLeastThreePhotos))
                         Checkbox(checked = min3photos, onCheckedChange = { min3photos = it })
-                        Text(text = "The property has schools nearby")
+                        Text(text = stringResource(R.string.filterCheckBoxInfoSchools))
                         Checkbox(checked = schools, onCheckedChange = { schools = it })
-                        Text(text = "The property has shops nearby")
+                        Text(text = stringResource(R.string.filterCheckBoxInfoShops))
                         Checkbox(checked = shops, onCheckedChange = { shops = it })
                     }
 
@@ -192,10 +186,10 @@ fun FilterScreen(
                     Button(
                         onClick = {
 
-                            filterState = true
+
 
                             editFilterProperty(
-                                filterState,
+                                true,
                                 entryType,
                                 entryCity,
                                 entryMinSurface.toInt(),
@@ -211,7 +205,7 @@ fun FilterScreen(
                             closeDialog()
                         },
                     ) {
-                        Text("Filter")
+                        Text(stringResource(R.string.buttonFilter))
                     }
                     Spacer(modifier = Modifier.size(50.dp))
                 }

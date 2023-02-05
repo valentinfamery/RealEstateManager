@@ -1,11 +1,13 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
@@ -14,6 +16,7 @@ import com.openclassrooms.realestatemanager.utils.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerScreen(
@@ -82,7 +85,7 @@ fun DrawerScreen(
                     navController.navigate(Screen.SignInScreen.route)
                 }
             ) {
-                Text("Logout")
+                Text(stringResource(R.string.buttonLogout))
             }
         }
 

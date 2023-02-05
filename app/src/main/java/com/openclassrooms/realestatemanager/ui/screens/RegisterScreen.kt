@@ -13,8 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.openclassrooms.realestatemanager.domain.models.Response
 import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
+import com.openclassrooms.realestatemanager.utils.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(isExpanded: Boolean, navController: NavController, userViewModel: UserViewModel){
 
@@ -43,7 +43,7 @@ fun RegisterScreen(isExpanded: Boolean, navController: NavController, userViewMo
         is Response.Success -> {
             Log.i("responseRegisterUser", "Success")
             LaunchedEffect(responseRegisterUser){
-                navController.navigate("mainScreen")
+                navController.navigate(Screen.MainScreen.route)
             }
         }
     }

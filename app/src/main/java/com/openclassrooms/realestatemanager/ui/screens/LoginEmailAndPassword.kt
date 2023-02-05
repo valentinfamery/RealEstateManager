@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -47,7 +47,7 @@ fun LoginEmailAndPassword(
         TextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.loginFieldEmail)) },
             singleLine = true,
             modifier = Modifier.constrainAs(entryEmail) {
                 top.linkTo(parent.top, margin = 250.dp)
@@ -67,7 +67,7 @@ fun LoginEmailAndPassword(
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.loginFieldPassword)) },
             singleLine = true,
             modifier = Modifier.constrainAs(entryPassword) {
                 top.linkTo(entryEmail.bottom, margin = 25.dp)
@@ -87,7 +87,7 @@ fun LoginEmailAndPassword(
         )
 
         Text(
-            text = "Don't have an account ?",
+            text = stringResource(R.string.notHaveAccount),
             modifier = Modifier.constrainAs(textButtonRegister) {
                 top.linkTo(buttonLogin.bottom, margin = 15.dp)
                 start.linkTo(parent.start, margin = 0.dp)
@@ -102,7 +102,7 @@ fun LoginEmailAndPassword(
                 end.linkTo(parent.end, margin = 0.dp)
             },
         ) {
-            Text("REGISTER")
+            Text(stringResource(R.string.loginButtonRegister))
         }
 
         TextButton(
@@ -114,7 +114,7 @@ fun LoginEmailAndPassword(
                 end.linkTo(entryPassword.end, margin = 0.dp)
             },
         ) {
-            Text("Forgot password ?")
+            Text(stringResource(R.string.forgotPassword))
         }
 
         Button(
@@ -129,7 +129,7 @@ fun LoginEmailAndPassword(
                     end.linkTo(parent.end, margin = 0.dp)
                 },
         ) {
-            Text("Login")
+            Text(stringResource(R.string.buttonLogin))
         }
 
     }
@@ -139,7 +139,7 @@ fun LoginEmailAndPassword(
             Toast.makeText(context, resetPasswordResponse.e.toString(), Toast.LENGTH_SHORT).show()
         }
         is Response.Success -> {
-            Toast.makeText(context, "success , check email", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, stringResource(R.string.successMessageEditPassword), Toast.LENGTH_SHORT).show()
         }
         Response.Empty -> {}
         Response.Loading -> {}

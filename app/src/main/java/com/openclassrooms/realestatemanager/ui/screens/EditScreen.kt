@@ -27,18 +27,17 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.gson.Gson
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.*
 import com.openclassrooms.realestatemanager.presentation.viewModels.EstateViewModel
-import com.openclassrooms.realestatemanager.presentation.viewModels.UserViewModel
 import com.openclassrooms.realestatemanager.ui.components.TopBar
 import com.openclassrooms.realestatemanager.utils.Screen
 import com.skydoves.landscapist.ImageOptions
@@ -54,9 +53,7 @@ import org.joda.time.chrono.ISOChronology
 fun EditScreenRealEstate(
     estateViewModel: EstateViewModel,
     itemRealEstate: Estate?,
-    navController: NavHostController,
-    userViewModel: UserViewModel = hiltViewModel(),
-    setPhotoUrl : (photoUrl : String) -> Unit
+    navController: NavHostController
 ) {
 
     var openDialogAddPhotoWithText by remember { mutableStateOf(false) }
@@ -111,17 +108,17 @@ fun EditScreenRealEstate(
             var entryNumberRoom by rememberSaveable { mutableStateOf(itemRealEstate.numberRoom.toString()) }
             var entryDescription by rememberSaveable { mutableStateOf(itemRealEstate.description.toString()) }
             var entryNumberAndStreet by rememberSaveable { mutableStateOf(itemRealEstate.numberAndStreet.toString()) }
-            var entryNumberApartement by rememberSaveable { mutableStateOf(itemRealEstate.numberApartment.toString()) }
+            var entryNumberApartment by rememberSaveable { mutableStateOf(itemRealEstate.numberApartment.toString()) }
             var entryCity by rememberSaveable { mutableStateOf(itemRealEstate.city.toString()) }
             var entryRegion by rememberSaveable { mutableStateOf(itemRealEstate.region.toString()) }
             var entryPostalCode by rememberSaveable { mutableStateOf(itemRealEstate.postalCode.toString()) }
             var entryCountry by rememberSaveable { mutableStateOf(itemRealEstate.country.toString()) }
             var entryStatus by rememberSaveable { mutableStateOf(itemRealEstate.status.toString()) }
 
-            var textDateOfEntry by rememberSaveable { mutableStateOf(itemRealEstate.dateOfEntry.toString()) }
+            val textDateOfEntry by rememberSaveable { mutableStateOf(itemRealEstate.dateOfEntry.toString()) }
             var textDateOfSale by rememberSaveable { mutableStateOf("00/00/0000") }
 
-            val checkedStateHopital = remember { mutableStateOf(itemRealEstate.hospitalsNear) }
+            val checkedStateHospital = remember { mutableStateOf(itemRealEstate.hospitalsNear) }
             val checkedStateSchool = remember { mutableStateOf(itemRealEstate.schoolsNear) }
             val checkedStateShops = remember { mutableStateOf(itemRealEstate.shopsNear) }
             val checkedStateParks = remember { mutableStateOf(itemRealEstate.parksNear) }
@@ -140,7 +137,7 @@ fun EditScreenRealEstate(
 
                 val (fieldType, fieldPrice, fieldArea, fieldNumberRoom, fieldDescription, fieldStatus, rowDateSaleButtonAndText, topAppBar, confirmAddButton, lazyColumnPhoto, buttonAddPhoto, dropdownMenu) = createRefs()
 
-                val (rowHopital, rowSchool, rowShops, rowParks, dropdownMenuStatus, fieldNumberAndStreet, fieldNumberApartement, fieldCity, fieldRegion, fieldPostalCode, fieldCountry) = createRefs()
+                val (rowHospital, rowSchool, rowShops, rowParks, dropdownMenuStatus, fieldNumberAndStreet, fieldNumberApartment, fieldCity, fieldRegion, fieldPostalCode, fieldCountry) = createRefs()
 
                 TopBar(
                     title = Screen.EditScreen.title,
@@ -178,7 +175,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryType,
                     onValueChange = { entryType = it },
-                    label = { Text("Type") },
+                    label = { Text(stringResource(R.string.editInfoType)) },
                     modifier = Modifier
                         .constrainAs(fieldType) {
                             top.linkTo(topAppBar.bottom, margin = 10.dp)
@@ -192,7 +189,7 @@ fun EditScreenRealEstate(
                         }
                         .fillMaxWidth(0.8f),
                     trailingIcon = {
-                        Icon(icon, "contentDescription",
+                        Icon(icon, "",
                             Modifier.clickable { expanded = !expanded })
                     }
 
@@ -228,7 +225,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryPrice,
                     onValueChange = { entryPrice = it },
-                    label = { Text("Price") },
+                    label = { Text(stringResource(R.string.editInfoPrice)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
@@ -243,7 +240,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryArea,
                     onValueChange = { entryArea = it },
-                    label = { Text("Area") },
+                    label = { Text(stringResource(R.string.editInfoArea)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
@@ -258,7 +255,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryNumberRoom,
                     onValueChange = { entryNumberRoom = it },
-                    label = { Text("Number of rooms") },
+                    label = { Text(stringResource(R.string.editInfoNumberOfRooms)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
@@ -273,7 +270,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryDescription,
                     onValueChange = { entryDescription = it },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(R.string.editInfoDescription)) },
                     singleLine = false,
                     modifier = Modifier
                         .constrainAs(fieldDescription) {
@@ -289,7 +286,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryNumberAndStreet,
                     onValueChange = { entryNumberAndStreet = it },
-                    label = { Text("NumberAndStreet") },
+                    label = { Text(stringResource(R.string.editInfoNumberAndStreet)) },
                     singleLine = true,
                     modifier = Modifier
                         .constrainAs(fieldNumberAndStreet) {
@@ -301,12 +298,12 @@ fun EditScreenRealEstate(
                 )
 
                 TextField(
-                    value = entryNumberApartement,
-                    onValueChange = { entryNumberApartement = it },
-                    label = { Text("NumberApartement") },
+                    value = entryNumberApartment,
+                    onValueChange = { entryNumberApartment = it },
+                    label = { Text(stringResource(R.string.editInfoNumberApartment)) },
                     singleLine = true,
                     modifier = Modifier
-                        .constrainAs(fieldNumberApartement) {
+                        .constrainAs(fieldNumberApartment) {
                             top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
@@ -317,11 +314,11 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryCity,
                     onValueChange = { entryCity = it },
-                    label = { Text("City") },
+                    label = { Text(stringResource(R.string.editInfoCity)) },
                     singleLine = true,
                     modifier = Modifier
                         .constrainAs(fieldCity) {
-                            top.linkTo(fieldNumberApartement.bottom, margin = 25.dp)
+                            top.linkTo(fieldNumberApartment.bottom, margin = 25.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
                         }
@@ -331,7 +328,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryRegion,
                     onValueChange = { entryRegion = it },
-                    label = { Text("Region") },
+                    label = { Text(stringResource(R.string.editInfoRegion)) },
                     singleLine = true,
                     modifier = Modifier
                         .constrainAs(fieldRegion) {
@@ -345,7 +342,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryPostalCode,
                     onValueChange = { entryPostalCode = it },
-                    label = { Text("Postal Code") },
+                    label = { Text(stringResource(R.string.editInfoPostalCode)) },
                     singleLine = true,
                     modifier = Modifier
                         .constrainAs(fieldPostalCode) {
@@ -359,7 +356,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryCountry,
                     onValueChange = { entryCountry = it },
-                    label = { Text("Country") },
+                    label = { Text(stringResource(R.string.editInfoCountry)) },
                     singleLine = true,
                     modifier = Modifier
                         .constrainAs(fieldCountry) {
@@ -373,7 +370,7 @@ fun EditScreenRealEstate(
 
                 Row(
                     modifier = Modifier
-                        .constrainAs(rowHopital) {
+                        .constrainAs(rowHospital) {
                             top.linkTo(fieldCountry.bottom, margin = 5.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
@@ -384,16 +381,16 @@ fun EditScreenRealEstate(
                     ) {
 
                     Checkbox(
-                        checked = checkedStateHopital.value,
-                        onCheckedChange = { checkedStateHopital.value = it },
+                        checked = checkedStateHospital.value,
+                        onCheckedChange = { checkedStateHospital.value = it },
                     )
-                    Text(text = "Near Hopital")
+                    Text(text = stringResource(R.string.editInfoHospital))
                 }
 
                 Row(
                     modifier = Modifier
                         .constrainAs(rowSchool) {
-                            top.linkTo(rowHopital.bottom, margin = 5.dp)
+                            top.linkTo(rowHospital.bottom, margin = 5.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
                         },
@@ -405,7 +402,7 @@ fun EditScreenRealEstate(
                         checked = checkedStateSchool.value,
                         onCheckedChange = { checkedStateSchool.value = it }
                     )
-                    Text(text = "Near School")
+                    Text(text = stringResource(R.string.editInfoSchool))
                 }
 
                 Row(
@@ -422,7 +419,7 @@ fun EditScreenRealEstate(
                         checked = checkedStateShops.value,
                         onCheckedChange = { checkedStateShops.value = it }
                     )
-                    Text(text = "Near Shops")
+                    Text(text = stringResource(R.string.editInfoShops))
                 }
 
                 Row(
@@ -439,7 +436,7 @@ fun EditScreenRealEstate(
                         checked = checkedStateParks.value,
                         onCheckedChange = { checkedStateParks.value = it }
                     )
-                    Text(text = "Near Parks")
+                    Text(text = stringResource(R.string.editInfoParks))
                 }
 
 
@@ -451,7 +448,7 @@ fun EditScreenRealEstate(
                 TextField(
                     value = entryStatus,
                     onValueChange = { entryStatus = it },
-                    label = { Text("Status") },
+                    label = { Text(stringResource(R.string.editInfoStatus)) },
                     singleLine = true,
                     modifier = Modifier
                         .constrainAs(fieldStatus) {
@@ -466,7 +463,7 @@ fun EditScreenRealEstate(
                         }
                         .fillMaxWidth(0.8f),
                     trailingIcon = {
-                        Icon(iconStatus, "contentDescription",
+                        Icon(iconStatus, "",
                             Modifier.clickable { expandedStatus = !expandedStatus })
                     }
                 )
@@ -531,7 +528,7 @@ fun EditScreenRealEstate(
                             },
                         )
                         {
-                            Text("Set Date Of Sale")
+                            Text(stringResource(R.string.editInfoSetDateOfSale))
                         }
                     }
 
@@ -548,7 +545,7 @@ fun EditScreenRealEstate(
                     end.linkTo(parent.end, margin = 25.dp)
                 }) {
 
-                    listPhotos.value?.filter { !it.toDeleteLatter }?.forEachIndexed { index, photoWithText->
+                    listPhotos.value.filter { !it.toDeleteLatter }.forEach { photoWithText->
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
@@ -598,15 +595,15 @@ fun EditScreenRealEstate(
                         end.linkTo(parent.end, margin = 0.dp)
                     }
                 ) {
-                    Text("Add Photo")
+                    Text(stringResource(R.string.editButtonAddPhoto))
                 }
-
+                val errorEdit = stringResource(R.string.errorEdit)
                 Button(
                     onClick = {
 
                         try {
 
-                            listPhotos.value!!.size >= 1
+                            listPhotos.value.isNotEmpty()
 
 
 
@@ -618,7 +615,7 @@ fun EditScreenRealEstate(
                             entryNumberRoom ,
                             entryDescription ,
                             entryNumberAndStreet,
-                            entryNumberApartement ,
+                            entryNumberApartment ,
                             entryCity ,
                             entryRegion ,
                             entryPostalCode ,
@@ -629,11 +626,11 @@ fun EditScreenRealEstate(
                                 itemRealEstate.realEstateAgent,
                                 itemRealEstate.lat,
                                 itemRealEstate.lng,
-                            checkedStateHopital ,
+                            checkedStateHospital ,
                             checkedStateSchool ,
                             checkedStateShops ,
                             checkedStateParks,
-                                listPhotos.value!!.toMutableList(),
+                                listPhotos.value.toMutableList(),
                             itemRealEstate
                             )
 
@@ -643,7 +640,7 @@ fun EditScreenRealEstate(
                         } catch (e: Exception) {
                             Toast.makeText(
                                 context,
-                                "Please enter a valid number for price , area and number of room",
+                                errorEdit,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -655,7 +652,7 @@ fun EditScreenRealEstate(
                         end.linkTo(parent.end, margin = 0.dp)
                     },
                 ) {
-                    Text("Confirm")
+                    Text(stringResource(R.string.buttonConfirmEdit))
                 }
 
             }
