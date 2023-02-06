@@ -626,9 +626,9 @@ fun NewRealEstateScreen(
 
             FlowRow(modifier = if(!isExpanded) Modifier.constrainAs(lazyColumnPhoto) {
                 top.linkTo(rowDateSaleButtonAndText.bottom, margin = 25.dp)
-                start.linkTo(fieldNumberApartment.end, margin = 25.dp)
-                end.linkTo(parent.end, margin = 25.dp)
-                width = Dimension.percent(0.40f)
+                start.linkTo(startGuideline)
+                end.linkTo(endGuideline)
+                width = Dimension.percent(0.80f)
                 height = Dimension.wrapContent
             }else Modifier.constrainAs(lazyColumnPhoto) {
                 top.linkTo(topGuideline)
@@ -641,7 +641,7 @@ fun NewRealEstateScreen(
                 listPhotos.value.forEach { photo->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                            .fillMaxWidth(0.50f)
+                            .fillMaxWidth(0.49f)
                             .padding(5.dp)
                     ) {
                         GlideImage(

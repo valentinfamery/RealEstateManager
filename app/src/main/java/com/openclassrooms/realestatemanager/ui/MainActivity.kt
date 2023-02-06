@@ -107,7 +107,7 @@ class MainActivity : ComponentActivity() {
 
                         composable(Screen.NewScreen.route){
                             NewRealEstateScreen(isExpanded,estateViewModel,userViewModel, navigateToBack = {
-                                navControllerMainActivity.popBackStack()
+                                navControllerMainActivity.navigate(Screen.MainScreen.route)
                             })
                         }
 
