@@ -597,15 +597,8 @@ fun EditScreenRealEstate(
                 ) {
                     Text(stringResource(R.string.editButtonAddPhoto))
                 }
-                val errorEdit = stringResource(R.string.errorEdit)
                 Button(
                     onClick = {
-
-                        try {
-
-                            listPhotos.value.isNotEmpty()
-
-
 
                             estateViewModel.updateRealEstate(
                                 itemRealEstate.id,
@@ -635,15 +628,6 @@ fun EditScreenRealEstate(
                             )
 
 
-                            navController.popBackStack()
-
-                        } catch (e: Exception) {
-                            Toast.makeText(
-                                context,
-                                errorEdit,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
 
                     },
                     modifier = Modifier.constrainAs(confirmAddButton) {
@@ -657,5 +641,19 @@ fun EditScreenRealEstate(
 
             }
         }
+    }
+    when(estateViewModel.updateRealEstateResponse){
+        is Response.Success->{
+            LaunchedEffect(estateViewModel.updateRealEstateResponse){
+                if(estateViewModel.updateRealEstateResponse is Response.Success){
+                    navController.popBackStack()
+                }
+            }
+        }
+        is Response.Failure -> {
+            val e = (estateViewModel.updateRealEstateResponse as Response.Failure).e.message
+            Toast.makeText(context,e,Toast.LENGTH_LONG).show()
+        }
+        else -> {}
     }
 }

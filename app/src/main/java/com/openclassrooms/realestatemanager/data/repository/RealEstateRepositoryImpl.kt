@@ -457,6 +457,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
             Response.Success(true)
         }catch (e: Exception) {
+            Log.e("repoUpdateFailure",e.message.toString())
             Response.Failure(e)
         }
     }

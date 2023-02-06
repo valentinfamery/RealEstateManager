@@ -100,20 +100,20 @@ fun RealEstateDetailScreen(
                         FlowRow(modifier = Modifier
                             .fillMaxWidth(0.80f)
                         ) {
-                            repeat(listPhotos?.size ?: 0) {
+                            listPhotos?.forEach {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                                     .fillMaxWidth(0.49f)
                                     .padding(5.dp)) {
 
                                         GlideImage(
-                                            imageModel = {listPhotos?.get(it)?.photoSource},
+                                            imageModel = { it.photoSource },
                                             modifier = Modifier
                                                 .aspectRatio(0.9f)
                                                 .clip(RoundedCornerShape(15.dp)),
                                             imageOptions = ImageOptions(contentScale = ContentScale.FillBounds)
                                         )
 
-                                    Text(text = listPhotos?.get(it)?.text ?: "")
+                                    Text(text = it.text)
                                 }
                             }
                         }

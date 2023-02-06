@@ -38,8 +38,8 @@ data class Estate(
     var parksNear : Boolean = false,
     @ColumnInfo(name = "listPhotoWithText")
     @Exclude
-    var listPhotoWithText : List<Photo> ?=null,
-    var count_photo : Int? = listPhotoWithText?.size,
+    var listPhotoWithText : List<Photo> = listOf(),
+    var count_photo : Int? = listPhotoWithText.size,
 ): Parcelable {
     constructor() : this("",
         null,null,null,

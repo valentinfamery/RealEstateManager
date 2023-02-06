@@ -687,12 +687,8 @@ fun NewRealEstateScreen(
             ) {
                 Text(stringResource(R.string.editButtonAddPhoto))
             }
-            val errorNew = stringResource(R.string.errorEdit)
             Button(
                 onClick = {
-
-                    try {
-
 
                         listPhotos.value.isNotEmpty()
 
@@ -719,22 +715,6 @@ fun NewRealEstateScreen(
                                         checkedStateShops.value,
                                         checkedStateParks.value
                                     )
-
-
-
-
-
-
-
-
-
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            context,
-                            errorNew,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
 
                 },
                 modifier = Modifier.constrainAs(confirmAddButton) {
@@ -776,6 +756,10 @@ fun NewRealEstateScreen(
                     navigateToBack()
                 }
             }
+        }
+        is Response.Failure ->{
+            val e = (estateViewModel.createRealEstateResponse as Response.Failure).e.message
+            Toast.makeText(context,e,Toast.LENGTH_LONG).show()
         }
         else -> {}
     }

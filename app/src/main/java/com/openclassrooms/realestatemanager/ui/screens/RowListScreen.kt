@@ -33,7 +33,7 @@ fun RowList(
 
 
     if (!isExpanded) {
-        val items2 = item.listPhotoWithText
+
 
         Card(
             modifier = Modifier
@@ -54,11 +54,13 @@ fun RowList(
                         .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
-                    if (items2?.get(0)?.photoSource != null) {
-                        GlideImage(
-                            imageModel = {items2[0].photoSource},
-                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                        )
+                    if(item.listPhotoWithText.isNotEmpty()) {
+                        item.listPhotoWithText[0].let {
+                            GlideImage(
+                                imageModel = { it.photoSource },
+                                imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+                            )
+                        }
                     }
                 }
 
@@ -87,7 +89,8 @@ fun RowList(
 
 
     } else  {
-        val items2 = item.listPhotoWithText
+
+
 
         Card(
             modifier = Modifier
@@ -106,10 +109,14 @@ fun RowList(
                         .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
                         .background(MaterialTheme.colorScheme.tertiary)
                 ) {
-                    GlideImage(
-                        imageModel = {items2?.get(0)?.photoSource},
-                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                    )
+                    if(item.listPhotoWithText.isNotEmpty()) {
+                        item.listPhotoWithText[0].let {
+                            GlideImage(
+                                imageModel = { it.photoSource },
+                                imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+                            )
+                        }
+                    }
                 }
 
 
