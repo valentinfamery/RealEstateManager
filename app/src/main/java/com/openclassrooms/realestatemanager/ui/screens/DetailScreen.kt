@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -18,6 +19,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
@@ -77,13 +80,15 @@ fun RealEstateDetailScreen(
                 },
                 content = {
 
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    ConstraintLayout(modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth()) {
 
+                        val (
+                            topBar,flowPhotos,infoType,infoPrice,infoSurface,
+                            infoNumberRooms,boxDescription,boxAddress,
+                            infoHospital,infoSchools,infoShops,infoParks,
+                            infoStatus,infoDateEntry,infoDateSale,infoAgent
+                        ) = createRefs()
+                        val (map) = createRefs()
                         TopBar(
                             title = Screen.DetailScreen.title,
                             backNavigate = !isExpanded,
@@ -92,15 +97,25 @@ fun RealEstateDetailScreen(
                             navigateToFilterScreen = { /*TODO*/ },
                             navigateToBack = { navigateToBack() },
                             openDrawer = { /*TODO*/ },
-                            modifier = Modifier
+                            modifier = Modifier.constrainAs(topBar){
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                width = Dimension.matchParent
+                                height = Dimension.wrapContent
+
+                            }
                         )
 
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
-
-                        FlowRow(modifier = Modifier
-                            .fillMaxWidth(0.80f)
+                        FlowRow(modifier = Modifier.constrainAs(flowPhotos){
+                            top.linkTo(topBar.bottom,10.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.percent(0.8f)
+                            height = Dimension.wrapContent
+                        }
                         ) {
-                            listPhotos?.forEach {
+                            listPhotos.forEach {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                                     .fillMaxWidth(0.49f)
                                     .padding(5.dp)) {
@@ -117,28 +132,35 @@ fun RealEstateDetailScreen(
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
-                        FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                        ) {
-                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
-                                Text(text = stringResource(R.string.beforeType) + estate.type.toString())
-                                Text(text = stringResource(R.string.beforePrice) + estate.price.toString() + stringResource(R.string.dollarSymbol))
-                            }
-                            Spacer(modifier = Modifier.fillMaxWidth(0.2f))
-                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
-                                Text(text = stringResource(R.string.beforeSurface) + estate.area.toString() + stringResource(R.string.surfaceUnity))
-                                Text(text = stringResource(R.string.beforeNumberRooms) + estate.numberRoom.toString())
-                            }
+                        Text(text = stringResource(R.string.beforeType) + estate.type.toString(), modifier = Modifier.constrainAs(infoType){
+                            top.linkTo(flowPhotos.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+                        Text(text = stringResource(R.string.beforePrice) + estate.price.toString() + stringResource(R.string.dollarSymbol),modifier = Modifier.constrainAs(infoPrice){
+                            top.linkTo(infoType.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+                        Text(text = stringResource(R.string.beforeSurface) + estate.area.toString() + stringResource(R.string.surfaceUnity),modifier = Modifier.constrainAs(infoSurface){
+                            top.linkTo(infoPrice.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+                        Text(text = stringResource(R.string.beforeNumberRooms) + estate.numberRoom.toString(), modifier = Modifier.constrainAs(infoNumberRooms){
+                            top.linkTo(infoSurface.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+
+                        Box(modifier = Modifier.constrainAs(boxDescription){
+                            top.linkTo(infoNumberRooms.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.percent(0.8f)
+                            height = Dimension.wrapContent
                         }
-
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
-
-                        Box(modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .wrapContentHeight()
                             .clip(RoundedCornerShape(10.dp))
                             .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp))) {
                             Column(modifier = Modifier.padding(20.dp)) {
@@ -148,12 +170,16 @@ fun RealEstateDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.fillMaxHeight(0.10f))
-
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
-                                .fillMaxWidth(0.8f)
+                                .constrainAs(boxAddress){
+                                    top.linkTo(boxDescription.bottom,15.dp)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    width = Dimension.percent(0.8f)
+                                    height = Dimension.wrapContent
+                                }
                                 .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)),
                         ) {
                             Column(modifier = Modifier.padding(20.dp)) {
@@ -165,72 +191,124 @@ fun RealEstateDetailScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
+                        FilterChip(
+                            modifier = Modifier.constrainAs(infoHospital){
+                                top.linkTo(boxAddress.bottom,15.dp)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                width = Dimension.percent(0.8f)
+                                height = Dimension.wrapContent
+                            },
+                            selected = estate.hospitalsNear,
+                            onClick = { estate.hospitalsNear = !estate.hospitalsNear },
+                            label = { Text(stringResource(R.string.editInfoHospital)) },
+                            leadingIcon = if (estate.hospitalsNear) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.Done,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                    )
+                                }
+                            } else {
+                                null
+                            },
+                        )
 
-                        FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                        ) {
-                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
-                                Checkbox(
-                                    checked = estate.hospitalsNear,
-                                    onCheckedChange = { estate.hospitalsNear = it },
-                                )
-                                Text(text = stringResource(R.string.beforeHospital))
-                                Checkbox(
-                                    checked = estate.schoolsNear,
-                                    onCheckedChange = { estate.schoolsNear = it }
-                                )
-                                Text(text = stringResource(R.string.beforeSchool))
+                        FilterChip(
+                            modifier = Modifier.constrainAs(infoSchools){
+                                top.linkTo(infoHospital.bottom,15.dp)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                width = Dimension.percent(0.8f)
+                                height = Dimension.wrapContent
+                            },
+                            selected = estate.schoolsNear,
+                            onClick = { estate.schoolsNear = !estate.schoolsNear },
+                            label = { Text(stringResource(R.string.editInfoSchool)) },
+                            leadingIcon = if (estate.schoolsNear) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.Done,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                    )
+                                }
+                            } else {
+                                null
                             }
-                            Spacer(modifier = Modifier.fillMaxWidth(0.2f))
-                            Column(modifier = Modifier.fillMaxWidth(0.4f)) {
-                                Checkbox(
-                                    checked = estate.shopsNear,
-                                    onCheckedChange = { estate.shopsNear = it }
-                                )
-                                Text(text = stringResource(R.string.beforeShops))
-                                Checkbox(
-                                    checked = estate.parksNear,
-                                    onCheckedChange = { estate.parksNear = it }
-                                )
-                                Text(text = stringResource(R.string.beforeParks))
+                        )
+                        FilterChip(
+                            modifier = Modifier.constrainAs(infoShops){
+                                top.linkTo(infoSchools.bottom,15.dp)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                width = Dimension.percent(0.8f)
+                                height = Dimension.wrapContent
+                            },
+                            selected = estate.shopsNear,
+                            onClick = { estate.shopsNear = !estate.shopsNear },
+                            label = { Text(stringResource(R.string.editInfoShops)) },
+                            leadingIcon = if (estate.shopsNear) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.Done,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                    )
+                                }
+                            } else {
+                                null
                             }
-                        }
-
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(text = stringResource(R.string.beforeStatus) + estate.status.toString())
-                        }
-
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
-
-                        Row(modifier = Modifier
-                            .fillMaxWidth(0.8f)) {
-                            Text(text = stringResource(R.string.beforeDateOfEntry) + estate.dateOfEntry.toString())
-                        }
-
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
-
-                        Row(modifier = Modifier
-                            .fillMaxWidth(0.8f)) {
-                            if(estate.status == "Sold") {
-                                Text(text = stringResource(R.string.beforeDateOfSale) + estate.dateOfSale.toString())
+                        )
+                        FilterChip(
+                            modifier = Modifier.constrainAs(infoParks){
+                                top.linkTo(infoShops.bottom,15.dp)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                width = Dimension.percent(0.8f)
+                                height = Dimension.wrapContent
+                            },
+                            selected = estate.parksNear,
+                            onClick = { estate.parksNear = !estate.parksNear },
+                            label = { Text(stringResource(R.string.editInfoParks)) },
+                            leadingIcon = if (estate.parksNear) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.Done,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                    )
+                                }
+                            } else {
+                                null
                             }
-                        }
+                        )
 
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
 
-                        Row {
-                            Text(text = stringResource(R.string.beforeAgent) + estate.realEstateAgent.toString())
-                        }
+                        Text(text = stringResource(R.string.beforeStatus) + estate.status.toString(), modifier = Modifier.constrainAs(infoStatus){
+                            top.linkTo(infoParks.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+                        Text(text = stringResource(R.string.beforeDateOfEntry) + estate.dateOfEntry.toString(), modifier = Modifier.constrainAs(infoDateEntry){
+                            top.linkTo(infoStatus.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
 
-                        Spacer(modifier = Modifier.fillMaxHeight(0.025f))
+
+                        Text(text = if(estate.status == "Sold") stringResource(R.string.beforeDateOfSale) + estate.dateOfSale.toString() else "", modifier = Modifier.constrainAs(infoDateSale){
+                            top.linkTo(infoDateEntry.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+
+                        Text(text = stringResource(R.string.beforeAgent) + estate.realEstateAgent.toString(),modifier = Modifier.constrainAs(infoAgent){
+                            top.linkTo(infoDateSale.bottom,15.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
 
 
                         if (estate.lat != null && estate.lng != null) {
@@ -245,7 +323,12 @@ fun RealEstateDetailScreen(
 
 
 
-                            GoogleMap(cameraPositionState = cameraPositionState, modifier = Modifier
+                            GoogleMap(cameraPositionState = cameraPositionState, modifier = Modifier.constrainAs(map){
+                                top.linkTo(infoAgent.bottom,15.dp)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom,25.dp)
+                            }
                                 .size(200.dp)
                                 .clip(RoundedCornerShape(15.dp))
                             ) {

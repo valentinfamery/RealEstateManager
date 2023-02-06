@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.openclassrooms.realestatemanager.R
 
 
@@ -88,8 +89,9 @@ fun FilterScreen(
                         top.linkTo(buttonReset.bottom, margin = 25.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
+                        width = Dimension.percent(0.8f)
+                        height = Dimension.wrapContent
                     }
-                    .fillMaxWidth(0.8f)
                     .wrapContentHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
 
                     TextField(
@@ -165,6 +167,7 @@ fun FilterScreen(
 
 
                     FilterChip(
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                         selected = onTheMarketLessALastWeek,
                         onClick = { onTheMarketLessALastWeek = !onTheMarketLessALastWeek },
                         label = { Text(stringResource(R.string.filterCheckBoxInfoWeekAgo)) },
@@ -181,6 +184,7 @@ fun FilterScreen(
                         }
                     )
                     FilterChip(
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                         selected = soldOn3LastMonth,
                         onClick = { soldOn3LastMonth = !soldOn3LastMonth },
                         label = { Text(stringResource(R.string.filterCheckBoxInfoThreeMonth)) },
@@ -197,6 +201,7 @@ fun FilterScreen(
                         }
                     )
                     FilterChip(
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                         selected = min3photos,
                         onClick = { min3photos = !min3photos },
                         label = { Text(stringResource(R.string.filterCheckBoxInfoLeastThreePhotos)) },
@@ -213,6 +218,7 @@ fun FilterScreen(
                         }
                     )
                     FilterChip(
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                         selected = schools,
                         onClick = { schools = !schools },
                         label = { Text(stringResource(R.string.filterCheckBoxInfoSchools)) },
@@ -229,6 +235,7 @@ fun FilterScreen(
                         }
                     )
                     FilterChip(
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                         selected = shops,
                         onClick = { shops = !shops },
                         label = { Text(stringResource(R.string.filterCheckBoxInfoShops)) },

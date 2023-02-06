@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.gson.Gson
@@ -368,76 +370,103 @@ fun EditScreenRealEstate(
                 )
 
 
-                Row(
+                FilterChip(
+                    selected = checkedStateHospital.value,
+                    onClick = { checkedStateHospital.value = !checkedStateHospital.value },
+                    label = { Text(stringResource(R.string.editInfoHospital)) },
+                    leadingIcon = if (checkedStateHospital.value) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    },
                     modifier = Modifier
                         .constrainAs(rowHospital) {
-                            top.linkTo(fieldCountry.bottom, margin = 5.dp)
+                            top.linkTo(fieldCountry.bottom, margin = 25.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
+                            width = Dimension.percent(0.8f)
+                            height = Dimension.wrapContent
                         },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
+                )
 
-                    ) {
-
-                    Checkbox(
-                        checked = checkedStateHospital.value,
-                        onCheckedChange = { checkedStateHospital.value = it },
-                    )
-                    Text(text = stringResource(R.string.editInfoHospital))
-                }
-
-                Row(
+                FilterChip(
                     modifier = Modifier
                         .constrainAs(rowSchool) {
                             top.linkTo(rowHospital.bottom, margin = 5.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
+                            width = Dimension.percent(0.8f)
+                            height = Dimension.wrapContent
                         },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-
-                    ) {
-                    Checkbox(
-                        checked = checkedStateSchool.value,
-                        onCheckedChange = { checkedStateSchool.value = it }
-                    )
-                    Text(text = stringResource(R.string.editInfoSchool))
-                }
-
-                Row(
+                    selected = checkedStateSchool.value,
+                    onClick = { checkedStateSchool.value = !checkedStateSchool.value },
+                    label = { Text(stringResource(R.string.editInfoSchool)) },
+                    leadingIcon = if (checkedStateSchool.value) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    }
+                )
+                FilterChip(
                     modifier = Modifier
                         .constrainAs(rowShops) {
                             top.linkTo(rowSchool.bottom, margin = 5.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
+                            width = Dimension.percent(0.8f)
+                            height = Dimension.wrapContent
                         },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    Checkbox(
-                        checked = checkedStateShops.value,
-                        onCheckedChange = { checkedStateShops.value = it }
-                    )
-                    Text(text = stringResource(R.string.editInfoShops))
-                }
-
-                Row(
+                    selected = checkedStateShops.value,
+                    onClick = { checkedStateShops.value = !checkedStateShops.value },
+                    label = { Text(stringResource(R.string.editInfoShops)) },
+                    leadingIcon = if (checkedStateShops.value) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    }
+                )
+                FilterChip(
                     modifier = Modifier
                         .constrainAs(rowParks) {
                             top.linkTo(rowShops.bottom, margin = 5.dp)
                             start.linkTo(parent.start, margin = 50.dp)
                             end.linkTo(parent.end, margin = 50.dp)
+                            width = Dimension.percent(0.8f)
+                            height = Dimension.wrapContent
                         },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    Checkbox(
-                        checked = checkedStateParks.value,
-                        onCheckedChange = { checkedStateParks.value = it }
-                    )
-                    Text(text = stringResource(R.string.editInfoParks))
-                }
+                    selected = checkedStateParks.value,
+                    onClick = { checkedStateParks.value = !checkedStateParks.value },
+                    label = { Text(stringResource(R.string.editInfoParks)) },
+                    leadingIcon = if (checkedStateParks.value) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = "",
+                                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    }
+                )
 
 
 

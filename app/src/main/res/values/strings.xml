@@ -13,8 +13,8 @@
     <string name="ErrorDollarValue">Incorrect Dollar Value</string>
     <string name="ErrorInternetNotAvailable">Error Internet Not Available</string>
     <string name="FloatingActionButtonEdit">Edit</string>
-    <string name="beforeAddress">\" Address : \"</string>
-    <string name="beforeDescription">\"Description : \"</string>
+    <string name="beforeAddress"> Address : </string>
+    <string name="beforeDescription"> Description : </string>
     <string name="beforeHospital">Near Hospital</string>
     <string name="beforeSchool">Near School</string>
     <string name="beforeShops">Near Shops</string>
