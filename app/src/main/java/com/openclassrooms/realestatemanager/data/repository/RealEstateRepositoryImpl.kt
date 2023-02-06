@@ -393,7 +393,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                             photoWithText.id = newId
 
 
-                            photoWithText.toAddLatter = false
+
 
                     firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).set(photoWithText)
 
@@ -418,7 +418,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                     }.toString()
                     Log.e("urlFinal", urlFinal)
                     photoWithText.photoSource = urlFinal
-                    photoWithText.toUpdateLatter = false
+
 
                     firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("photoSource",photoWithText.photoSource)
                     firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("text",photoWithText.text)
@@ -429,7 +429,6 @@ open class RealEstateRepositoryImpl @Inject constructor(
                         "realEstates/$id/${photoWithText.id}"
                     )
                     realEstateImage2.delete().await()
-                    photoWithText.toDeleteLatter = false
 
                     firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).delete()
                 }
