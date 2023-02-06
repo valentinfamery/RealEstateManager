@@ -761,14 +761,21 @@ fun NewRealEstateScreen(
 
     when(estateViewModel.createRealEstateResponse){
         is Response.Success ->{
-            NotificationHelper.sendSimpleNotification(
-                context = context,
-                title = stringResource(R.string.app_name),
-                message = stringResource(R.string.notificationMessage),
-                intent = Intent(context, MainActivity::class.java),
-                reqCode = 10001
-            )
-            navigateToBack()
+            val title = stringResource(R.string.app_name)
+            val message = stringResource(R.string.notificationMessage)
+
+            LaunchedEffect(estateViewModel.createRealEstateResponse){
+                if(estateViewModel.createRealEstateResponse is Response.Success){
+                    NotificationHelper.sendSimpleNotification(
+                        context = context,
+                        title = title,
+                        message = message,
+                        intent = Intent(context, MainActivity::class.java),
+                        reqCode = 10001
+                    )
+                    navigateToBack()
+                }
+            }
         }
         else -> {}
     }
