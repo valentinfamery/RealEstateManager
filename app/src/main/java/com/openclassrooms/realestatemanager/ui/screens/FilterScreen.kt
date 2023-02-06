@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
@@ -148,8 +149,7 @@ fun FilterScreen(
                     TextField(
                         value = entryMinPrice,
                         onValueChange = { entryMinPrice = it },
-                        label = { Text(stringResource(R.string.filterFieldMinPrice)) },
-                        modifier = Modifier.fillMaxWidth(0.5f)
+                        label = { Text(stringResource(R.string.filterFieldMinPrice)) }
                     )
 
                     Spacer(modifier = Modifier.size(10.dp))
@@ -157,30 +157,93 @@ fun FilterScreen(
                     TextField(
                         value = entryMaxPrice,
                         onValueChange = { entryMaxPrice = it },
-                        label = { Text(stringResource(R.string.filterFieldMaxPrice)) },
-                        modifier = Modifier.fillMaxWidth(0.5f)
+                        label = { Text(stringResource(R.string.filterFieldMaxPrice)) }
                     )
 
 
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    Column(horizontalAlignment = Alignment.Start) {
-                        Text(text = stringResource(R.string.filterCheckBoxInfoWeekAgo))
-                        Checkbox(
-                            checked = onTheMarketLessALastWeek,
-                            onCheckedChange = { onTheMarketLessALastWeek = it })
-                        Text(text = stringResource(R.string.filterCheckBoxInfoThreeMonth))
-                        Checkbox(
-                            checked = soldOn3LastMonth,
-                            onCheckedChange = { soldOn3LastMonth = it })
-                        Text(text = stringResource(R.string.filterCheckBoxInfoLeastThreePhotos))
-                        Checkbox(checked = min3photos, onCheckedChange = { min3photos = it })
-                        Text(text = stringResource(R.string.filterCheckBoxInfoSchools))
-                        Checkbox(checked = schools, onCheckedChange = { schools = it })
-                        Text(text = stringResource(R.string.filterCheckBoxInfoShops))
-                        Checkbox(checked = shops, onCheckedChange = { shops = it })
-                    }
 
+                    FilterChip(
+                        selected = onTheMarketLessALastWeek,
+                        onClick = { onTheMarketLessALastWeek = !onTheMarketLessALastWeek },
+                        label = { Text(stringResource(R.string.filterCheckBoxInfoWeekAgo)) },
+                        leadingIcon = if (onTheMarketLessALastWeek) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                    FilterChip(
+                        selected = soldOn3LastMonth,
+                        onClick = { soldOn3LastMonth = !soldOn3LastMonth },
+                        label = { Text(stringResource(R.string.filterCheckBoxInfoThreeMonth)) },
+                        leadingIcon = if (soldOn3LastMonth) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                    FilterChip(
+                        selected = min3photos,
+                        onClick = { min3photos = !min3photos },
+                        label = { Text(stringResource(R.string.filterCheckBoxInfoLeastThreePhotos)) },
+                        leadingIcon = if (min3photos) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                    FilterChip(
+                        selected = schools,
+                        onClick = { schools = !schools },
+                        label = { Text(stringResource(R.string.filterCheckBoxInfoSchools)) },
+                        leadingIcon = if (schools) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
+                    FilterChip(
+                        selected = shops,
+                        onClick = { shops = !shops },
+                        label = { Text(stringResource(R.string.filterCheckBoxInfoShops)) },
+                        leadingIcon = if (shops) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = "",
+                                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                                )
+                            }
+                        } else {
+                            null
+                        }
+                    )
 
                     Spacer(modifier = Modifier.size(10.dp))
                     Button(
