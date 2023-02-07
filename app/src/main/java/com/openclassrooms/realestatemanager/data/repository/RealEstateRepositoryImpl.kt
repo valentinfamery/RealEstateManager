@@ -105,99 +105,89 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
             val address3 = "$numberAndStreet,$city,$region"
             val id = UUID.randomUUID().toString()
-            val listRestaurantApiNearBySearchResponseOut: Call<ResultGeocoding?>? =
-                ApiService.`interface`.getResultGeocodingResponse(address3)
-
-            listRestaurantApiNearBySearchResponseOut?.enqueue(object : Callback<ResultGeocoding?> {
-                override fun onResponse(
-                    call: Call<ResultGeocoding?>,
-                    response: retrofit2.Response<ResultGeocoding?>
-                ) {
-
-                    if (response.body() != null) {
+            val response = ApiService.`interface`.getResultGeocodingResponse(address3)
 
 
-                        val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
-                        val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
-                        Log.e(lat.toString(), lng.toString())
-                        Log.e("latLng", LatLng(lat!!, lng!!).toString())
-                        val latLng = LatLng(lat, lng)
-                        Log.e("result", latLng.toString())
 
-                        val listPhotoFinal: MutableList<Photo> =
-                            mutableListOf()
 
-                        if (listPhotos != null) {
-                            for (photoWithText in listPhotos) {
-                                runBlocking {
-                                    launch {
 
-                                        val newId = UUID.randomUUID().toString()
-                                        val realEstateImage: StorageReference = storageRef.child(
-                                            "realEstates/$id/$newId"
-                                        )
-                                        Log.e("uri", photoWithText.photoSource)
-                                        val urlFinal = withContext(Dispatchers.IO) {
-                                            realEstateImage.putFile(Uri.parse(photoWithText.photoSource))
-                                                .await().storage.downloadUrl.await()
-                                        }.toString()
-                                        Log.e("urlFinal", urlFinal)
-                                        photoWithText.photoSource = urlFinal
-                                        photoWithText.id = newId
-                                        listPhotoFinal.add(photoWithText)
-                                    }
-                                }
-                            }
-                        }
 
-                        val realEstate  = Estate(
-                            id,
-                            type,
-                            price.toInt(),
-                            area.toInt(),
-                            numberRoom,
-                            description,
-                            numberAndStreet,
-                            numberApartment,
-                            city,
-                            region,
-                            postalCode,
-                            country,
-                            status,
-                            dateEntry,
-                            dateSale,
-                            realEstateAgent,
-                            latLng.latitude,
-                            latLng.longitude,
-                            checkedStateHospital,
-                            checkedStateSchool,
-                            checkedStateShops,
-                            checkedStateParks,
-                            listPhotoFinal,
-                        )
+                            val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
+                            val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
+                            Log.e(lat.toString(), lng.toString())
+                            Log.e("latLng", LatLng(lat!!, lng!!).toString())
+                            val latLng = LatLng(lat, lng)
+                            Log.e("result", latLng.toString())
 
-                        firebaseFirestore.collection("real_estates").document(id).set(realEstate)
+                            val listPhotoFinal: MutableList<Photo> =
+                                mutableListOf()
 
-                        listPhotoFinal.forEach {
-                            firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(it.id).set(it)
-                        }
+            for (photoWithText in listPhotos) {
+                runBlocking {
+                    launch {
 
-                        runBlocking {
-                            launch {
-
-                                realEstateDao.insertRealEstate(realEstate)
-                            }
-                        }
-
+                        val newId = UUID.randomUUID().toString()
+                        val realEstateImage: StorageReference =
+                            storageRef.child(
+                                "realEstates/$id/$newId"
+                            )
+                        Log.e("uri", photoWithText.photoSource)
+                        val urlFinal = withContext(Dispatchers.IO) {
+                            realEstateImage.putFile(Uri.parse(photoWithText.photoSource))
+                                .await().storage.downloadUrl.await()
+                        }.toString()
+                        Log.e("urlFinal", urlFinal)
+                        photoWithText.photoSource = urlFinal
+                        photoWithText.id = newId
+                        listPhotoFinal.add(photoWithText)
                     }
                 }
+            }
 
-                override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
+                            val realEstate = Estate(
+                                id,
+                                type,
+                                price.toInt(),
+                                area.toInt(),
+                                numberRoom,
+                                description,
+                                numberAndStreet,
+                                numberApartment,
+                                city,
+                                region,
+                                postalCode,
+                                country,
+                                status,
+                                dateEntry,
+                                dateSale,
+                                realEstateAgent,
+                                latLng.latitude,
+                                latLng.longitude,
+                                checkedStateHospital,
+                                checkedStateSchool,
+                                checkedStateShops,
+                                checkedStateParks,
+                                listPhotoFinal,
+                            )
 
-                }
-            })
+                            firebaseFirestore.collection("real_estates").document(id)
+                                .set(realEstate)
+
+                            listPhotoFinal.forEach {
+                                firebaseFirestore.collection("real_estates").document(id)
+                                    .collection("listPhotoWithText").document(it.id).set(it)
+                            }
+
+                            runBlocking {
+                                launch {
+
+                                    realEstateDao.insertRealEstate(realEstate)
+                                }
+                            }
+
 
             Response.Success(true)
+
 
         } catch (e: Exception) {
             Response.Failure(e)
@@ -344,27 +334,16 @@ open class RealEstateRepositoryImpl @Inject constructor(
                entryRegion != itemRealEstate.region || entryPostalCode != itemRealEstate.postalCode || entryCountry != itemRealEstate.country   ){
 
                 val address3 = "$entryNumberAndStreet,$entryCity,$entryRegion"
-                val listRestaurantApiNearBySearchResponseOut4: Call<ResultGeocoding?>? =
-                    ApiService.`interface`.getResultGeocodingResponse(address3)
+                val response = ApiService.`interface`.getResultGeocodingResponse(address3)
 
-                listRestaurantApiNearBySearchResponseOut4?.enqueue(object : Callback<ResultGeocoding?> {
-                    override fun onResponse(
-                        call: Call<ResultGeocoding?>,
-                        response: retrofit2.Response<ResultGeocoding?>
-                    ) {
+
                         val lat = response.body()?.results?.get(0)?.geometry?.location?.lat
                         val lng = response.body()?.results?.get(0)?.geometry?.location?.lng
 
                         rEcollection.document(id).update("lat",lat)
                         rEcollection.document(id).update("lng",lng)
 
-                    }
 
-                    override fun onFailure(call: Call<ResultGeocoding?>, t: Throwable) {
-
-                    }
-
-                })
 
                 rEcollection.document(id).update("numberAndStreet",entryNumberAndStreet)
                 rEcollection.document(id).update("city",entryCity)
