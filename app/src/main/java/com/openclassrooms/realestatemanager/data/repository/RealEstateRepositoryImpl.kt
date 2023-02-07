@@ -88,7 +88,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         postalCode: String,
         country: String,
         status: String,
-        listPhotos: MutableList<Photo>?,
+        listPhotos: MutableList<Photo>,
         dateEntry: String,
         dateSale: String,
         realEstateAgent: String,
@@ -100,6 +100,8 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
         return try {
             Response.Loading
+
+            listPhotos.isNotEmpty()
 
             val address3 = "$numberAndStreet,$city,$region"
             val id = UUID.randomUUID().toString()
@@ -286,6 +288,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
         return try {
             Response.Loading
 
+            listPhotoWithText.isNotEmpty()
 
 
             val rEcollection = firebaseFirestore.collection("real_estates")

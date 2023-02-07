@@ -449,7 +449,7 @@ fun NewRealEstateScreen(
                     .constrainAs(rowHospital) {
                         top.linkTo(fieldNumberAndStreet.bottom, margin = 25.dp)
                         start.linkTo(startGuideline)
-                        width = Dimension.percent(0.4f)
+                        width = Dimension.percent(0.2f)
                         height = Dimension.wrapContent
                     },
             )
@@ -466,7 +466,7 @@ fun NewRealEstateScreen(
                     .constrainAs(rowSchool) {
                         top.linkTo(rowHospital.bottom, margin = 25.dp)
                         start.linkTo(startGuideline)
-                        width = Dimension.percent(0.4f)
+                        width = Dimension.percent(0.2f)
                         height = Dimension.wrapContent
                     },
                 selected = checkedStateSchool.value,
@@ -494,9 +494,9 @@ fun NewRealEstateScreen(
                         height = Dimension.wrapContent
                     }else Modifier
                     .constrainAs(rowShops) {
-                        top.linkTo(rowShops.bottom, margin = 5.dp)
+                        top.linkTo(rowSchool.bottom, margin = 5.dp)
                         start.linkTo(startGuideline)
-                        width = Dimension.percent(0.4f)
+                        width = Dimension.percent(0.2f)
                         height = Dimension.wrapContent
                     },
                 selected = checkedStateShops.value,
@@ -526,7 +526,7 @@ fun NewRealEstateScreen(
                     .constrainAs(rowParks) {
                         top.linkTo(rowShops.bottom, margin = 5.dp)
                         start.linkTo(startGuideline)
-                        width = Dimension.percent(0.4f)
+                        width = Dimension.percent(0.2f)
                         height = Dimension.wrapContent
                     },
                 selected = checkedStateParks.value,
@@ -720,7 +720,7 @@ fun NewRealEstateScreen(
             Button(
                 onClick = {
 
-                        listPhotos.value.isNotEmpty()
+
 
 
                                     estateViewModel.createRealEstate(

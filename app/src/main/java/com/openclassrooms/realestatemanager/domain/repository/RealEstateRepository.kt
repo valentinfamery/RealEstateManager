@@ -24,7 +24,7 @@ interface RealEstateRepository {
         postalCode: String,
         country: String,
         status: String,
-        listPhotos: MutableList<Photo>?,
+        listPhotos: MutableList<Photo>,
         dateEntry: String,
         dateSale: String,
         realEstateAgent: String,
