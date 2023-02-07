@@ -784,6 +784,7 @@ fun NewRealEstateScreen(
                         reqCode = 10001
                     )
                     navigateToBack()
+                    estateViewModel.createRealEstateResponse = Response.Empty
                 }
             }
         }

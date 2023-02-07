@@ -676,6 +676,7 @@ fun EditScreenRealEstate(
             LaunchedEffect(estateViewModel.updateRealEstateResponse){
                 if(estateViewModel.updateRealEstateResponse is Response.Success){
                     navController.popBackStack()
+                    estateViewModel.updateRealEstateResponse = Response.Empty
                 }
             }
         }
