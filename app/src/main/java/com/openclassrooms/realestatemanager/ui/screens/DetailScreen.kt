@@ -327,7 +327,6 @@ fun RealEstateDetailScreen(
                                 top.linkTo(infoAgent.bottom,15.dp)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom,25.dp)
                             }
                                 .size(200.dp)
                                 .clip(RoundedCornerShape(15.dp))
