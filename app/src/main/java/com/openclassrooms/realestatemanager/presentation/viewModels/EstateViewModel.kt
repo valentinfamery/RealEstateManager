@@ -143,6 +143,7 @@ class EstateViewModel @Inject constructor(private val realEstateRepository: Real
         checkedStateShops: Boolean,
         checkedStateParks: Boolean
     ) = viewModelScope.launch {
+        createRealEstateResponse = Response.Loading
         createRealEstateResponse = realEstateRepository.createRealEstate(type , price , area , numberRoom , description , numberAndStreet,
             numberApartment,
             city,
@@ -197,6 +198,7 @@ class EstateViewModel @Inject constructor(private val realEstateRepository: Real
         listPhotoWithText:MutableList<Photo>,
         itemRealEstate: Estate
     ) = viewModelScope.launch {
+        updateRealEstateResponse = Response.Loading
         updateRealEstateResponse = realEstateRepository.updateRealEstate(id,
             entryType,
             entryPrice,

@@ -380,7 +380,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
                                 .set(photoWithText)
 
                         }
-                    }
+                }
 
 
                     if(photo != null) {
