@@ -357,10 +357,10 @@ open class RealEstateRepositoryImpl @Inject constructor(
                 if(photoWithText.toAddLatter){
 
 
-                            val newId = UUID.randomUUID().toString()
+
 
                             val realEstateImage2: StorageReference = storageRef.child(
-                                "realEstates/$id/$newId"
+                                "realEstates/$id/${photoWithText.id}"
                             )
 
                             val urlFinal = withContext(Dispatchers.IO) {
@@ -369,7 +369,11 @@ open class RealEstateRepositoryImpl @Inject constructor(
                             }.toString()
                             Log.e("urlFinal", urlFinal)
                             photoWithText.photoSource = urlFinal
-                            photoWithText.id = newId
+
+
+                    photoWithText.toAddLatter = false
+                    photoWithText.toUpdateLatter = false
+                    photoWithText.toDeleteLatter = false
 
 
 
@@ -398,6 +402,10 @@ open class RealEstateRepositoryImpl @Inject constructor(
                     Log.e("urlFinal", urlFinal)
                     photoWithText.photoSource = urlFinal
 
+                    photoWithText.toAddLatter = false
+                    photoWithText.toUpdateLatter = false
+                    photoWithText.toDeleteLatter = false
+
 
                     firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("photoSource",photoWithText.photoSource)
                     firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("text",photoWithText.text)
@@ -408,6 +416,10 @@ open class RealEstateRepositoryImpl @Inject constructor(
                         "realEstates/$id/${photoWithText.id}"
                     )
                     realEstateImage2.delete().await()
+
+                    photoWithText.toAddLatter = false
+                    photoWithText.toUpdateLatter = false
+                    photoWithText.toDeleteLatter = false
 
                     firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).delete()
                 }
