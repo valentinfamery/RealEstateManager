@@ -147,9 +147,7 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean, addPhotoWithText
                         onClick = {
                             val photoWithText = Photo(photoSelect.toString(),titlePhoto,
                                 UUID.randomUUID().toString(),
-                                toAddLatter = false,
                                 toDeleteLatter = false,
-                                toUpdateLatter = false
                             )
                             addPhotoWithText(photoWithText)
                             photoSelect = Uri.EMPTY

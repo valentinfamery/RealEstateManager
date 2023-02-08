@@ -73,7 +73,6 @@ fun EditScreenRealEstate(
 
 
     DialogAddPhotoWithText(openDialogAddPhotoWithText = openDialogAddPhotoWithText, addPhotoWithText ={
-        it.toAddLatter = true
         estateViewModel.addPhoto(it)
     }, closeDialogAddPhoto = {
         openDialogAddPhotoWithText = false
@@ -93,9 +92,6 @@ fun EditScreenRealEstate(
             estateViewModel.updateAttributePhotoText(
                 s,
                 s2
-            )
-            estateViewModel.updateAttributeToUpdate(
-                s
             )
         }
     )

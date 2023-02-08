@@ -84,11 +84,7 @@ class EstateViewModel @Inject constructor(private val realEstateRepository: Real
         })
     }
 
-    fun updateAttributeToUpdate(id: String) {
-        _listPhotoEditScreenState.updateElement({ it.id == id && !it.toAddLatter }, {
-            it.copy(toUpdateLatter = true)
-        })
-    }
+
 
     fun updateAttributePhotoSource(id: String,photoSource : String) {
         _listPhotoEditScreenState.updateElement({ it.id == id }, {

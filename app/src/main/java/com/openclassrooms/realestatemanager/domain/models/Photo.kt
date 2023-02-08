@@ -13,11 +13,7 @@ data class Photo(
     var text: String ="",
     var id: String = "",
     @Exclude
-    var toAddLatter: Boolean = false,
-    @Exclude
     var toDeleteLatter: Boolean = false,
-    @Exclude
-    var toUpdateLatter: Boolean = false,
 
     ): Parcelable  {
 
