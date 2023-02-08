@@ -353,75 +353,87 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
 
             for(photoWithText in listPhotoWithText){
-                Log.e("photoWithTextToAddLater",photoWithText.toAddLatter.toString())
-                if(photoWithText.toAddLatter){
+                Log.e("photoWithTextToAddLater",photoWithText.toString())
+
+                val photo = firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).get().await().toObject(Photo::class.java)
+
+                if(photoWithText.toAddLatter && !photoWithText.toDeleteLatter){
+                    if(photo == null) {
+
+
+                        val realEstateImage2: StorageReference = storageRef.child(
+                            "realEstates/$id/${photoWithText.id}"
+                        )
+
+                        val urlFinal = withContext(Dispatchers.IO) {
+                            realEstateImage2.putFile(Uri.parse(photoWithText.photoSource))
+                                .await().storage.downloadUrl.await()
+                        }.toString()
+                        Log.e("urlFinal", urlFinal)
+                        photoWithText.photoSource = urlFinal
+
+
+                        photoWithText.toAddLatter = false
+                        photoWithText.toUpdateLatter = false
+                        photoWithText.toDeleteLatter = false
 
 
 
 
-                            val realEstateImage2: StorageReference = storageRef.child(
-                                "realEstates/$id/${photoWithText.id}"
-                            )
-
-                            val urlFinal = withContext(Dispatchers.IO) {
-                                realEstateImage2.putFile(Uri.parse(photoWithText.photoSource))
-                                    .await().storage.downloadUrl.await()
-                            }.toString()
-                            Log.e("urlFinal", urlFinal)
-                            photoWithText.photoSource = urlFinal
+                        firebaseFirestore.collection("real_estates").document(id)
+                            .collection("listPhotoWithText").document(photoWithText.id)
+                            .set(photoWithText)
 
 
-                    photoWithText.toAddLatter = false
-                    photoWithText.toUpdateLatter = false
-                    photoWithText.toDeleteLatter = false
-
-
-
-
-                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).set(photoWithText)
-
-
-
-
+                    }
                 }
-                if(photoWithText.toUpdateLatter && !photoWithText.toDeleteLatter){
-                    val realEstateImage2: StorageReference = storageRef.child(
-                        "realEstates/$id/${photoWithText.id}"
-                    )
+                if(photoWithText.toUpdateLatter && !photoWithText.toDeleteLatter && !photoWithText.toAddLatter){
+                    if(photo != null) {
+                        val realEstateImage2: StorageReference = storageRef.child(
+                            "realEstates/$id/${photoWithText.id}"
+                        )
 
-                    realEstateImage2.delete().await()
+                        realEstateImage2.delete().await()
 
-                    val realEstateImage3: StorageReference = storageRef.child(
-                        "realEstates/$id/${photoWithText.id}"
-                    )
+                        val realEstateImage3: StorageReference = storageRef.child(
+                            "realEstates/$id/${photoWithText.id}"
+                        )
 
-                    val urlFinal = withContext(Dispatchers.IO) {
-                        realEstateImage3.putFile(Uri.parse(photoWithText.photoSource))
-                            .await().storage.downloadUrl.await()
-                    }.toString()
-                    Log.e("urlFinal", urlFinal)
-                    photoWithText.photoSource = urlFinal
+                        val urlFinal = withContext(Dispatchers.IO) {
+                            realEstateImage3.putFile(Uri.parse(photoWithText.photoSource))
+                                .await().storage.downloadUrl.await()
+                        }.toString()
+                        Log.e("urlFinal", urlFinal)
+                        photoWithText.photoSource = urlFinal
 
-                    photoWithText.toAddLatter = false
-                    photoWithText.toUpdateLatter = false
-                    photoWithText.toDeleteLatter = false
+                        photoWithText.toAddLatter = false
+                        photoWithText.toUpdateLatter = false
+                        photoWithText.toDeleteLatter = false
 
 
-                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("photoSource",photoWithText.photoSource)
-                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).update("text",photoWithText.text)
+                        firebaseFirestore.collection("real_estates").document(id)
+                            .collection("listPhotoWithText").document(photoWithText.id)
+                            .update("photoSource", photoWithText.photoSource)
+                        firebaseFirestore.collection("real_estates").document(id)
+                            .collection("listPhotoWithText").document(photoWithText.id)
+                            .update("text", photoWithText.text)
+                    }
 
                 }
                 if(photoWithText.toDeleteLatter){
-                    val realEstateImage2: StorageReference = storageRef.child(
-                        "realEstates/$id/${photoWithText.id}"
-                    )
-                    realEstateImage2.delete().await()
+                    if(photo != null) {
+                        val realEstateImage2: StorageReference = storageRef.child(
+                            "realEstates/$id/${photoWithText.id}"
+                        )
+                        realEstateImage2.delete().await()
 
-                    photoWithText.toAddLatter = false
-                    photoWithText.toUpdateLatter = false
-                    photoWithText.toDeleteLatter = false
+                        photoWithText.toAddLatter = false
+                        photoWithText.toUpdateLatter = false
+                        photoWithText.toDeleteLatter = false
 
-                    firebaseFirestore.collection("real_estates").document(id).collection("listPhotoWithText").document(photoWithText.id).delete()
+                        firebaseFirestore.collection("real_estates").document(id)
+                            .collection("listPhotoWithText").document(photoWithText.id).delete()
+                    }
                 }
 
             }
