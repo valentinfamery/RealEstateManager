@@ -384,7 +384,7 @@ open class RealEstateRepositoryImpl @Inject constructor(
 
 
                 }
-                if(photoWithText.toUpdateLatter){
+                if(photoWithText.toUpdateLatter && !photoWithText.toDeleteLatter){
                     val realEstateImage2: StorageReference = storageRef.child(
                         "realEstates/$id/${photoWithText.id}"
                     )
