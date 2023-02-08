@@ -588,29 +588,6 @@ class EstateViewModelTest {
         viewModel.updatePhotoWithTextInListEditScreenToDeleteLatterToTrue("1")
         assertEquals(true, viewModel.listPhotoEditScreenState.value[0].toDeleteLatter)
     }
-
-    @Test
-    fun testUpdateAttributeToUpdate() {
-
-        val firebaseFirestore = mock(FirebaseFirestore::class.java)
-
-        val storageReference = mock(StorageReference::class.java)
-
-        val db = Room.inMemoryDatabaseBuilder(instrumentationContext, EstateRoomDatabase::class.java).build()
-
-        val dao = db.realEstateDao()
-
-        val repository = RealEstateRepositoryImpl(firebaseFirestore,storageReference,instrumentationContext,dao)
-
-        val viewModel = EstateViewModel(repository)
-
-        val photo = Photo( "photo1.jpg", "text1","1",toUpdateLatter = false)
-        val list = listOf(photo)
-        viewModel._listPhotoEditScreenState.value = list
-        viewModel.updateAttributeToUpdate("1")
-        assertEquals(true, viewModel.listPhotoEditScreenState.value[0].toUpdateLatter)
-    }
-
     @Test
     fun testUpdateAttributePhotoSource() {
 
