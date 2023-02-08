@@ -29,6 +29,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.Photo
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -144,7 +145,8 @@ fun DialogAddPhotoWithText(openDialogAddPhotoWithText: Boolean, addPhotoWithText
                             end.linkTo(parent.end, margin = 50.dp)
                         },
                         onClick = {
-                            val photoWithText = Photo(photoSelect.toString(),titlePhoto,"",
+                            val photoWithText = Photo(photoSelect.toString(),titlePhoto,
+                                UUID.randomUUID().toString(),
                                 toAddLatter = false,
                                 toDeleteLatter = false,
                                 toUpdateLatter = false

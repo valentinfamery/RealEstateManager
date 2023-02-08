@@ -125,11 +125,9 @@ open class RealEstateRepositoryImpl @Inject constructor(
             for (photoWithText in listPhotos) {
                 runBlocking {
                     launch {
-
-                        val newId = UUID.randomUUID().toString()
                         val realEstateImage: StorageReference =
                             storageRef.child(
-                                "realEstates/$id/$newId"
+                                "realEstates/$id/${photoWithText.id}"
                             )
                         Log.e("uri", photoWithText.photoSource)
                         val urlFinal = withContext(Dispatchers.IO) {
@@ -138,7 +136,6 @@ open class RealEstateRepositoryImpl @Inject constructor(
                         }.toString()
                         Log.e("urlFinal", urlFinal)
                         photoWithText.photoSource = urlFinal
-                        photoWithText.id = newId
                         listPhotoFinal.add(photoWithText)
                     }
                 }
