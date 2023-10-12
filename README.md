@@ -1,6 +1,14 @@
 #RealEstateManager
 This project is an Android application that uses the Google Maps API to display data and provide functionalities.
 
+![](/readme/Screenshot_2023-10-12-21-48-38-73_baced0013f8694beaf06a38d8f4873cd.jpg)
+![](/readme/Screenshot_2023-10-12-21-49-05-76_baced0013f8694beaf06a38d8f4873cd.jpg)
+![](/readme/Screenshot_2023-10-12-21-49-15-62_baced0013f8694beaf06a38d8f4873cd.jpg)
+![](/readme/Screenshot_2023-10-12-21-49-20-09_baced0013f8694beaf06a38d8f4873cd.jpg)
+![](/readme/Screenshot_2023-10-12-21-49-35-84.jpg)
+![](/readme/Screenshot_2023-10-12-21-49-52-12.jpg)
+![](/readme/Screenshot_2023-10-12-21-50-02-80.jpg)
+
 ## Prerequisites
 * A Google Maps API key
 
