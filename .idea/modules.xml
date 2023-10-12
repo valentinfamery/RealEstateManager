@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Projet_9_OC_RealEstateManager.iml" filepath="$PROJECT_DIR$/.idea/modules/Projet_9_OC_RealEstateManager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Projet_9_OC_RealEstateManager.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Openclassrooms-Project-9.iml" filepath="$PROJECT_DIR$/.idea/modules/Openclassrooms-Project-9.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Openclassrooms-Project-9.app.unitTest.iml" />
     </modules>
   </component>
 </project>
