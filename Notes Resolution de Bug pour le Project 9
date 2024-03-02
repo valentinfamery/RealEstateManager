@@ -1,0 +1,42 @@
+Notes Resolution de Bug pour le Project 9
+
+package com.openclassrooms.realestatemanager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    private TextView textViewMain;
+    private TextView textViewQuantity;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //Replace correct id resource for textViewMain because the previous resource referred to the second activity
+        this.textViewMain = findViewById(R.id.activity_second_activity_text_view_main); //Before
+        this.textViewMain = findViewById(R.id.activity_main_activity_text_view_main); //After
+
+        this.textViewQuantity = findViewById(R.id.activity_main_activity_text_view_quantity);
+
+        this.configureTextViewMain();
+        this.configureTextViewQuantity();
+    }
+
+    private void configureTextViewMain(){
+        this.textViewMain.setTextSize(15);
+        this.textViewMain.setText("Le premier bien immobilier enregistré vaut ");
+    }
+
+    private void configureTextViewQuantity(){
+        int quantity = Utils.convertDollarToEuro(100);
+        this.textViewQuantity.setTextSize(20);
+
+        //Add String.valueOf() method to correctly display the int-type quantity variable
+        this.textViewQuantity.setText(quantity); //Before
+        this.textViewQuantity.setText(String.valueOf(quantity)); //After
+    }
+}
